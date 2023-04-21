@@ -43,4 +43,16 @@ public class User {
         joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
         inverseJoinColumns={@JoinColumn(name="RECIPE_ID", referencedColumnName="ID")})
     private List<Recipe> recipes = new ArrayList<>();
+
+
+    public void addRecipe(Recipe recipe) {
+        recipes.add(recipe);
+    }
+
+    public void removeRecipe(Recipe recipe) {
+        recipes.remove(recipe);
+    }
+
+    
+
 }

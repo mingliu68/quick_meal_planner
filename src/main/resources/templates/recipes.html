@@ -19,6 +19,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li th:if="${user != null}" class="nav-item">
+                    <a th:text="${user.name}" class="nav-link active" th:href="@{/user}" />
+                </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
                 </li>
@@ -30,6 +33,53 @@
 <div class="container">
     <div class="row">
         <h1 class="text-center">Quick Recipes</h1>
+        <hr>
+
+
+        <div th:each="recipe: ${user.recipes}" class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 th:text="${recipe.name}" class="card-title" />
+              <h6 class="card-subtitle mb-2 text-body-secondary">Saved by <span th:text="${#lists.size(recipe.users)}" /> users</h6>
+              <p class="card-text">Requires <span th:text="${#lists.size(recipe.ingredients)}"/> ingredients</p>
+              <p class="card-text">Complete in <span th:text="${#lists.size(recipe.directions)}"/> steps</p>
+              <a  
+                th:href="@{/user/recipes/recipe(recipeId=${recipe.id})}"
+                type="button"
+                class="btn btn-primary btn-sm">
+                See Recipe
+                </a>
+              <a  
+                th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
+                type="button"
+                class="btn btn-warning btn-sm">
+                Unsave
+                </a>
+            </div>
+          </div>
+
+
+
+
+
+        <!-- <div th:each="recipe: ${user.recipes}">
+            <h4 th:text="${recipe.name}" />
+            <p>Ingredients: </p>
+            <div th:each="ingredient: ${recipe.ingredients}" >
+                <p th:text="${ingredient}" />
+            </div>
+            <p>Directions:</p>
+            <div th:each="direction: ${recipe.directions}" >
+                <p th:text="${direction}" />
+            </div>
+    
+            <p>Saved by <span th:text="${#lists.size(recipe.users)}" /> users </p>
+            <a  
+                th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
+                type="button"
+                class="btn btn-warning btn-sm">
+                Unsave
+            </a>
+        </div> -->
     </div>
 </div>
 </body>

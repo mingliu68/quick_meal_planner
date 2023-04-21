@@ -36,14 +36,19 @@ public class AuthController {
         // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(principal == null) {
             currentUser = null;
-        } 
+        } else {
+            getPrincipal(principal);
+        }
         model.addAttribute("user", currentUser);
 
         return "index";
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(Principal principal) {
+        if(principal != null) {
+            return "redirect:/user";
+        }
         return "login";
     }
 
@@ -79,6 +84,8 @@ public class AuthController {
         model.addAttribute("users", users);
         // User currentUser = userService.findUserByEmail(principal.getName());
         User currentUser = getPrincipal(principal);
+        model.addAttribute("user", currentUser);
+        
         System.out.println("Principal id: " + currentUser.getId());
         System.out.println("Principal first role: " + currentUser.getRoles().get(0).getName());
 
@@ -92,10 +99,10 @@ public class AuthController {
         return  "user";
     }
 
-    @GetMapping("/recipes")
-    public String recipes() {
-        return "recipes";
-    }
+    // @GetMapping("/recipes")
+    // public String recipes() {
+    //     return "recipes";
+    // }
 
     private User getPrincipal(Principal principal) {
         currentUser = userService.findUserByEmail(principal.getName());

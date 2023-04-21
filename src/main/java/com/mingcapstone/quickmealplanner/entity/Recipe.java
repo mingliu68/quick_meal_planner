@@ -30,13 +30,13 @@ public class Recipe {
     @Column(name="directions",length = 2500)
     private List<String> directions;
 
-    @Column(name="saved")
-    private int saved;
+    // @Column(name="saved")
+    // private int saved;
 
     @ManyToMany(mappedBy="recipes") 
     private List<User> users;
     
-    public void setSaved(int num) {
-        saved += num;
-    }
+    // public void setSaved(int num) {
+    //     saved += num;
+    // }
 }

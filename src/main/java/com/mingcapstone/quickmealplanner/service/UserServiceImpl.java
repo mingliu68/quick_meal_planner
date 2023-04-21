@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.Role;
 import com.mingcapstone.quickmealplanner.entity.User;
+import com.mingcapstone.quickmealplanner.repository.RecipeRepository;
 import com.mingcapstone.quickmealplanner.repository.RoleRepository;
 import com.mingcapstone.quickmealplanner.repository.UserRepository;
 
@@ -34,6 +36,9 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Autowired
+    RecipeRepository recipeRepository;
+
     @Override
     public User saveUser(UserDto userDto){
         User user = new User();
@@ -51,6 +56,24 @@ public class UserServiceImpl implements UserService {
         
         return userRepository.save(user);
     }
+    
+    @Override
+    public User updateUser(UserDto userDto){
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setRecipes(userDto.getRecipes());
+        Role role = roleRepository.findByName("USER");
+        if(role == null){
+            role = checkRoleExist();
+        }
+        user.setRoles(Arrays.asList(role));
+        
+        return userRepository.save(user);
+    }
+
     
     @Override
     public User findUserByEmail(String email){
@@ -92,6 +115,37 @@ public class UserServiceImpl implements UserService {
         Role role = new Role();
         role.setName("USER");
         return roleRepository.save(role);
+    }
+
+    // adding recipe to user recipes list and update recipe saved count
+    @Override
+    public User addRecipeToList(Long recipeId, User user){
+        Optional<Recipe> result = recipeRepository.findById(recipeId);
+        Recipe recipe = new Recipe();
+        if(result.isPresent()){
+            recipe = result.get();
+            // recipe.setSaved(1);
+        } else {
+            throw new RuntimeException("Recipe not found");
+        }
+        Recipe dbRecipe = recipeRepository.save(recipe);
+        user.addRecipe(dbRecipe);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User removeRecipeFromList(Long recipeId, User user) {
+        Optional<Recipe> result = recipeRepository.findById(recipeId);
+        Recipe recipe = new Recipe();
+        if(result.isPresent()){
+            recipe = result.get();
+            // recipe.setSaved(-1);
+        } else {
+            throw new RuntimeException("Recipe not found");
+        }
+        Recipe dbRecipe = recipeRepository.save(recipe);
+        user.removeRecipe(dbRecipe);
+        return userRepository.save(user);
     }
 
     @Override
