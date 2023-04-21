@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +23,7 @@ import jakarta.validation.Valid;
 public class AuthController {
     
     private UserService userService;
+    private User currentUser;
 
     @Autowired
     public AuthController(UserService userService) {
@@ -29,7 +32,13 @@ public class AuthController {
 
 
     @GetMapping("/index")
-    public String home() {
+    public String home(Model model, Principal principal) {
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(principal == null) {
+            currentUser = null;
+        } 
+        model.addAttribute("user", currentUser);
+
         return "index";
     }
 
@@ -49,7 +58,6 @@ public class AuthController {
     @PostMapping("/register/save")
     public String registration(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result, Model model) {
         
-        System.out.println(userDto.getRecipes());
         User existingUser = userService.findUserByEmail(userDto.getEmail());
         if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
             result.rejectValue("email", null, "There is already an account registered with that email address.");
@@ -58,8 +66,9 @@ public class AuthController {
             model.addAttribute("user", userDto);
             return "/register";
         }
-        User dbUser = userService.saveUser(userDto);
-        System.out.println(dbUser.getRecipes());
+        userService.saveUser(userDto);
+        // User dbUser = userService.saveUser(userDto);
+        // System.out.println(dbUser.getRecipes());
 
         return "redirect:/register?success";
     }
@@ -89,7 +98,8 @@ public class AuthController {
     }
 
     private User getPrincipal(Principal principal) {
-        User currentUser = userService.findUserByEmail(principal.getName());
+        currentUser = userService.findUserByEmail(principal.getName());
+        
         return currentUser;
     }   
 
