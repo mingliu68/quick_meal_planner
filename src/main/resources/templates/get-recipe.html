@@ -9,42 +9,27 @@
     />
 
     <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-      crossorigin="anonymous"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous">
     <title>Get Recipe</title>
   </head>
   <body>
     <div class="container">
       <h3>Get Recipe</h3>
-      
       <h3 th:text="${recipe.name}" id="recipeName" />
-
       <h5>Ingredients:</h5>
       <div th:each="ingredient: ${recipe.ingredients}">
         <p th:text="${ingredient}" class="ingredients"/>
       </div>
-
       <h5>Directions:</h5>
       <div th:each="direction, directionStat: ${recipe.directions}" >
         <p th:text="${direction}" class="directions" />
       </div>
-
-      <!-- <form
-        action="#"
-        th:action="@{/users/saveNewRecipe(userId=${user.id})}"
-        th:object="${recipe}"
-        method="POST"
-      >
-        <button type="submit" class="btn btn-info col-2">Save Recipe</button>
-      </form> -->
-
       <button id="saveButton" class="btn btn-info">Save Recipe To My Collection</button>
       <hr />
-      <a th:href="@{/users/savedRecipes?(userId=${user.id})}"
+      <a th:href="@{/user/recipes}"
         >Back to Saved Recipes</a
       >
     </div>

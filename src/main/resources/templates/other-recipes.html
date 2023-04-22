@@ -49,11 +49,11 @@
     <br /><br />
     <div class="container">
       <div class="row">
-        <h1 class="text-center">My Saved Recipes</h1>
+        <h1 class="text-center">Recently Saved Recipes by Other Users</h1>
         <hr />
 
         <div
-          th:each="recipe: ${user.recipes}"
+          th:each="recipe: ${recipes}"
           class="card m-2"
           style="width: 23%"
         >
@@ -80,11 +80,11 @@
               See Recipe
             </a>
             <a
-              th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
+              th:href="@{/user/recipes/addRecipeToList(recipeId=${recipe.id})}"
               type="button"
               class="btn btn-warning btn-sm"
             >
-              Unsave
+              Save Recipe
             </a>
           </div>
         </div>

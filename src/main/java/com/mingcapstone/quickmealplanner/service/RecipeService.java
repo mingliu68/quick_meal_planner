@@ -21,5 +21,7 @@ public interface RecipeService {
     Recipe updateRecipe(RecipeDto recipeDto);
 
     List<Recipe> getRecentRecipes();
+
+    List<Recipe> getRecentRecipesNotByUser(User user);
     
 }

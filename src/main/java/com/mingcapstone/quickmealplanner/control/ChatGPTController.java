@@ -1,6 +1,7 @@
 package com.mingcapstone.quickmealplanner.control;
 
 import java.security.Principal;
+import java.time.Duration;
 
 import org.hibernate.annotations.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
@@ -33,35 +36,38 @@ import jakarta.websocket.server.PathParam;
 @RequestMapping("/user")
 public class ChatGPTController {
     
-
     @Value("${chatgptToken}")
     private String chatgptToken;
+
+    private UserService userService;
+    
+    private RecipeService recipeService;
     
     
-    public ChatGPTController() {
+    @Autowired
+    public ChatGPTController(UserService userService, RecipeService recipeService) {
+        this.userService = userService;
+        this.recipeService = recipeService;
         initOpenAI();
     }
     @PostConstruct
     private void initOpenAI(){
         if (chatgptToken != null)
-            openAiService = new OpenAiService(chatgptToken);
+            openAiService = new OpenAiService(chatgptToken, Duration.ofSeconds(30));
     }
 
 
     private OpenAiService openAiService ;
 
-    @Autowired 
-    UserService userService;
-
-    @Autowired
-    RecipeService recipeService;
+    
 
     
     @GetMapping("/findRecipe")
     public String findRecipe(Model model, Principal principal) throws JsonMappingException, JsonProcessingException{
         
         CompletionRequest completionRequest = CompletionRequest.builder()
-        .prompt("I need a quick meal in under 30 minutes with directions, and ingredient list and return it in json with name in string, ingredients in array, and directions in array as keys in lower cases with double quotes")
+        // .prompt("I need a quick meal in under 30 minutes with directions, and ingredient list and return it in json with name in string, ingredients in array, and directions in array as keys in lower cases with double quotes")
+        .prompt("I need a quick meal in under 30 minutes with directions, and ingredient and return it in json with name in string, ingredients in array, and directions in array . Only provide a  RFC8259 compliant JSON response in the following format: {\"name\":\"name of recipe, cannot be null\", \"ingredients\": [\"array of ingredients, cannot be null\"],\"directions\":[\"array of directions, cannot be null\"]} The JSON response:")
         .model("text-davinci-003")
         .temperature(1.0)
         .echo(false)
@@ -69,9 +75,27 @@ public class ChatGPTController {
         .build();
                 
         String jsonString = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
+        jsonString = jsonString.replaceAll("[\\n\\t]", "");
+
         
-        RecipeDto recipe = new ObjectMapper().readValue(jsonString, RecipeDto.class);
+
+        // RecipeDto recipe = new ObjectMapper().readValue(jsonString, RecipeDto.class);
+
+        RecipeDto recipe = null;
         
+        
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+
+            mapper.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);  
+
+            recipe = mapper.readValue(jsonString, RecipeDto.class);
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
         User user = getLoggedInUser(principal);
         
         model.addAttribute("user", user);

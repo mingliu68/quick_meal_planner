@@ -38,25 +38,32 @@
             class="btn btn-primary btn-sm mt-4 mb-4 mr-4">
             Back to saved recipes
         </a>
-        <h1 class="text-center">Quick Recipes</h1>
+        <h1 th:text="${recipe.name}" class="text-center" />
         <hr>
         <div>
-            <h4 th:text="${recipe.name}" />
-            <p>Ingredients: </p>
+            <h4>Ingredients: </h4>
             <div th:each="ingredient: ${recipe.ingredients}" >
                 <p th:text="${ingredient}" />
             </div>
-            <p>Directions:</p>
+            <h4>Directions:</h4>
             <div th:each="direction: ${recipe.directions}" >
                 <p th:text="${direction}" />
             </div>
     
             <p>Saved by <span th:text="${#lists.size(recipe.users)}" /> users </p>
             <a  
+                th:if="${savedByUser}"
                 th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
                 type="button"
                 class="btn btn-warning btn-sm">
                 Unsave
+            </a>
+            <a  
+                th:if="${!savedByUser}"
+                th:href="@{/user/recipes/addRecipeToList(recipeId=${recipe.id})}"
+                type="button"
+                class="btn btn-warning btn-sm">
+                save
             </a>
         </div>
     </div>

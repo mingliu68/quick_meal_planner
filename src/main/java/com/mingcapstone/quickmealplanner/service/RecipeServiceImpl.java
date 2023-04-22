@@ -1,5 +1,6 @@
 package com.mingcapstone.quickmealplanner.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -97,6 +98,21 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findRecentRecipes();
     }
     
+    @Override
+    public List<Recipe> getRecentRecipesNotByUser(User user){
+        List<Recipe> recentRecipes = getRecentRecipes();
+        List<Recipe> recipes = new ArrayList<>();
+        for(Recipe recipe: recentRecipes) {
+            if(!user.getRecipes().contains(recipe)) {
+                recipes.add(recipe);
+            }
+        }
+
+        return recipes;
+    }
+
+
+
     private RecipeDto mapToRecipeDto(Recipe recipe) {
         RecipeDto recipeDto = new RecipeDto();
         recipeDto.setId(recipe.getId());
