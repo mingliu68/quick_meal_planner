@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(UserDto userDto){
         User user = new User();
-        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        // user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         List<Recipe> recipes = new ArrayList<>();
@@ -61,7 +63,9 @@ public class UserServiceImpl implements UserService {
     public User updateUser(UserDto userDto){
         User user = new User();
         user.setId(userDto.getId());
-        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        // user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRecipes(userDto.getRecipes());
@@ -103,9 +107,9 @@ public class UserServiceImpl implements UserService {
     private UserDto mapToUserDto(User user) {
         // System.out.println(user.getRecipes());
         UserDto userDto = new UserDto();
-        String[] str = user.getName().split(" ");
-        userDto.setFirstName(str[0]);
-        userDto.setLastName(str[1]);
+        // String[] str = user.getName().split(" ");
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
         userDto.setRecipes(user.getRecipes());
         return userDto;

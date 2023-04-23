@@ -20,7 +20,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li th:if="${user != null}" class="nav-item">
-                    <a th:text="${user.name}" class="nav-link active" th:href="@{/user}" />
+                    <a th:text="${user.firstName}" class="nav-link active" th:href="@{/user}" />
                 </li>
                 <li th:if="${user != null}" class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
@@ -35,7 +35,7 @@
     </div>
    
     <div class="row col-md-10">
-        <h2>Hello <span th:text="${user.name}"></span></h2>
+        <h2>Hello <span th:text="${user.firstName}"></span></h2>
     </div>
 
     <a 
