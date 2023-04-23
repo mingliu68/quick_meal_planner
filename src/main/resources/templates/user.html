@@ -44,19 +44,99 @@
         class="btn btn-primary btn-sm mt-4 mb-4 mr-4">
         See Saved Recipes
     </a>
-    <a  
-        th:href="@{/user/findRecipe}"
-        type="button"
-        class="btn btn-warning btn-sm mt-4 mb-4 mr-4">
-        Find a New Recipe
-    </a>
+    
     <a  
         th:href="@{/user/recipes/otherRecipes}"
         type="button"
         class="btn btn-warning btn-sm mt-4 mb-4 mr-4">
         Recently Saved By Other Users
     </a>
-   
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <a  
+                    th:href="@{/user/findRecipe}"
+                    type="button"
+                    class="btn btn-warning btn-sm mt-4 mb-4 mr-4">
+                    Find a New Recipe
+                </a>
+            </div>
+            <div class="col">
+                <form
+                    method="post"
+                    role="form"
+                    th:action="@{/user/findRecipeWithOptions}"
+                    th:object="${optionsDto}"
+                    class="form-horizontal"
+                >
+                    <div class="form-group mb-3">
+                        <input
+                                class="form-control form-control-lg"
+                                id="ingredient1"
+                                name="ingredient1"
+                                placeholder="Enter an ingredient"
+                                th:field="*{ingredient1}"
+                                type="text"
+                        />
+                    </div>
+                    <div class="form-group mb-3">
+                        <input
+                                class="form-control form-control-lg"
+                                id="ingredient2"
+                                name="ingredient2"
+                                placeholder="Enter an ingredient"
+                                th:field="*{ingredient2}"
+                                type="text"
+                        />
+                    </div>
+                    <div class="form-group mb-3">
+                        <input
+                                class="form-control form-control-lg"
+                                id="ingredient3"
+                                name="ingredient13"
+                                placeholder="Enter an ingredient"
+                                th:field="*{ingredient3}"
+                                type="text"
+                        />
+                    </div>
+                    <div class="form-group mb-3">
+                        <button type="submit" class="btn btn-primary">Find Recipe</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col">
+                <form
+                    method="post"
+                    role="form"
+                    th:action="@{/user/findRecipeWithRestriction}"
+                    th:object="${optionsDto}"
+                    class="form-horizontal"
+                >
+                    <div class="form-group mb-3">
+                        <select th:field="*{restriction}" class="form-select form-select-lg">
+                            <option th:value="0">Select Dietary Restriction</option>
+                            <option th:value="keto" th:text="Keto"></option>
+                            <option th:value="paleo" th:text="Paleo"></option>
+                            <option th:value="gluten_free" th:text="'Gluten Free'"></option>
+                            <option th:value="low_carb" th:text="'Low Carb'"></option>
+                            <option th:value="pescetarian" th:text="Pescetarian"></option>
+                            <option th:value="vegetarian" th:text="Vegetarian"></option>
+                            <option th:value="vegan" th:text="Vegan"></option>
+     
+                        </select>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <button type="submit" class="btn btn-primary">Find Recipe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+    
+    
 </div>
+<script src="/js/search-handler.js" type="application/javascript"></script>
 </body>
 </html>

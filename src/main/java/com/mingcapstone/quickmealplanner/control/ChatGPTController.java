@@ -3,24 +3,21 @@ package com.mingcapstone.quickmealplanner.control;
 import java.security.Principal;
 import java.time.Duration;
 
-import org.hibernate.annotations.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mingcapstone.quickmealplanner.dto.OptionsDto;
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
@@ -30,7 +27,6 @@ import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.service.OpenAiService;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.websocket.server.PathParam;
 
 @Controller
 @RequestMapping("/user")
@@ -60,27 +56,114 @@ public class ChatGPTController {
     private OpenAiService openAiService ;
 
     
+    @PostMapping("/findRecipeWithOptions")
+    public String findRecipeWithOptions(@ModelAttribute("optionsDto") OptionsDto optionsDto, Model model, Principal principal) {
+        
+        String prompt = "I need a quick meal recipe that include the following ingredients "
+                        + optionsDto.getIngredient1() 
+                        + ", " + optionsDto.getIngredient2() 
+                        + ", " + optionsDto.getIngredient3()
+                        + "if any of the given ingredients are improper or not part of an actual food group, "
+                        + "or is a domesticated animal, omit the ingredient in search."
+                        + "recipe should have name, directions, "
+                        + "and ingredients and return it in json with name in string, "
+                        + "ingredients in array, and directions in array. "
+                        + "Only provide a  RFC8259 compliant JSON response in the "
+                        + "following format: "
+                        + "{\"name\":\"name of recipe, cannot be null\", "
+                        + "\"ingredients\": [\"array of ingredients, cannot be null\"], "
+                        + "\"directions\":[\"array of directions, cannot be null\"]} "
+                        + "The JSON response:";
+        
+                        String jsonString = getResponseJsonString(prompt);
+        
+                        RecipeDto recipe = null;
+        
+        
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);  
+
+            recipe = mapper.readValue(jsonString, RecipeDto.class);
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        User user = getLoggedInUser(principal);
+        
+        model.addAttribute("user", user);
+
+        model.addAttribute("recipe", recipe);
+
+        return "get-recipe";
+
+    }
+
+    @PostMapping("/findRecipeWithRestriction")
+    public String findRecipeWithRestriction(@ModelAttribute("optionsDto") OptionsDto optionsDto, Model model, Principal principal) {
+        
+        String prompt = "I need a quick meal recipe of the following dietary restriction "
+                        + optionsDto.getRestriction() + ". "
+                        + "Recipe should have name, directions, "
+                        + "and ingredients and return it in json with name in string, "
+                        + "ingredients in array, and directions in array. "
+                        + "Only provide a  RFC8259 compliant JSON response in the "
+                        + "following format: "
+                        + "{\"name\":\"name of recipe, cannot be null\", "
+                        + "\"ingredients\": [\"array of ingredients, cannot be null\"], "
+                        + "\"directions\":[\"array of directions, cannot be null\"]} "
+                        + "The JSON response:";
+        
+                        String jsonString = getResponseJsonString(prompt);
+        
+                        RecipeDto recipe = null;
+        
+        
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);  
+
+            recipe = mapper.readValue(jsonString, RecipeDto.class);
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        User user = getLoggedInUser(principal);
+        
+        model.addAttribute("user", user);
+
+        model.addAttribute("recipe", recipe);
+
+        return "get-recipe";
+
+    }
+
 
     
-    @GetMapping("/findRecipe")
-    public String findRecipe(Model model, Principal principal) throws JsonMappingException, JsonProcessingException{
+    // @GetMapping("/findRecipe")
+    // public String findRecipe(Model model, Principal principal) throws JsonMappingException, JsonProcessingException{
+
+        @GetMapping("/findRecipe")
+        public String findRecipe(Model model, Principal principal) {
         
-        CompletionRequest completionRequest = CompletionRequest.builder()
-        // .prompt("I need a quick meal in under 30 minutes with directions, and ingredient list and return it in json with name in string, ingredients in array, and directions in array as keys in lower cases with double quotes")
-        .prompt("I need a quick meal in under 30 minutes with directions, and ingredient and return it in json with name in string, ingredients in array, and directions in array . Only provide a  RFC8259 compliant JSON response in the following format: {\"name\":\"name of recipe, cannot be null\", \"ingredients\": [\"array of ingredients, cannot be null\"],\"directions\":[\"array of directions, cannot be null\"]} The JSON response:")
-        .model("text-davinci-003")
-        .temperature(1.0)
-        .echo(false)
-        .maxTokens(350)
-        .build();
-                
-        String jsonString = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
-        jsonString = jsonString.replaceAll("[\\n\\t]", "");
+        String prompt = "Give me a quick meal recipe in under 30 mins "
+                        + "recipe should have name, directions, "
+                        + "and ingredients and return it in json with name in string, "
+                        + "ingredients in array, and directions in array. "
+                        + "Only provide a  RFC8259 compliant JSON response in the "
+                        + "following format: "
+                        + "{\"name\":\"name of recipe, cannot be null\", "
+                        + "\"ingredients\": [\"array of ingredients, cannot be null\"], "
+                        + "\"directions\":[\"array of directions, cannot be null\"]} "
+                        + "The JSON response:";
+       
 
+        String jsonString = getResponseJsonString(prompt);
         
-
-        // RecipeDto recipe = new ObjectMapper().readValue(jsonString, RecipeDto.class);
-
         RecipeDto recipe = null;
         
         
@@ -105,7 +188,23 @@ public class ChatGPTController {
         return "get-recipe";
     }  
     
-   
+    private String getResponseJsonString(String prompt) {
+        CompletionRequest completionRequest = CompletionRequest.builder()
+        .prompt(prompt)
+        .model("text-davinci-003")
+        .temperature(1.0)
+        .echo(false)
+        .maxTokens(350)
+        .build();
+
+        String jsonString = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
+        jsonString = jsonString.replaceAll("[\\n\\t]", "");
+
+        return jsonString;
+    }
+
+
+
     private User getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
     }   

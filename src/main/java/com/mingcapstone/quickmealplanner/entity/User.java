@@ -44,6 +44,9 @@ public class User {
         inverseJoinColumns={@JoinColumn(name="RECIPE_ID", referencedColumnName="ID")})
     private List<Recipe> recipes = new ArrayList<>();
 
+    @OneToMany(mappedBy="user")
+    private List<MealPlan> mealPlan;
+
 
     public void addRecipe(Recipe recipe) {
         recipes.add(recipe);

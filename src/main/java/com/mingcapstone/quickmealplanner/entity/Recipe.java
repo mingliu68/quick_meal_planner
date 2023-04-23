@@ -29,12 +29,16 @@ public class Recipe {
 
     @Column(name="directions",length = 2500)
     private List<String> directions;
+    
+    @ManyToMany(mappedBy="recipes") 
+    private List<User> users;
 
+    @OneToMany(mappedBy="recipe")
+    private List<MealPlanItem> mealPlanItems;
+    
     // @Column(name="saved")
     // private int saved;
 
-    @ManyToMany(mappedBy="recipes") 
-    private List<User> users;
     
     // public void setSaved(int num) {
     //     saved += num;

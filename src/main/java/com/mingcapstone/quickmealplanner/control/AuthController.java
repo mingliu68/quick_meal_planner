@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.mingcapstone.quickmealplanner.dto.OptionsDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.service.UserService;
@@ -95,7 +96,9 @@ public class AuthController {
     @GetMapping("/user")
     public String currentUser(Model model, Principal principal) {
         User currentUser = getPrincipal(principal);
+        OptionsDto optionsDto = new OptionsDto();
         model.addAttribute("user", currentUser);
+        model.addAttribute("optionsDto", optionsDto);
         return  "user";
     }
 
