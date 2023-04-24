@@ -5,13 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Quick Meal Planner</title>
+   
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav th:replace="~{fragments/general :: header}" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">Quick Meal Planner</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,16 +32,15 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <div th:if="${param.error}">
-        <div class="alert alert-danger">Not Authorized</div>
-    </div>
-   
-    <div class="row col-md-10">
-        <h2>Hello <span th:text="${user.firstName}"></span></h2>
+<div class="container-fluid min-full-height dashboard-container">
+    <div class="row full-height">
+    <div th:replace="~{fragments/general :: dash-nav(activeTab='user')}" class="col-md-3 col-lg-2">
+
+            <p>Testing Side Nav</p>
+
     </div>
 
-    <a 
+    <!-- <a 
         th:href="@{/user/recipes}" 
         type="button" 
         class="btn btn-primary btn-sm mt-4 mb-4 mr-4">
@@ -50,8 +52,8 @@
         type="button"
         class="btn btn-warning btn-sm mt-4 mb-4 mr-4">
         Recently Saved By Other Users
-    </a>
-    <div class="container">
+    </a> -->
+    <div class="col-md-8">
         <div class="row">
             <div class="col">
                 <a  
@@ -135,8 +137,11 @@
         
     </div>
     
-    
+    </div>
 </div>
+<footer th:replace="~{fragments/general :: footer}" >
+    <p>Testing Footer</p>
+</footer>
 <script src="/js/search-handler.js" type="application/javascript"></script>
 </body>
 </html>

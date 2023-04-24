@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 public class AuthController {
     
     private UserService userService;
-    private User currentUser;
+    // private User currentUser;
 
     @Autowired
     public AuthController(UserService userService) {
@@ -33,14 +33,16 @@ public class AuthController {
     @GetMapping("/index")
     public String home(Model model, Principal principal) {
         // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(principal == null) {
-            currentUser = null;
-        } else {
-            getPrincipal(principal);
-        }
-        model.addAttribute("user", currentUser);
+        // if(principal == null) {
+        //     currentUser = null;
+        // } else {
+        //     getPrincipal(principal);
+        // }
+        // getPrincipal(principal);
+        // model.addAttribute("user", currentUser);
 
-        return "index";
+        return principal == null ? "index" : "redirect:/user";
+
     }
 
     @GetMapping("/login")
@@ -106,9 +108,8 @@ public class AuthController {
     // }
 
     private User getPrincipal(Principal principal) {
-        currentUser = userService.findUserByEmail(principal.getName());
-        
-        return currentUser;
+
+        return userService.findUserByEmail(principal.getName());
     }   
 
 }

@@ -3,15 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <title>Quick Meal Planner</title>
+    
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="/css/style.css">
+
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav th:replace="~{fragments/general :: header}" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">Quick Meal Planner</a>
         <button
@@ -46,49 +49,64 @@
         </div>
       </div>
     </nav>
-    <br /><br />
-    <div class="container">
-      <div class="row">
-        <h1 class="text-center">My Saved Recipes</h1>
-        <hr />
 
-        <div
-          th:each="recipe: ${user.recipes}"
-          class="card m-2"
-          style="width: 23%"
-        >
-          <div class="card-body">
-            <h5 th:text="${recipe.name}" class="card-title" />
-            <h6
-              class="card-subtitle mb-2 text-body-secondary"
-              style="font-size: 0.8rem"
-            >
-              Saved by <span th:text="${#lists.size(recipe.users)}" /> users
-            </h6>
-            <p class="card-text">
-              Requires
-              <span th:text="${#lists.size(recipe.ingredients)}" /> ingredients
-              <br />
-              Complete in
-              <span th:text="${#lists.size(recipe.directions)}" /> steps
-            </p>
-            <a
-              th:href="@{/user/recipes/recipe(recipeId=${recipe.id})}"
-              type="button"
-              class="btn btn-primary btn-sm"
-            >
-              See Recipe
-            </a>
-            <a
-              th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
-              type="button"
-              class="btn btn-warning btn-sm"
-            >
-              Unsave
-            </a>
-          </div>
+    <div class="container-fluid min-full-height dashboard-container">
+      <div class="row full-height">
+        <div th:replace="~{fragments/general :: dash-nav(activeTab='recipes')}" class="col-md-3 col-lg-2">
+          <p>Testing Side Nav</p>
         </div>
+        <div class="col-md-9 col-lg-10">
+              <div class="row">
+                <h1 class="text-center">My Saved Recipes</h1>
+                <hr />
+
+                <div
+                  th:each="recipe: ${user.recipes}"
+                  class="p-2 col-xs-12 col-sm-6 col-md-4 col-lg-3" >
+                  <div class="card" style="height: 100%;">
+                    <div class="card-body">
+                      <h5 th:text="${recipe.name}" class="card-title" />
+                      <h6
+                        class="card-subtitle mb-2 text-body-secondary"
+                        style="font-size: 0.8rem"
+                      >
+                        Saved by <span th:text="${#lists.size(recipe.users)}" /> users
+                      </h6>
+                      <p class="card-text">
+                        Requires
+                        <span th:text="${#lists.size(recipe.ingredients)}" /> ingredients
+                        <br />
+                        Complete in
+                        <span th:text="${#lists.size(recipe.directions)}" /> steps
+                      </p>
+                      <a
+                        th:href="@{/user/recipes/recipe(recipeId=${recipe.id})}"
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                      >
+                        See Recipe
+                      </a>
+                      <a
+                        th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
+                        type="button"
+                        class="btn btn-warning btn-sm"
+                      >
+                        Unsave
+                      </a>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
       </div>
     </div>
+
+
+    
+    <footer th:replace="~{fragments/general :: footer}" >
+      <p>Testing Footer</p>
+  </footer>
   </body>
 </html>

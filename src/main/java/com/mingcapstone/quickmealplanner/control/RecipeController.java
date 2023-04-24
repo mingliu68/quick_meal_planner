@@ -56,6 +56,7 @@ public class RecipeController {
         User user = getLoggedInUser(principal);
         List<Recipe> recipes = recipeService.getRecentRecipesNotByUser(user);
         model.addAttribute("recipes", recipes);
+        model.addAttribute("user", user);
 
         return "other-recipes";
     }

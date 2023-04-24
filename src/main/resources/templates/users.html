@@ -5,13 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Quick Meal Planner</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav th:replace="~{fragments/general :: header}" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">Quick Meal Planner</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +32,7 @@
         </div>
     </div>
 </nav>
-<div class="container">
+<div class="container min-full-height">
     <div th:if="${param.error}">
         <div class="alert alert-danger">Not Authorized</div>
     </div>
@@ -56,5 +59,8 @@
         </tbody>
     </table>
 </div>
+<footer th:replace="~{fragments/general :: footer}" >
+    <p>Testing Footer</p>
+</footer>
 </body>
 </html>

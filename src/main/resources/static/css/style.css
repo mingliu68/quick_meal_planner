@@ -1,0 +1,36 @@
+body {
+    min-height: 100vh;
+}
+
+.min-full-height {
+    min-height: calc(100vh - 56px - 73px);
+}
+
+.dashboard-container {
+    display: flex;
+}
+
+.dashboard-container .full-height {
+    flex-grow:1;
+}
+
+.dashboard-nav-container {
+    border-right: 1px solid #eee;
+    background-color: cornsilk;
+    padding: 0 ;
+}
+
+.dashboard-nav-container .nav-item a.nav-link {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    transition: all ease-in-out 0.1s;
+}
+
+.dashboard-nav-container .nav-item a.nav-link.active {
+    background-color:#c6c6c6;
+    color: white;
+    /* border-left: 15px solid salmon;
+    width: calc(100% + 15px); */
+}
+
