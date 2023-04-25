@@ -7,61 +7,91 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-   
+
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-    crossorigin="anonymous">
-     <link rel="stylesheet" href="/css/style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
 
     <title>Get Recipe</title>
   </head>
   <body>
-    <nav th:replace="~{fragments/general :: header}" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav
+      th:replace="~{fragments/general :: header}"
+      class="navbar navbar-expand-lg navbar-dark bg-dark"
+    >
       <div class="container-fluid">
-          <a class="navbar-brand" th:href="@{/index}">NonFragment Quick Meal Planner</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li th:if="${user != null}" class="nav-item">
-                      <a th:text="${user.firstName}" class="nav-link" th:href="@{/user}" />
-                  </li>
-                  <li th:if="${user == null}" class="nav-item">
-                      <a class="nav-link" th:href="@{/register}">Register</a>
-                  </li>
-                  <li th:if="${user == null}" class="nav-item">
-                      <a class="nav-link" th:href="@{/login}">Login</a>
-                    </li>
-                  <li th:if="${user != null}" class="nav-item">
-                      <a class="nav-link" th:href="@{/logout}">Logout</a>
-                  </li>
-              </ul>
+        <a class="navbar-brand" th:href="@{/index}"
+          >NonFragment Quick Meal Planner</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li th:if="${user != null}" class="nav-item">
+              <a
+                th:text="${user.firstName}"
+                class="nav-link"
+                th:href="@{/user}"
+              />
+            </li>
+            <li th:if="${user == null}" class="nav-item">
+              <a class="nav-link" th:href="@{/register}">Register</a>
+            </li>
+            <li th:if="${user == null}" class="nav-item">
+              <a class="nav-link" th:href="@{/login}">Login</a>
+            </li>
+            <li th:if="${user != null}" class="nav-item">
+              <a class="nav-link" th:href="@{/logout}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid min-full-height dashboard-container">
+      <div class="row full-height">        
+        <div class="col-md-3 col-lg-2 dashboard-nav-container-wrapper">
+          <div th:replace="~{fragments/general :: dash-nav(activeTab='user')}">
+            <p>Testing Side Nav</p>
           </div>
+        </div>
+        <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper">
+          <div class="row">
+            <h3 th:text="${recipe.name}" id="recipeName" />
+            <h5>Ingredients:</h5>
+            <div th:each="ingredient: ${recipe.ingredients}">
+              <p th:text="${ingredient}" class="ingredients" />
+            </div>
+            <h5>Directions:</h5>
+            <div th:each="direction, directionStat: ${recipe.directions}">
+              <p th:text="${direction}" class="directions" />
+            </div>
+            
+          </div>
+          <button id="saveButton" class="btn btn-info btn-sm">
+              Save Recipe To My Collection
+          </button>
+        </div>
       </div>
-  </nav>
-    <div class="container min-full-height">
-      <h3>Get Recipe</h3>
-      <h3 th:text="${recipe.name}" id="recipeName" />
-      <h5>Ingredients:</h5>
-      <div th:each="ingredient: ${recipe.ingredients}">
-        <p th:text="${ingredient}" class="ingredients"/>
-      </div>
-      <h5>Directions:</h5>
-      <div th:each="direction, directionStat: ${recipe.directions}" >
-        <p th:text="${direction}" class="directions" />
-      </div>
-      <button id="saveButton" class="btn btn-info">Save Recipe To My Collection</button>
-      <hr />
-      <a th:href="@{/user/recipes}"
-        >Back to Saved Recipes</a
-      >
     </div>
-    <footer th:replace="~{fragments/general :: footer}" >
+
+
+    <footer th:replace="~{fragments/general :: footer}">
       <p>Testing Footer</p>
-  </footer>
+    </footer>
     <script src="/js/recipe-handler.js" type="application/javascript"></script>
   </body>
 </html>

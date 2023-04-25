@@ -1,5 +1,6 @@
 package com.mingcapstone.quickmealplanner.service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         // user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setPassword(userDto.getPassword());
         user.setRecipes(userDto.getRecipes());
         Role role = roleRepository.findByName("USER");
         if(role == null){
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(Arrays.asList(role));
         
-        return userRepository.save(user);
+        return userRepository.saveAndFlush(user);
     }
 
     

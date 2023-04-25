@@ -36,10 +36,10 @@
     </div>
 </nav>
 <div class="container">
-    <div th:fragment="dash-nav(activeTab)" class="col-md-3 col-lg-2 dashboard-nav-container">
+    <div th:fragment="dash-nav(activeTab)" class="dashboard-nav-container">
         <ul class="nav flex-column">
             <li class="nav-item"><a th:href="@{/user}" th:class="${activeTab == 'user'} ? 'nav-link active' : 'nav-link'">Home</a></li>
-            <li class="nav-item"><a th:href="@{/user}" class="nav-link">User Profile</a></li>
+            <li class="nav-item"><a th:href="@{/user/profile}" th:class="${activeTab == 'userProfile'} ? 'nav-link active' : 'nav-link'">User Profile</a></li>
             <li class="nav-item"><a th:href="@{/user/recipes}" th:class="${activeTab == 'recipes'} ? 'nav-link active' : 'nav-link'">Saved Recipes</a></li>
             <li class="nav-item"><a th:href="@{/user}" th:class="${activeTab == 'mealPlan'} ? 'nav-link active' : 'nav-link'">Meal Plans</a></li>
             <li class="nav-item"><a th:href="@{/user/recipes/otherRecipes}" th:class="${activeTab == 'otherRecipes'} ? 'nav-link active' : 'nav-link'">Recent Recipes Saved By Others</a></li>

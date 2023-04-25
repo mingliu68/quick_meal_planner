@@ -10,10 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.mingcapstone.quickmealplanner.dto.OptionsDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.User;
+import com.mingcapstone.quickmealplanner.security.CustomUserDetailsService;
 import com.mingcapstone.quickmealplanner.service.UserService;
 
 import jakarta.validation.Valid;
@@ -28,7 +30,7 @@ public class AuthController {
     public AuthController(UserService userService) {
         this.userService = userService;
     }
-
+  
 
     @GetMapping("/index")
     public String home(Model model, Principal principal) {
@@ -47,9 +49,9 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login(Principal principal) {
-        if(principal != null) {
-            return "redirect:/user";
-        }
+        // if(principal != null) {
+        //     return "redirect:/user";
+        // }
         return "login";
     }
 
@@ -79,6 +81,41 @@ public class AuthController {
         return "redirect:/register?success";
     }
 
+    @PostMapping("/user")
+    public String updateUser(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult result, Model model, Principal principal) {
+        
+        System.out.println("userDto id: " + userDto.getId());
+        System.out.println("userDto first name: " + userDto.getFirstName());
+        User currentUser = getPrincipal(principal);
+        User updatedUser = userService.findUserByEmail(userDto.getEmail());
+
+        // user trying to update email
+        if(updatedUser != null && updatedUser.getId() != currentUser.getId()) {
+            System.out.println("REJECTED");
+            result.rejectValue("email", null, "There is already an account registered with that email address.");
+        }
+        if(userDto.getFirstName().isEmpty()) {
+            result.rejectValue("firstName", null, "First name cannot be empty");
+        }
+        if(userDto.getLastName().isEmpty()) {
+            result.rejectValue("lastName", null, "Last name cannot be empty");
+        }
+        if(userDto.getEmail().isEmpty()) {
+            result.rejectValue("email", null, "Email cannot be empty");
+        }
+        // if(result.hasErrors()) {
+  
+        //     model.addAttribute("user", currentUser);
+        //     model.addAttribute("userDto", userDto);
+        //     return "user-profile";
+        // }
+        userDto.setPassword(currentUser.getPassword());
+        userDto.setRecipes(currentUser.getRecipes());
+        userService.updateUser(userDto);
+
+        return "redirect:/user/profile";
+    }
+
     @GetMapping("/users")
     public String users(Model model, Principal principal) {
         List<UserDto> users = userService.findAllUsers();
@@ -100,6 +137,24 @@ public class AuthController {
         model.addAttribute("user", currentUser);
         model.addAttribute("optionsDto", optionsDto);
         return  "user";
+    }
+
+    @GetMapping("/user/profile")
+    public String userProfileForm(Model model, Principal principal) {
+        User currentUser = getPrincipal(principal);
+        UserDto userDto = new UserDto();
+        userDto.setFirstName(currentUser.getFirstName());
+        userDto.setLastName(currentUser.getLastName());
+        userDto.setEmail(currentUser.getEmail());
+        userDto.setId(currentUser.getId());
+        userDto.setRecipes(currentUser.getRecipes());
+
+        model.addAttribute("user", currentUser);
+        model.addAttribute("userDto", userDto);
+
+        return "user-profile";
+    
+
     }
 
     // @GetMapping("/recipes")
