@@ -68,11 +68,13 @@ public class ChatGPTController {
                         + "recipe should have name, directions, "
                         + "and ingredients and return it in json with name in string, "
                         + "ingredients in array, and directions in array. "
+                        + "if directions is in a single string, split it up into an array. "
                         + "Only provide a  RFC8259 compliant JSON response in the "
                         + "following format: "
                         + "{\"name\":\"name of recipe, cannot be null\", "
-                        + "\"ingredients\": [\"array of ingredients, cannot be null\"], "
-                        + "\"directions\":[\"array of directions, cannot be null\"]} "
+                        + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
+                        + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
+                        + "Must user proper brackets and include close marker } for json object."
                         + "The JSON response:";
         
                         String jsonString = getResponseJsonString(prompt);
@@ -88,6 +90,7 @@ public class ChatGPTController {
             recipe = mapper.readValue(jsonString, RecipeDto.class);
         }
         catch(Exception e){
+            
             System.out.println(e.getMessage());
         }
 
@@ -109,11 +112,13 @@ public class ChatGPTController {
                         + "Recipe should have name, directions, "
                         + "and ingredients and return it in json with name in string, "
                         + "ingredients in array, and directions in array. "
+                        + "if directions is in a single string, split it up into an array. "
                         + "Only provide a  RFC8259 compliant JSON response in the "
                         + "following format: "
                         + "{\"name\":\"name of recipe, cannot be null\", "
-                        + "\"ingredients\": [\"array of ingredients, cannot be null\"], "
-                        + "\"directions\":[\"array of directions, cannot be null\"]} "
+                        + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
+                        + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
+                        + "Must user proper brackets and include close marker } for json object."
                         + "The JSON response:";
         
                         String jsonString = getResponseJsonString(prompt);
@@ -154,11 +159,13 @@ public class ChatGPTController {
                         + "recipe should have name, directions, "
                         + "and ingredients and return it in json with name in string, "
                         + "ingredients in array, and directions in array. "
+                        + "if directions is in a single string, split it up into an array. "
                         + "Only provide a  RFC8259 compliant JSON response in the "
                         + "following format: "
                         + "{\"name\":\"name of recipe, cannot be null\", "
-                        + "\"ingredients\": [\"array of ingredients, cannot be null\"], "
-                        + "\"directions\":[\"array of directions, cannot be null\"]} "
+                        + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
+                        + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
+                        + "Must user proper brackets and include close marker } for json object."
                         + "The JSON response:";
        
 
@@ -194,11 +201,13 @@ public class ChatGPTController {
         .model("text-davinci-003")
         .temperature(1.0)
         .echo(false)
-        .maxTokens(350)
+        .maxTokens(500)
         .build();
 
         String jsonString = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
-        jsonString = jsonString.replaceAll("[\\n\\t]", "");
+        jsonString = jsonString.replaceAll("[\\n\\t]", " ");
+        System.out.println("---------------------");
+        System.out.println("jsonString: " + jsonString);
 
         return jsonString;
     }

@@ -10,12 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import com.mingcapstone.quickmealplanner.dto.OptionsDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.User;
-import com.mingcapstone.quickmealplanner.security.CustomUserDetailsService;
 import com.mingcapstone.quickmealplanner.service.UserService;
 
 import jakarta.validation.Valid;
