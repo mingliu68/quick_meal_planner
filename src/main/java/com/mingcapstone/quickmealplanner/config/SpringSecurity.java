@@ -17,56 +17,50 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-@EnableWebSecurity  
+@EnableWebSecurity
 public class SpringSecurity {
-    
 
-    @Autowired  
+    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Bean 
+    @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     // @Bean
     // public UserDetailsManager userDetailsManager (DataSource dataSource) {
-    //     return new JdbcUserDetailsManager(dataSource);
+    // return new JdbcUserDetailsManager(dataSource);
     // }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-            .authorizeHttpRequests((authorize) -> 
-                authorize.requestMatchers("/register/**").permitAll()
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/register/**").permitAll()
                         .requestMatchers("/index").permitAll()
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         // .requestMatchers("/users").hasRole("USER")
-                        .anyRequest().authenticated()
-                ).formLogin(
-                    form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/user")
-                        .permitAll()   
-                ).logout(
-                    logout -> logout    
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .permitAll()
-                ).httpBasic();
-                return http.build();
+                        .anyRequest().authenticated())
+                .formLogin(
+                        form -> form
+                                .loginPage("/login")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/user")
+                                .permitAll())
+                .logout(
+                        logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .permitAll())
+                .httpBasic();
+        return http.build();
     }
 
-
-    @Autowired  
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder());
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
-
-
-
 
 }

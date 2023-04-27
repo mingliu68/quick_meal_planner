@@ -61,32 +61,31 @@
 
         <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper">
           <div class="row">
-            <div class="col-lg-4 mb-3 d-flex align-items-stretch">              
+            <div class="col-lg-4 mb-3 d-flex align-items-stretch">
               <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                   <h4 class="my0 fw-normal">Quick Search</h4>
                 </div>
                 <div class="card-body">
-                   <h2>In a hurry?</h2>
-                   <p>Try a quick search to find a 30-minute recipe. </p>
-                   <a
+                  <h2>In a hurry?</h2>
+                  <p>Try a quick search to find a 30-minute recipe.</p>
+                  <a
                     th:href="@{/user/findRecipe}"
                     type="button"
                     class="botton_align_button btn btn-lg btn-primary"
-                    >
-                      Find Recipe
-                    </a>
+                  >
+                    Find Recipe
+                  </a>
                 </div>
-               
               </div>
             </div>
-            <div class="col-lg-4 mb-3 d-flex align-items-stretch">              
+            <div class="col-lg-4 mb-3 d-flex align-items-stretch">
               <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                   <h4 class="my0 fw-normal">Search by Ingredients</h4>
                 </div>
                 <div class="card-body">
-                    <form
+                  <form
                     method="post"
                     role="form"
                     th:action="@{/user/findRecipeWithOptions}"
@@ -124,64 +123,69 @@
                       />
                     </div>
                     <div class="form-group mb-3">
-                      <button type="submit" class="botton_align_button btn btn-lg btn-primary"
+                      <button
+                        type="submit"
+                        class="botton_align_button btn btn-lg btn-primary"
                       >
                         Find Recipe
                       </button>
                     </div>
                   </form>
                 </div>
-                
               </div>
             </div>
-            <div class="col-lg-4 mb-3 d-flex align-items-stretch">              
+            <div class="col-lg-4 mb-3 d-flex align-items-stretch">
               <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                   <h4 class="my0 fw-normal">Search by Diet</h4>
                 </div>
                 <div class="card-body">
-                <form
-                  method="post"
-                  role="form"
-                  th:action="@{/user/findRecipeWithRestriction}"
-                  th:object="${optionsDto}"
-                  class="form-horizontal"
-                >
-                <div class="form-group mb-3">
-                  <select
-                    th:field="*{restriction}"
-                    class="form-select form-select-lg"
+                  <form
+                    method="post"
+                    role="form"
+                    th:action="@{/user/findRecipeWithRestriction}"
+                    th:object="${optionsDto}"
+                    class="form-horizontal"
                   >
-                    <option th:value="0">Select Dietary Restriction</option>
-                    <option th:value="keto" th:text="Keto"></option>
-                    <option th:value="paleo" th:text="Paleo"></option>
-                    <option
-                      th:value="gluten_free"
-                      th:text="'Gluten Free'"
-                    ></option>
-                    <option th:value="low_carb" th:text="'Low Carb'"></option>
-                    <option
-                      th:value="pescetarian"
-                      th:text="Pescetarian"
-                    ></option>
-                    <option th:value="vegetarian" th:text="Vegetarian"></option>
-                    <option th:value="vegan" th:text="Vegan"></option>
-                  </select>
+                    <div class="form-group mb-3">
+                      <select
+                        th:field="*{restriction}"
+                        class="form-select form-select-lg"
+                      >
+                        <option th:value="0">Select Dietary Restriction</option>
+                        <option th:value="keto" th:text="Keto"></option>
+                        <option th:value="paleo" th:text="Paleo"></option>
+                        <option
+                          th:value="gluten_free"
+                          th:text="'Gluten Free'"
+                        ></option>
+                        <option
+                          th:value="low_carb"
+                          th:text="'Low Carb'"
+                        ></option>
+                        <option
+                          th:value="pescetarian"
+                          th:text="Pescetarian"
+                        ></option>
+                        <option
+                          th:value="vegetarian"
+                          th:text="Vegetarian"
+                        ></option>
+                        <option th:value="vegan" th:text="Vegan"></option>
+                      </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                      <button
+                        type="submit"
+                        class="botton_align_button btn btn-lg btn-primary"
+                      >
+                        Find Recipe
+                      </button>
+                    </div>
+                  </form>
                 </div>
-
-                <div class="form-group mb-3">
-                  <button type="submit" class="botton_align_button btn btn-lg btn-primary">
-                  Find Recipe
-                  </button>
-                </div>
-              </form>
-
-                </div>
-
-                
-
               </div>
-              
             </div>
           </div>
         </div>
@@ -190,6 +194,6 @@
     <footer th:replace="~{fragments/general :: footer}">
       <p>Testing Footer</p>
     </footer>
-    <script src="/js/search-handler.js" type="application/javascript"></script>
+    <!-- <script src="/js/search-handler.js" type="application/javascript"></script> -->
   </body>
 </html>

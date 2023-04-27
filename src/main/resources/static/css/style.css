@@ -18,8 +18,8 @@ body {
     padding: 0;
 }
 .dashboard-nav-container {
-    border-right: 1px solid #eee;
-    background-color: cornsilk;
+    border-right: 1px solid rgba(0,0,0,.125);
+    /* background-color: cornsilk; */
     padding: 0 ;
     height: 100%;
 }
@@ -30,14 +30,18 @@ body {
 }
 .dashboard-nav-container .nav-item a.nav-link {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid #eee;
+    /* border-bottom: 1px solid #eee; */
     color: #333;
+    border-radius: 10px;
 }
 
+.dashboard-nav-container .nav-item {
+    padding: 0.5rem 0.8rem;
+}
 .dashboard-nav-container .nav-item a.nav-link.active {
     background-color:#c6c6c6;
-    color: white;
-    padding: 1rem 1.5rem;
+    /* color: white; */
+    /* padding: 1rem 1.5rem; */
     /* border-left: 15px solid salmon;
     width: calc(100% + 15px); */
 }

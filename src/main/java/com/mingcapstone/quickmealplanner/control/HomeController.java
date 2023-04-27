@@ -9,10 +9,10 @@ import com.theokanning.openai.model.Model;
 
 @Controller
 public class HomeController {
-    
+
     @GetMapping("/")
     public String home(Model model, Principal principal) {
-        
+
         return principal == null ? "index" : "redirect:/user";
 
     }

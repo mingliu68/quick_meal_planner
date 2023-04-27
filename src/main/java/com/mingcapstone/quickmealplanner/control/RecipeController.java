@@ -15,7 +15,6 @@ import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
 import com.mingcapstone.quickmealplanner.service.UserService;
 
-
 @Controller
 @RequestMapping("/user/recipes")
 public class RecipeController {
@@ -28,22 +27,21 @@ public class RecipeController {
         this.recipeService = recipeService;
         this.userService = userService;
     }
-    
+
     @GetMapping
     public String recipes(Model model, Principal principal) {
         User user = getLoggedInUser(principal);
         model.addAttribute("user", user);
-        
 
         return "recipes";
     }
 
-    @GetMapping("/recipe") 
+    @GetMapping("/recipe")
     public String recipe(@RequestParam("recipeId") Long recipeId, Model model, Principal principal) {
         User user = getLoggedInUser(principal);
         Recipe recipe = recipeService.findById(recipeId);
         Boolean savedByUser = user.getRecipes().contains(recipe);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("recipe", recipe);
         model.addAttribute("savedByUser", savedByUser);
@@ -61,11 +59,9 @@ public class RecipeController {
         return "other-recipes";
     }
 
-
-
     @GetMapping("/removeRecipeFromList")
     public String removeRecipeFromList(@RequestParam("recipeId") Long recipeId, Principal principal) {
-        
+
         User user = getLoggedInUser(principal);
         userService.removeRecipeFromList(recipeId, user);
         return "redirect:/user/recipes";
@@ -80,5 +76,5 @@ public class RecipeController {
 
     private User getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
-    } 
+    }
 }

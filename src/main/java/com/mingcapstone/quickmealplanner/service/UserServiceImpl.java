@@ -24,14 +24,14 @@ import com.mingcapstone.quickmealplanner.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
-    
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
-    @Autowired 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     RecipeRepository recipeRepository;
 
     @Override
-    public User saveUser(UserDto userDto){
+    public User saveUser(UserDto userDto) {
         User user = new User();
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
@@ -51,17 +51,17 @@ public class UserServiceImpl implements UserService {
         List<Recipe> recipes = new ArrayList<>();
         user.setRecipes(recipes);
         Role role = roleRepository.findByName("USER");
-        if(role == null){
+        if (role == null) {
             role = checkRoleExist();
         }
         user.setRoles(Arrays.asList(role));
         // User dbUser = userRepository.save(user);
-        
+
         return userRepository.save(user);
     }
-    
+
     @Override
-    public User updateUser(UserDto userDto){
+    public User updateUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
         user.setFirstName(userDto.getFirstName());
@@ -71,25 +71,24 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userDto.getPassword());
         user.setRecipes(userDto.getRecipes());
         Role role = roleRepository.findByName("USER");
-        if(role == null){
+        if (role == null) {
             role = checkRoleExist();
         }
         user.setRoles(Arrays.asList(role));
-        
+
         return userRepository.saveAndFlush(user);
     }
 
-    
     @Override
-    public User findUserByEmail(String email){
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
-    }   
+    }
 
     @Override
     public User findUserById(Long id) {
         Optional<User> result = userRepository.findById(id);
         User user = null;
-        if(result.isPresent()) {
+        if (result.isPresent()) {
             user = result.get();
         } else {
             throw new RuntimeException("User not found");
@@ -98,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAllUsers(){
+    public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
                 .map((user) -> mapToUserDto(user))
@@ -116,7 +115,7 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
-    private Role checkRoleExist(){
+    private Role checkRoleExist() {
         Role role = new Role();
         role.setName("USER");
         return roleRepository.save(role);
@@ -124,10 +123,10 @@ public class UserServiceImpl implements UserService {
 
     // adding recipe to user recipes list and update recipe saved count
     @Override
-    public User addRecipeToList(Long recipeId, User user){
+    public User addRecipeToList(Long recipeId, User user) {
         Optional<Recipe> result = recipeRepository.findById(recipeId);
         Recipe recipe = new Recipe();
-        if(result.isPresent()){
+        if (result.isPresent()) {
             recipe = result.get();
             // recipe.setSaved(1);
         } else {
@@ -142,7 +141,7 @@ public class UserServiceImpl implements UserService {
     public User removeRecipeFromList(Long recipeId, User user) {
         Optional<Recipe> result = recipeRepository.findById(recipeId);
         Recipe recipe = new Recipe();
-        if(result.isPresent()){
+        if (result.isPresent()) {
             recipe = result.get();
             // recipe.setSaved(-1);
         } else {
@@ -158,4 +157,3 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 }
-
