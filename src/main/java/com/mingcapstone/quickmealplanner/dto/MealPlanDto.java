@@ -1,37 +1,29 @@
-package com.mingcapstone.quickmealplanner.entity;
+package com.mingcapstone.quickmealplanner.dto;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
+import com.mingcapstone.quickmealplanner.entity.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class MealPlanDto {
 
-@Getter 
-@Setter 
-@NoArgsConstructor  
-@AllArgsConstructor 
-@Entity
-@Table(name="meal_plans")
-public class MealPlan {
-    
-    @Id
     private String id;
 
-    @OneToMany(mappedBy="mealPlan")
     private List<MealPlanItem> mealPlanItems;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
     private User user;
 
-    @Column(name="next")
     private String next;
 
-    @Column(name="prev")
     private String prev;
 
     public void addMealPlanItem(MealPlanItem mealPlanItem) {
