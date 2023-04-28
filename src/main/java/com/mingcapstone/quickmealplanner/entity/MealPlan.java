@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter 
 @Setter 
 // @NoArgsConstructor  
-@AllArgsConstructor 
+// @AllArgsConstructor 
 @Entity
 @Table(name="meal_plans")
 public class MealPlan {
@@ -71,7 +71,7 @@ public class MealPlan {
         // reset back to original
         calendarStartDate.add(Calendar.DATE, -7);
 
-        // set menuitems
+        // set menu items
         setMealPlanMap();
     }
 

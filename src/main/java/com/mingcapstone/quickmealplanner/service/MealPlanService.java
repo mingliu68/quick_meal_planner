@@ -5,19 +5,23 @@ import java.util.List;
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
+import com.mingcapstone.quickmealplanner.entity.Recipe;
 
 public interface MealPlanService {
-    MealPlan saveMealPlan(MealPlanDto mealPlanDto);
 
-    MealPlan findMealPlanById(String id);
+    MealPlan findMealPlanById(Long id);
+
+    MealPlan findMealPlanByStartDate(String startDate);
+
+    MealPlan saveMealPlan(MealPlanDto mealPlanDto);
 
     List<MealPlan> findAllMealPlans();
 
-    void deleteMealPlan(String id);
+    void deleteMealPlan(Long id);
 
     MealPlan updateMealPlan(MealPlanDto mealPlanDto);
     
-    MealPlan addMealPlanItem(MealPlanItem mealPlanItem);
+    MealPlan addMealPlanItem(String mealKey, Recipe recipe);
     
-    MealPlan removeMealPlanItem(MealPlanItem mealPlanItem);
+    MealPlan removeMealPlanItem(String mealKey);
 }
