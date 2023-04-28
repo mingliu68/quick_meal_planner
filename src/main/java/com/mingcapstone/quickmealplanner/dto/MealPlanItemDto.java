@@ -14,10 +14,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MealPlanItemDto {
 
-    private String id;
+    // private String id;
 
-    private MealPlan mealPlan;
+    // private MealPlan mealPlan;
 
-    private Recipe recipe;
+    // private Recipe recipe;
 
 }

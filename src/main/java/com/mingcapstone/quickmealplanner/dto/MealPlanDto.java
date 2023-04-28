@@ -16,21 +16,21 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MealPlanDto {
 
-    private String id;
+    // private String id;
 
-    private List<MealPlanItem> mealPlanItems;
+    // private List<MealPlanItem> mealPlanItems;
 
-    private User user;
+    // private User user;
 
-    private String next;
+    // private String next;
 
-    private String prev;
+    // private String prev;
 
-    public void addMealPlanItem(MealPlanItem mealPlanItem) {
-        mealPlanItems.add(mealPlanItem);
-    }
+    // public void addMealPlanItem(MealPlanItem mealPlanItem) {
+    //     mealPlanItems.add(mealPlanItem);
+    // }
 
-    public void removeMealPlanItem(MealPlanItem mealPlanItem) {
-        mealPlanItems.remove(mealPlanItem);
-    }
+    // public void removeMealPlanItem(MealPlanItem mealPlanItem) {
+    //     mealPlanItems.remove(mealPlanItem);
+    // }
 }
