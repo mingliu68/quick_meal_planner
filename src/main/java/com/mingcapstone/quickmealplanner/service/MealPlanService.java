@@ -7,17 +7,17 @@ import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 
 public interface MealPlanService {
-    MealPlan saveMealPlan(MealPlanDto mealPlanDto);
+    // MealPlan saveMealPlan(MealPlanDto mealPlanDto);
 
-    MealPlan findMealPlanById(String id);
+    // MealPlan findMealPlanById(String id);
 
-    List<MealPlan> findAllMealPlans();
+    // List<MealPlan> findAllMealPlans();
 
-    void deleteMealPlan(String id);
+    // void deleteMealPlan(String id);
 
-    MealPlan updateMealPlan(MealPlanDto mealPlanDto);
+    // MealPlan updateMealPlan(MealPlanDto mealPlanDto);
     
-    MealPlan addMealPlanItem(MealPlanItem mealPlanItem);
+    // MealPlan addMealPlanItem(MealPlanItem mealPlanItem);
     
-    MealPlan removeMealPlanItem(MealPlanItem mealPlanItem);
+    // MealPlan removeMealPlanItem(MealPlanItem mealPlanItem);
 }

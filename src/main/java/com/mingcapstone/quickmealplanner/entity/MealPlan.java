@@ -12,33 +12,33 @@ import java.util.Set;
 
 @Getter 
 @Setter 
-@NoArgsConstructor  
-@AllArgsConstructor 
+// @NoArgsConstructor  
+// @AllArgsConstructor 
 @Entity
 @Table(name="meal_plans")
 public class MealPlan {
     
-    @Id
-    private String id;
+    // @Id
+    // private String id;
 
-    @OneToMany(mappedBy="mealPlan")
-    private List<MealPlanItem> mealPlanItems;
+    // @OneToMany(mappedBy="mealPlan")
+    // private List<MealPlanItem> mealPlanItems;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+    // @ManyToOne
+    // @JoinColumn(name="user_id")
+    // private User user;
 
-    @Column(name="next")
-    private String next;
+    // @Column(name="next")
+    // private String next;
 
-    @Column(name="prev")
-    private String prev;
+    // @Column(name="prev")
+    // private String prev;
 
-    public void addMealPlanItem(MealPlanItem mealPlanItem) {
-        mealPlanItems.add(mealPlanItem);
-    }
+    // public void addMealPlanItem(MealPlanItem mealPlanItem) {
+    //     mealPlanItems.add(mealPlanItem);
+    // }
 
-    public void removeMealPlanItem(MealPlanItem mealPlanItem) {
-        mealPlanItems.remove(mealPlanItem);
-    }
+    // public void removeMealPlanItem(MealPlanItem mealPlanItem) {
+    //     mealPlanItems.remove(mealPlanItem);
+    // }
 }
