@@ -20,7 +20,8 @@ body {
 .dashboard-nav-container {
     border-right: 1px solid rgba(0,0,0,.125);
     /* background-color: cornsilk; */
-    padding: 0 ;
+    /* padding: 0 ; */
+    padding: 2.5rem 0 0 0;
     height: 100%;
 }
 
