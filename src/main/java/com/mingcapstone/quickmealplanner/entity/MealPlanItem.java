@@ -12,21 +12,21 @@ import java.util.List;
 
 @Getter 
 @Setter 
-// @NoArgsConstructor  
-// @AllArgsConstructor 
+@NoArgsConstructor  
+@AllArgsConstructor 
 @Entity
 @Table(name="meal_plan_items")
 public class MealPlanItem {
     
-    // @Id
-    // private String id;
+    @Id
+    private String id;
 
-    // @ManyToOne
-    // @JoinColumn(name="meal_plan_id")
-    // private MealPlan mealPlan;
+    @ManyToOne
+    @JoinColumn(name="meal_plan_id")
+    private MealPlan mealPlan;
 
-    // @ManyToOne
-    // @JoinColumn(name="recipe_id")
-    // private Recipe recipe;
+    @ManyToOne
+    @JoinColumn(name="recipe_id")
+    private Recipe recipe;
 
 }

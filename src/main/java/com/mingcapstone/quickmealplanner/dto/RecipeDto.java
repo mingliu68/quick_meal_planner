@@ -25,6 +25,6 @@ public class RecipeDto {
     @NotEmpty 
     private List<String> directions;
 
-    private int saved;
+    // private int saved;
 
 }
