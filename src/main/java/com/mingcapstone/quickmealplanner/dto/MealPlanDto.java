@@ -3,8 +3,8 @@ package com.mingcapstone.quickmealplanner.dto;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
 
@@ -32,11 +32,11 @@ public class MealPlanDto {
 
     private String nextStartDate;
 
-    private HashMap<String, Recipe> menuItems;
-
+    // private Map<String, Long> menuItems;;
+    private Map<String, Recipe> menuItems = new HashMap<String, Recipe>();
     
     public MealPlanDto() {
-        setMealPlanDtoMap();
+        // setMealPlanDtoMap();
     }
 
     public MealPlanDto(User user, Calendar calendarStartDate) {
@@ -62,13 +62,23 @@ public class MealPlanDto {
         // reset back to original
         calendarStartDate.add(Calendar.DATE, -7);
 
-        // set menu items
-        setMealPlanDtoMap();
+        // // set menu items
+        menuItems = setMealPlanDtoMap();
+
+    }
+
+    public MealPlanDto(User user, Calendar calendarStartDate, String startDate, String prevStartDate, String nextStartDate){
+        this.user = user;
+        this.calendarStartDate = calendarStartDate;
+        this.startDate = startDate;
+        this.prevStartDate = prevStartDate;
+        this.nextStartDate = nextStartDate;
+        menuItems = setMealPlanDtoMap();
     }
     
     // key format "1L" => monday lunch
-    public void setMealPlanDtoMap() {
-        menuItems = new HashMap<>();
+    public Map<String, Recipe> setMealPlanDtoMap() {
+        Map<String, Recipe> menuItems = new HashMap<String, Recipe>();
         String[] meals = {"L","D"};
         for(int i = 1; i <= 7; i++) {
             for(String m : meals) {
@@ -76,7 +86,17 @@ public class MealPlanDto {
                 menuItems.put(key, null);
             }
         }
+       return menuItems;
     }
+
+    // public void addMenuItem(String key, Long recipeId) {
+    //     menuItems.put(key, recipeId);
+    // }
+
+    // public void removeMenuItem(String key) {
+    //     menuItems.put(key, null);
+    // }
+
 
     public void addMenuItem(String key, Recipe recipe) {
         menuItems.put(key, recipe);
@@ -87,21 +107,5 @@ public class MealPlanDto {
     }
 
 
-    // private String id;
 
-    // private List<MealPlanItem> mealPlanItems;
-
-    // private User user;
-
-    // private String next;
-
-    // private String prev;
-
-    // public void addMealPlanItem(MealPlanItem mealPlanItem) {
-    //     mealPlanItems.add(mealPlanItem);
-    // }
-
-    // public void removeMealPlanItem(MealPlanItem mealPlanItem) {
-    //     mealPlanItems.remove(mealPlanItem);
-    // }
 }

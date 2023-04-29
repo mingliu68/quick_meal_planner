@@ -61,6 +61,15 @@
 
         <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper">
           <div class="row">
+            <p th:text="${user.firstName}" />
+            <p th:text="${mealPlanDto.startDate}" />
+            <p th:text="${mealPlanDto.prevStartDate}" />
+            <p th:text="${mealPlanDto.nextStartDate}" />
+            <div th:each="item: ${mealPlanDto.menuItems}">
+              <p th:text="${item.key}" />
+              <p th:text="${item.value}" />
+            </div>
+
           </div>
         </div>
       </div>

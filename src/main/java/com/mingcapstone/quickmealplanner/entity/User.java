@@ -33,12 +33,14 @@ public class User {
     @Column(nullable=false)
     private String password;
 
+    
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
         name="users_roles",
         joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
         inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")})
     private List<Role> roles = new ArrayList<>();
+
 
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
@@ -47,10 +49,13 @@ public class User {
         inverseJoinColumns={@JoinColumn(name="recipe_id", referencedColumnName="id")})
     private List<Recipe> recipes = new ArrayList<>();
 
+
     @OneToMany(mappedBy="user")
-    private List<MealPlan> mealPlan;
+    private List<MealPlan> mealPlans = new ArrayList<>();
 
     
+
+
     public void addRecipe(Recipe recipe) {
         recipes.add(recipe);
     }
@@ -59,6 +64,11 @@ public class User {
         recipes.remove(recipe);
     }
 
-    
+    public void addMealPlan(MealPlan mealPlan) {
+        mealPlans.add(mealPlan);
+    }
 
+    public void removeMealPlan(MealPlan mealPlan) {
+        mealPlans.remove(mealPlan);
+    }
 }

@@ -1,27 +1,28 @@
 package com.mingcapstone.quickmealplanner.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
-import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
+import com.mingcapstone.quickmealplanner.entity.User;
 
 public interface MealPlanService {
 
-    MealPlan findMealPlanById(Long id);
+    // MealPlan findMealPlanById(Long id);
 
-    MealPlan findMealPlanByStartDate(String startDate);
+    MealPlanDto findMealPlanByStartDateByUser(User user, String startDate, Calendar calendar);
 
-    MealPlan saveMealPlan(MealPlanDto mealPlanDto);
+    // MealPlan saveMealPlan(MealPlanDto mealPlanDto);
 
-    List<MealPlan> findAllMealPlans();
+    // List<MealPlan> findAllMealPlans();
 
-    void deleteMealPlan(Long id);
+    // void deleteMealPlan(Long id);
 
-    MealPlan updateMealPlan(MealPlanDto mealPlanDto);
+    // MealPlan updateMealPlan(MealPlanDto mealPlanDto);
     
-    MealPlan addMealPlanItem(String mealKey, Recipe recipe);
+    // MealPlan addMealPlanItem(String mealKey, Recipe recipe);
     
-    MealPlan removeMealPlanItem(String mealKey);
+    // MealPlan removeMealPlanItem(String mealKey);
 }

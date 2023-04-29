@@ -2,6 +2,7 @@ package com.mingcapstone.quickmealplanner.dto;
 
 import java.util.List;
 
+import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
 
@@ -33,25 +34,12 @@ public class UserDto
     @NotEmpty(message = "Password should not be empty")
     private String password;
     
-    private List<Recipe> recipes;   
+    private List<Recipe> recipes; 
+      
+    private List<MealPlan> mealPlans;
 
 
-    // public UserDto(User user) {
-    //     if(user.getId() != null) {
-    //         this.id = user.getId();
-    //     }
-    //     if(user.getName() != null){
-    //         String[] str = user.getName().split(" ");
-    //         firstName = str[0];
-    //         lastName = str[1];
-    //     }
-    //     if(user.getEmail() != null) {
-    //         this.email = user.getEmail();
-    //     }
-    //     if(user.getPassword() != null) {
-    //         this.password = user.getPassword();
-    //     }
-    // }
+
 
     public void addRecipe(Recipe recipe) {
         recipes.add(recipe);
@@ -59,5 +47,13 @@ public class UserDto
 
     public void removeRecipe(Recipe recipe) {
         recipes.remove(recipe);
+    }
+
+    public void addMealPlan(MealPlan mealPlan) {
+        mealPlans.add(mealPlan);
+    }
+
+    public void removeMealPlan(MealPlan mealPlan) {
+        mealPlans.remove(mealPlan);
     }
 }
