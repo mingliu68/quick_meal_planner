@@ -48,7 +48,9 @@ public class User {
     private List<Recipe> recipes = new ArrayList<>();
 
     @OneToMany(mappedBy="user")
-    private List<MealPlan> mealPlan;
+    private List<MealPlan> mealPlans = new ArrayList<>();
+
+    
 
     
     public void addRecipe(Recipe recipe) {
@@ -59,6 +61,12 @@ public class User {
         recipes.remove(recipe);
     }
 
-    
+    public void addMealPlan(MealPlan mealPlan) {
+        mealPlans.add(mealPlan);
+    }
+
+    public void removeMealPlan(MealPlan mealPlan) {
+        mealPlans.remove(mealPlan);
+    }
 
 }

@@ -1,7 +1,9 @@
 package com.mingcapstone.quickmealplanner.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 import com.mingcapstone.quickmealplanner.entity.User;
 
@@ -16,15 +18,21 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MealPlanDto {
 
-    private String id;
-
-    private List<MealPlanItem> mealPlanItems;
-
+    private Long id;
+    
     private User user;
+    
+    private MealPlan next;
 
-    private String next;
+    private MealPlan prev;
 
-    private String prev;
+    private String startDate;
+
+    private List<MealPlanItem> mealPlanItems = new ArrayList<>();
+
+    
+
+    
 
     public void addMealPlanItem(MealPlanItem mealPlanItem) {
         mealPlanItems.add(mealPlanItem);

@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter 
 @Setter 
@@ -19,20 +18,28 @@ import java.util.Set;
 public class MealPlan {
     
     @Id
-    private String id;
-
-    @OneToMany(mappedBy="mealPlan")
-    private List<MealPlanItem> mealPlanItems;
-
+    private Long id;
+    
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(name="next")
-    private String next;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="next")
+    private MealPlan next;
 
+    @OneToOne(cascade = CascadeType.ALL)
     @Column(name="prev")
-    private String prev;
+    private MealPlan prev;
+    
+    @Column(name="start_date")
+    private String startDate;
+
+    @OneToMany(mappedBy="mealPlan")
+    private List<MealPlanItem> mealPlanItems = new ArrayList<>();
+
+
+
 
     public void addMealPlanItem(MealPlanItem mealPlanItem) {
         mealPlanItems.add(mealPlanItem);
