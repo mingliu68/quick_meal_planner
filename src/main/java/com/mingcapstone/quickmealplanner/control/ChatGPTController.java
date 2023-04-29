@@ -38,6 +38,18 @@ public class ChatGPTController {
 
     private RecipeService recipeService;
 
+    private String basePromptString = "recipe should have name, directions, "
+                                    + "and ingredients and return it in json with name in string, "
+                                    + "ingredients in array, and directions in array. "
+                                    + "if directions is in a single string, split it up into an array. "
+                                    + "Only provide a  RFC8259 compliant JSON response in the "
+                                    + "following format: "
+                                    + "{\"name\":\"name of recipe, cannot be null\", "
+                                    + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
+                                    + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
+                                    + "Must user proper brackets and include close marker } for json object."
+                                    + "The JSON response:";
+
     @Autowired
     public ChatGPTController(UserService userService, RecipeService recipeService) {
         this.userService = userService;
@@ -63,17 +75,18 @@ public class ChatGPTController {
                 + ", " + optionsDto.getIngredient3()
                 + "if any of the given ingredients are improper or not part of an actual food group, "
                 + "or is a domesticated animal, omit the ingredient in search."
-                + "recipe should have name, directions, "
-                + "and ingredients and return it in json with name in string, "
-                + "ingredients in array, and directions in array. "
-                + "if directions is in a single string, split it up into an array. "
-                + "Only provide a  RFC8259 compliant JSON response in the "
-                + "following format: "
-                + "{\"name\":\"name of recipe, cannot be null\", "
-                + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
-                + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
-                + "Must user proper brackets and include close marker } for json object."
-                + "The JSON response:";
+                + basePromptString;
+                // + "recipe should have name, directions, "
+                // + "and ingredients and return it in json with name in string, "
+                // + "ingredients in array, and directions in array. "
+                // + "if directions is in a single string, split it up into an array. "
+                // + "Only provide a  RFC8259 compliant JSON response in the "
+                // + "following format: "
+                // + "{\"name\":\"name of recipe, cannot be null\", "
+                // + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
+                // + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
+                // + "Must user proper brackets and include close marker } for json object."
+                // + "The JSON response:";
 
         String jsonString = getResponseJsonString(prompt);
 
@@ -106,17 +119,19 @@ public class ChatGPTController {
 
         String prompt = "I need a quick meal recipe of the following dietary restriction "
                 + optionsDto.getRestriction() + ". "
-                + "Recipe should have name, directions, "
-                + "and ingredients and return it in json with name in string, "
-                + "ingredients in array, and directions in array. "
-                + "if directions is in a single string, split it up into an array. "
-                + "Only provide a  RFC8259 compliant JSON response in the "
-                + "following format: "
-                + "{\"name\":\"name of recipe, cannot be null\", "
-                + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
-                + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
-                + "Must user proper brackets and include close marker } for json object."
-                + "The JSON response:";
+                + basePromptString;
+
+                // + "Recipe should have name, directions, "
+                // + "and ingredients and return it in json with name in string, "
+                // + "ingredients in array, and directions in array. "
+                // + "if directions is in a single string, split it up into an array. "
+                // + "Only provide a  RFC8259 compliant JSON response in the "
+                // + "following format: "
+                // + "{\"name\":\"name of recipe, cannot be null\", "
+                // + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
+                // + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
+                // + "Must user proper brackets and include close marker } for json object."
+                // + "The JSON response:";
 
         String jsonString = getResponseJsonString(prompt);
 
@@ -150,17 +165,19 @@ public class ChatGPTController {
     public String findRecipe(Model model, Principal principal) {
 
         String prompt = "Give me a quick meal recipe in under 30 mins "
-                + "recipe should have name, directions, "
-                + "and ingredients and return it in json with name in string, "
-                + "ingredients in array, and directions in array. "
-                + "if directions is in a single string, split it up into an array. "
-                + "Only provide a  RFC8259 compliant JSON response in the "
-                + "following format: "
-                + "{\"name\":\"name of recipe, cannot be null\", "
-                + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
-                + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
-                + "Must user proper brackets and include close marker } for json object."
-                + "The JSON response:";
+                        + basePromptString;
+
+                // + "recipe should have name, directions, "
+                // + "and ingredients and return it in json with name in string, "
+                // + "ingredients in array, and directions in array. "
+                // + "if directions is in a single string, split it up into an array. "
+                // + "Only provide a  RFC8259 compliant JSON response in the "
+                // + "following format: "
+                // + "{\"name\":\"name of recipe, cannot be null\", "
+                // + "\"ingredients\": [\"ingredients in array, cannot be null, each ingredient must be enclosed with double quotes \"], "
+                // + "\"directions\":[\"directions in array, cannot be null, each direction must be enclosed with double quotes\"]} "
+                // + "Must user proper brackets and include close marker } for json object."
+                // + "The JSON response:";
 
         String jsonString = getResponseJsonString(prompt);
 
