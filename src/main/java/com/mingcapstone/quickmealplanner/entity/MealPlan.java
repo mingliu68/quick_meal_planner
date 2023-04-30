@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
 
 @Getter 
 @Setter 
@@ -19,20 +19,34 @@ import java.util.Set;
 public class MealPlan {
     
     @Id
-    private String id;
-
-    @OneToMany(mappedBy="mealPlan")
-    private List<MealPlanItem> mealPlanItems;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(name="next")
-    private String next;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="next")
+    private MealPlan next;
 
-    @Column(name="prev")
-    private String prev;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="prev")
+    private MealPlan prev;
+    
+    @Column(name="start_date")
+    private String startDate;
+
+    @OneToMany(mappedBy="mealPlan")
+    private List<MealPlanItem> mealPlanItems = new ArrayList<>();
+
+
+    
+    public MealPlan(User user, String startDate) {
+        this.user = user;
+        this.startDate = startDate;
+    }
+
 
     public void addMealPlanItem(MealPlanItem mealPlanItem) {
         mealPlanItems.add(mealPlanItem);

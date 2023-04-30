@@ -61,6 +61,30 @@
 
         <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper">
           <div class="row">
+            <div>
+              <p th:text="${user.firstName}" />
+              <p><span th:text = "${#lists.size(user.mealPlans)}" />Meal Plans Saved</p>
+              <p th:text="${mealPlan.id}" />
+              <p>Start Date: <span th:text="${mealPlan.startDate}" /></p>
+              <p>Next Start Date: <span th:text="${nextStartDate}"/></p>
+              <p>Previous Start Date: <span th:text="${prevStartDate}"/></p>
+
+            </div>
+              <a
+                    th:href="@{/user/mealplans(startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                  >
+                    Next Meal Plan
+              </a>
+              <a
+                    th:href="@{/user/mealplans(startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                  >
+                    Previous Meal Plan
+              </a>
+           
           </div>
         </div>
       </div>

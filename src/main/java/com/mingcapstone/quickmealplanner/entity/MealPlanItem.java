@@ -7,9 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter 
 @Setter 
 @NoArgsConstructor  
@@ -19,11 +16,15 @@ import java.util.List;
 public class MealPlanItem {
     
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="meal_plan_id")
     private MealPlan mealPlan;
+
+    @Column(name="meal_type")
+    private String mealType;
 
     @ManyToOne
     @JoinColumn(name="recipe_id")
