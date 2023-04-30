@@ -22,4 +22,9 @@ public class MealPlanItemDto {
 
     private Recipe recipe;
 
+    public MealPlanItemDto(MealPlan mealPlan, String mealType) {
+        this.mealPlan = mealPlan;
+        this.mealType = mealType;
+    }
+
 }

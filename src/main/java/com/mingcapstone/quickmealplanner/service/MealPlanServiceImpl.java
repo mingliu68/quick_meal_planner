@@ -1,5 +1,6 @@
 package com.mingcapstone.quickmealplanner.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -8,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
+import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 import com.mingcapstone.quickmealplanner.entity.User;
+import com.mingcapstone.quickmealplanner.repository.MealPlanItemRepository;
 import com.mingcapstone.quickmealplanner.repository.MealPlanRepository;
 import com.mingcapstone.quickmealplanner.repository.UserRepository;
 
@@ -18,12 +21,24 @@ import com.mingcapstone.quickmealplanner.repository.UserRepository;
 public class MealPlanServiceImpl implements MealPlanService {
     
     private MealPlanRepository mealPlanRepository;
+    private MealPlanItemService mealPlanItemService;
     private UserRepository userRepository;
 
+    private String[] mealTypes = {
+        "MONDAY_LUNCH", "MONDAY_DINNER", 
+        "TUESDAY_LUNCH", "TUESDAY_DINNER",
+        "WEDNESDAY_LUNCH", "WEDNESDAY_DINNER",
+        "THURSDAY_LUNCH", "THURSDAY_DINNER",
+        "FRIDAY_LUNCH", "FRIDAY_DINNER",
+        "SATURDAY_LUNCH", "SATURDAY_DINNER",
+        "SUNDAY_LUNCH", "SUNDAY_DINNER"
+    };
+
     @Autowired
-    public MealPlanServiceImpl(MealPlanRepository mealPlanRepository, UserRepository userRepository) {
+    public MealPlanServiceImpl(MealPlanRepository mealPlanRepository, UserRepository userRepository, MealPlanItemService mealPlanItemService) {
         this.mealPlanRepository = mealPlanRepository;
         this.userRepository = userRepository;
+        this.mealPlanItemService = mealPlanItemService;
     }
 
     @Override
@@ -111,7 +126,12 @@ public class MealPlanServiceImpl implements MealPlanService {
         mealPlanDto.setStartDate(mealPlan.getStartDate());
         mealPlanDto.setNext(mealPlan.getNext());
         mealPlanDto.setPrev(mealPlan.getPrev());
-        mealPlanDto.setMealPlanItems(mealPlan.getMealPlanItems());
+        List<MealPlanItemDto> itemDtos= new ArrayList<>();
+        // get 14 dtos for both emtpies and existing mealplanitems
+        for(String mealType : mealTypes) {
+            itemDtos.add(mealPlanItemService.findMealPlanItemByMealPlanAndMealType(mealPlan, mealType));
+        }
+        mealPlanDto.setMealPlanItemsDtos(itemDtos);
         return mealPlanDto;
     } 
     

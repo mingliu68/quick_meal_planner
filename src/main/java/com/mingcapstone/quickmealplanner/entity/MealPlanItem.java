@@ -30,4 +30,9 @@ public class MealPlanItem {
     @JoinColumn(name="recipe_id")
     private Recipe recipe;
 
+    public MealPlanItem(MealPlan mealPlan, String mealType) {
+        this.mealPlan = mealPlan;
+        this.mealType = mealType;
+    }
+
 }

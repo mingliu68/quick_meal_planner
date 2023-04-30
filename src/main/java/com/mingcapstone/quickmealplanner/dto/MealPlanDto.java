@@ -28,9 +28,9 @@ public class MealPlanDto {
 
     private String startDate;
 
-    private List<MealPlanItem> mealPlanItems = new ArrayList<>();
+    private List<MealPlanItemDto> mealPlanItemsDtos = new ArrayList<>();
 
-    
+    private List<MealPlanItem> mealPlanItems = new ArrayList<>();
 
     
 
@@ -40,5 +40,13 @@ public class MealPlanDto {
 
     public void removeMealPlanItem(MealPlanItem mealPlanItem) {
         mealPlanItems.remove(mealPlanItem);
+    }
+
+    public void addMealPlanItemDto(MealPlanItemDto mealPlanItemDto) {
+        mealPlanItemsDtos.add(mealPlanItemDto);
+    }
+
+    public void removeMealPlanItemDto(MealPlanItemDto mealPlanItemDto) {
+        mealPlanItemsDtos.remove(mealPlanItemDto);
     }
 }

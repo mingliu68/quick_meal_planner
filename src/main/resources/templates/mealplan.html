@@ -68,7 +68,16 @@
               <p>Start Date: <span th:text="${mealPlan.startDate}" /></p>
               <p>Next Start Date: <span th:text="${nextStartDate}"/></p>
               <p>Previous Start Date: <span th:text="${prevStartDate}"/></p>
-
+              <table>
+                <tr>
+                  <th>Meal Type</th>
+                  <th>Recipe</th>
+                </tr>
+                <tr th:each="item: ${mealPlan.mealPlanItemsDtos}">
+                  <td th:text="${item.mealType}" />
+                  <td th:text="${item.recipe?.name}" />
+                </tr>
+              </table>
             </div>
               <a
                     th:href="@{/user/mealplans(startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"

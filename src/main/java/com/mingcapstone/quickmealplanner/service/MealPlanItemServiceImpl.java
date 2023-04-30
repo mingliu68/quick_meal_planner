@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
+import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 import com.mingcapstone.quickmealplanner.repository.MealPlanItemRepository;
 import com.mingcapstone.quickmealplanner.repository.MealPlanRepository;
@@ -42,6 +43,28 @@ public class MealPlanItemServiceImpl implements MealPlanItemService {
 
         return mealPlanItem;
 
+    }
+
+    @Override
+    public MealPlanItemDto findMealPlanItemByMealPlanAndMealType(MealPlan mealPlan, String mealType) {
+        for(MealPlanItem item : mealPlan.getMealPlanItems()) {
+            if(item.getMealType().equals(mealType)) {
+                return mapToMealPlanItemDto(item);
+            }
+        }
+        // if not mealplanitem matching mealType, send over a new dto
+        MealPlanItemDto mealPlanItemDto = new MealPlanItemDto(mealPlan, mealType);
+        return mealPlanItemDto;
+    }
+
+    @Override
+    public MealPlanItemDto mapToMealPlanItemDto(MealPlanItem mealPlanItem) {
+        MealPlanItemDto mealPlanItemDto = new MealPlanItemDto();
+        mealPlanItemDto.setId(mealPlanItem.getId());
+        mealPlanItemDto.setMealPlan(mealPlanItem.getMealPlan());
+        mealPlanItemDto.setMealType(mealPlanItem.getMealType());
+        mealPlanItemDto.setRecipe(mealPlanItem.getRecipe());
+        return mealPlanItemDto;
     }
 
     // not mapping to DTO since we won't be sending the list to FE
