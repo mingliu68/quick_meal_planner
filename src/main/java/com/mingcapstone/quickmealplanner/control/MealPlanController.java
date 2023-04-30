@@ -6,16 +6,22 @@ import java.util.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
+import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.repository.MealPlanRepository;
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
 import com.mingcapstone.quickmealplanner.service.UserService;
+
+import jakarta.validation.Valid;
 
 
 @Controller
@@ -64,11 +70,13 @@ public class MealPlanController {
                     model.addAttribute("user", currentUser);
                     model.addAttribute("mealPlan", mealPlanDto);
                     resetCalendar(c, mealPlan.getStartDate());
-                    c.add(Calendar.DATE, 7);
+                    // c.add(Calendar.DATE, 7);
+                    model.addAttribute("weeklyDates", getWeeklyDates(c));
                     model.addAttribute("nextStartDate", getStartDateString(c));
                     c.add(Calendar.DATE, -14);
                     model.addAttribute("prevStartDate", getStartDateString(c));
-                    
+                    // // need 14 dto attribute for processing
+                    // setMealPlanDtoAttributes(model, mealPlanDto);
                     return "mealPlan";
                 }
             } catch(Exception e){
@@ -88,15 +96,30 @@ public class MealPlanController {
 
         model.addAttribute("user", currentUser);
         model.addAttribute("mealPlan", mealPlanDto);
-        c.add(Calendar.DATE, 7);
+        // c.add(Calendar.DATE, 7);
+        model.addAttribute("weeklyDates", getWeeklyDates(c));
         model.addAttribute("nextStartDate", getStartDateString(c));
         c.add(Calendar.DATE, -14);
         model.addAttribute("prevStartDate", getStartDateString(c));
-        
+        // // need 14 dto attribute for processing
+        // setMealPlanDtoAttributes(model, mealPlanDto);
         return "mealplan";
 
     }
     
+    @PostMapping("/mealPlanItem")
+    public String saveMealPlanItem(@Valid @ModelAttribute("mealPlanItemDto") MealPlanItemDto mealPlanItemDto, BindingResult result, Model model,
+    Principal principal) {
+        // need to return meal plan id and start date string
+        return "";
+    }
+
+    private void setMealPlanDtoAttributes(Model model, MealPlanDto mealPlanDto) {
+        for(int i = 0; i < mealPlanDto.getMealPlanItemsDtos().size(); i++) {
+            model.addAttribute("mealPlanItem" + i, mealPlanDto.getMealPlanItemsDtos().get(i));
+        }
+    }
+
     private void resetCalendar(Calendar calendar, String startDate) {
         String[] str = startDate.split("_");
         calendar.set(Integer.parseInt(str[0]), getMonth(str[1]), Integer.parseInt(str[2]));
@@ -107,6 +130,18 @@ public class MealPlanController {
         String[] str = calendar.getTime().toString().split(" ");
         String startDate = str[5] + "_" + str[1] + "_" + str[2];
         return startDate;
+    }
+
+    private String[] getWeeklyDates(Calendar calendar) {
+        String[] weeklyDates = new String[7];
+        String[] str;
+        for(int i = 0; i < 7; i++) {
+            str = calendar.getTime().toString().split(" ");
+            weeklyDates[i] = str[1] + " " + str[2] + ", " + str[5];
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        return weeklyDates;
     }
 
     private int getMonth(String month) {

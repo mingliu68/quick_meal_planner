@@ -64,4 +64,8 @@ body {
     padding-bottom: 5rem;
 }
 
+.dashboard-content-container-wrapper .menu-column {
+    max-width: 14.25%;
+}
+
 

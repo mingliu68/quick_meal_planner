@@ -68,7 +68,53 @@
               <p>Start Date: <span th:text="${mealPlan.startDate}" /></p>
               <p>Next Start Date: <span th:text="${nextStartDate}"/></p>
               <p>Previous Start Date: <span th:text="${prevStartDate}"/></p>
-              <table>
+              <!-- <p><span th:each="date: ${weeklyDates}" th:text="${date}"/> </p> -->
+              <div class="container text-center">
+                <div class="row">
+                  <div th:each="date: ${weeklyDates}" th:text="${date}" class="col menu-column" />
+                </div>
+                <div class="row">
+                  <div class="col menu-column">Monday</div>
+                  <div class="col menu-column">Tuesday</div>
+                  <div class="col menu-column">Wednesday</div>
+                  <div class="col menu-column">Thursday</div>
+                  <div class="col menu-column">Friday</div>
+                  <div class="col menu-column">Saturday</div>
+                  <div class="col menu-column">Sunday</div>
+                </div>
+               
+                <div class="row">
+                  <div th:each="mealPlanItemDto, iter : ${mealPlan.mealPlanItemsDtos}" th:if="${iter.index % 2 == 0}" class="col menu-column" >
+                    <form
+                      method="POST"
+                      role="form"
+                      th:action="@{/user/mealplans/mealPlanItem}"
+                    >
+                      <input type="text" th:name="mealType" th:value="${mealPlanItemDto.mealType}" />
+                      <input type="text" th:name="id" th:value="${mealPlanItemDto.id}" />
+                      <p th:text="*{mealType}" />
+                      <button class="submit" type="submit">Update</button>
+                    </form>
+                  </div>
+                </div>
+                <div class="row">
+                  <div th:each="mealPlanItemDto, iter : ${mealPlan.mealPlanItemsDtos}" th:if="${iter.index % 2 != 0}" class="col menu-column" >
+                    
+                    <form
+                      method="POST"
+                      role="form"
+                      th:action="@{/user/mealplans/mealPlanItem}"
+                    >
+                      <input type="text" th:name="mealType" th:value="${mealPlanItemDto.mealType}" />
+                      <input type="text" th:name="id" th:value="${mealPlanItemDto.id}" />
+                      <p th:text="*{mealType}" />
+                      <button class="submit" type="submit">Update</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <table>
                 <tr>
                   <th>Meal Type</th>
                   <th>Recipe</th>
@@ -77,7 +123,7 @@
                   <td th:text="${item.mealType}" />
                   <td th:text="${item.recipe?.name}" />
                 </tr>
-              </table>
+              </table> -->
             </div>
               <a
                     th:href="@{/user/mealplans(startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
