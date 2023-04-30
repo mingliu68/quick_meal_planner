@@ -41,7 +41,7 @@ public class MealPlanController {
         
         // if id param exist, 
             // find mealplan and double check if the user is the true owner of the meal plan, then return dto
-            // if mealplan does not belong to user, continue with following if statements
+            // if mealplan does not belong to user, redirect to mealplan home
         // if startDate param exist, search for user's mealplans if there is a match, 
             // if one is found, return dto
             // if none is found, create a new MealPlan instance and return dto

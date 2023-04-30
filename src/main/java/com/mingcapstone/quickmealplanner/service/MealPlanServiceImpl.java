@@ -69,8 +69,6 @@ public class MealPlanServiceImpl implements MealPlanService {
         user.addMealPlan(dbMealPlan);
         userRepository.save(user);
         return mapToMealPlanDto(dbMealPlan);
-    
-        
     }
 
     private void setPreAndNext(User user, MealPlan mealPlan, Calendar calendar) {
