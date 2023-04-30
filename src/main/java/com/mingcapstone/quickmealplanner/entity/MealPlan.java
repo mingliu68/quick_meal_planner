@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Getter 
@@ -18,6 +19,7 @@ import java.util.List;
 public class MealPlan {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
@@ -29,7 +31,7 @@ public class MealPlan {
     private MealPlan next;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @Column(name="prev")
+    @JoinColumn(name="prev")
     private MealPlan prev;
     
     @Column(name="start_date")
@@ -39,6 +41,11 @@ public class MealPlan {
     private List<MealPlanItem> mealPlanItems = new ArrayList<>();
 
 
+    
+    public MealPlan(User user, String startDate) {
+        this.user = user;
+        this.startDate = startDate;
+    }
 
 
     public void addMealPlanItem(MealPlanItem mealPlanItem) {

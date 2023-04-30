@@ -1,10 +1,12 @@
 package com.mingcapstone.quickmealplanner.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
+import com.mingcapstone.quickmealplanner.entity.User;
 
 public interface MealPlanService {
 
@@ -21,4 +23,8 @@ public interface MealPlanService {
     MealPlan addMealPlanItem(MealPlan mealPlan, MealPlanItem mealPlanItem);
     
     MealPlan removeMealPlanItem(MealPlan mealPlan, MealPlanItem mealPlanItem);
+
+    MealPlanDto findUserMealPlanByStartDate(User user, String startDate, Calendar calendar);
+
+    MealPlanDto mapToMealPlanDto(MealPlan mealPlan);
 }

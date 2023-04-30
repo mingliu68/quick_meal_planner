@@ -1,5 +1,6 @@
 package com.mingcapstone.quickmealplanner.service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,16 +10,20 @@ import org.springframework.stereotype.Service;
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
+import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.repository.MealPlanRepository;
+import com.mingcapstone.quickmealplanner.repository.UserRepository;
 
 @Service
 public class MealPlanServiceImpl implements MealPlanService {
     
     private MealPlanRepository mealPlanRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public MealPlanServiceImpl(MealPlanRepository mealPlanRepository) {
+    public MealPlanServiceImpl(MealPlanRepository mealPlanRepository, UserRepository userRepository) {
         this.mealPlanRepository = mealPlanRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -45,6 +50,73 @@ public class MealPlanServiceImpl implements MealPlanService {
         return mealPlan;
     }
 
+
+    @Override
+    public MealPlanDto findUserMealPlanByStartDate(User user, String startDate, Calendar calendar) {
+       
+        // find a meal plan in user.mealplans that matches startDate
+        for(MealPlan mealPlan : user.getMealPlans()) {
+            // if a meal plan exist, return mealplan dto
+            if(mealPlan.getStartDate().equals(startDate)) {
+                return mapToMealPlanDto(mealPlan);
+            }
+        }
+        
+        // if not creating one, save, add to user, save user, then return a mealplan dto
+        MealPlan mealPlan = new MealPlan(user, startDate);
+        setPreAndNext(user, mealPlan, calendar);
+        MealPlan dbMealPlan = mealPlanRepository.save(mealPlan);
+        user.addMealPlan(dbMealPlan);
+        userRepository.save(user);
+        return mapToMealPlanDto(dbMealPlan);
+    
+        
+    }
+
+    private void setPreAndNext(User user, MealPlan mealPlan, Calendar calendar) {
+
+        // get next monday's calendar and convert to startDate string
+        calendar.add(Calendar.DATE, 7);
+        String nextString = getStartDateString(calendar);
+
+        // get prev monday's calendar and convert to startDate string
+        calendar.add(Calendar.DATE, -14);
+        String preString = getStartDateString(calendar);
+
+        // reset calendar to current monday for future operation
+        calendar.add(Calendar.DATE, 7);
+
+        for(MealPlan mp : user.getMealPlans()) {
+            if(mp.getStartDate().equals(nextString)) {
+                mealPlan.setNext(mp);
+                mp.setPrev(mealPlan);
+            } 
+            if(mp.getStartDate().equals(preString)) {
+                mealPlan.setPrev(mp);
+                mp.setNext(mealPlan);
+            }
+        }
+    }
+
+    private String getStartDateString(Calendar calendar) {
+        
+        String[] str = calendar.getTime().toString().split(" ");
+        String startDate = str[5] + "_" + str[1] + "_" + str[2];
+        return startDate;
+    }
+
+    @Override
+    public MealPlanDto mapToMealPlanDto(MealPlan mealPlan) {
+        MealPlanDto mealPlanDto = new MealPlanDto();
+        mealPlanDto.setId(mealPlan.getId());
+        mealPlanDto.setUser(mealPlan.getUser());
+        mealPlanDto.setStartDate(mealPlan.getStartDate());
+        mealPlanDto.setNext(mealPlan.getNext());
+        mealPlanDto.setPrev(mealPlan.getPrev());
+        mealPlanDto.setMealPlanItems(mealPlan.getMealPlanItems());
+        return mealPlanDto;
+    } 
+    
     // not mapping to DTO since we won't be sending the list to FE
     @Override
     public List<MealPlan> findAllMealPlans(){

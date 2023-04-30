@@ -16,4 +16,6 @@ public interface MealPlanItemService {
     void deleteMealPlanItem(Long id);
 
     MealPlanItem updateMealPlanItem(MealPlanItemDto mealPlanItemDto);
+
+    
 }

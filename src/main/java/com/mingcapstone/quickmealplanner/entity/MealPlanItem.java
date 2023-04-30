@@ -16,6 +16,7 @@ import lombok.Setter;
 public class MealPlanItem {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

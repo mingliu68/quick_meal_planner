@@ -33,7 +33,7 @@ public class Recipe {
     @ManyToMany(mappedBy="recipes") 
     private List<User> users;
 
-    @OneToMany(mappedBy="recipes")
+    @OneToMany(mappedBy="recipe")
     private List<MealPlanItem> mealPlanItems;
     
     // @Column(name="saved")
