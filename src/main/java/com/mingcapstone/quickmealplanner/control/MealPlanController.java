@@ -81,7 +81,6 @@ public class MealPlanController {
                     model.addAttribute("user", currentUser);
                     model.addAttribute("mealPlan", mealPlanDto);
                     resetCalendar(c, mealPlan.getStartDate());
-                    // c.add(Calendar.DATE, 7);
                     model.addAttribute("weeklyDates", getWeeklyDates(c));
                     model.addAttribute("nextStartDate", getStartDateString(c));
                     c.add(Calendar.DATE, -14);
@@ -106,7 +105,6 @@ public class MealPlanController {
 
         model.addAttribute("user", currentUser);
         model.addAttribute("mealPlan", mealPlanDto);
-        // c.add(Calendar.DATE, 7);
         model.addAttribute("weeklyDates", getWeeklyDates(c));
         model.addAttribute("nextStartDate", getStartDateString(c));
         c.add(Calendar.DATE, -14);

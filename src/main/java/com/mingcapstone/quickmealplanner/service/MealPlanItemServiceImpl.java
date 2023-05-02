@@ -19,7 +19,6 @@ public class MealPlanItemServiceImpl implements MealPlanItemService {
     
     private MealPlanItemRepository mealPlanItemRepository;
     private MealPlanRepository mealPlanRepository;
-    // private MealPlanService mealPlanService;
     private RecipeService recipeService;
 
     @Autowired
@@ -27,7 +26,6 @@ public class MealPlanItemServiceImpl implements MealPlanItemService {
         this.mealPlanItemRepository = mealPlanItemRepository;
         this.mealPlanRepository = mealPlanRepository;
         this.recipeService = recipeService;
-        // this.mealPlanService = mealPlanService;
     }
     
 
@@ -68,7 +66,7 @@ public class MealPlanItemServiceImpl implements MealPlanItemService {
                 return mapToMealPlanItemDto(item);
             }
         }
-        // if not mealplanitem matching mealType, send over a new dto
+        // if no mealplanitem matching mealType, send over a new dto
         MealPlanItemDto mealPlanItemDto = new MealPlanItemDto(mealPlan, mealType);
         return mealPlanItemDto;
     }

@@ -71,8 +71,6 @@ public class AuthController {
             return "/register";
         }
         userService.saveUser(userDto);
-        // User dbUser = userService.saveUser(userDto);
-        // System.out.println(dbUser.getRecipes());
 
         return "redirect:/register?success";
     }
