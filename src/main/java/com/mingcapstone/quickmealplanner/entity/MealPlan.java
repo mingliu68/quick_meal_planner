@@ -37,7 +37,7 @@ public class MealPlan {
     @Column(name="start_date")
     private String startDate;
 
-    @OneToMany(mappedBy="mealPlan", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="mealPlan", fetch = FetchType.EAGER)
     private List<MealPlanItem> mealPlanItems = new ArrayList<>();
 
 
