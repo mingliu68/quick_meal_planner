@@ -12,13 +12,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
+import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
+import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.repository.MealPlanRepository;
+import com.mingcapstone.quickmealplanner.service.MealPlanItemService;
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
+import com.mingcapstone.quickmealplanner.service.RecipeService;
+import com.mingcapstone.quickmealplanner.service.RecipeServiceImpl;
 import com.mingcapstone.quickmealplanner.service.UserService;
 
 import jakarta.validation.Valid;
@@ -31,12 +37,17 @@ public class MealPlanController {
 
     private MealPlanService mealPlanService;
     private UserService userService;
+    private RecipeService recipeService;
 
     @Autowired
-    public MealPlanController(MealPlanService mealPlanService, UserService userService) {
+    public MealPlanController(MealPlanService mealPlanService, UserService userService, RecipeService recipeService) {
         this.mealPlanService = mealPlanService;
         this.userService = userService;
+        this.recipeService = recipeService;
     }
+    
+    @Autowired
+    MealPlanItemService mealPlanItemService;
 
     // get mealplan by using startdate
     @GetMapping
@@ -75,8 +86,7 @@ public class MealPlanController {
                     model.addAttribute("nextStartDate", getStartDateString(c));
                     c.add(Calendar.DATE, -14);
                     model.addAttribute("prevStartDate", getStartDateString(c));
-                    // // need 14 dto attribute for processing
-                    // setMealPlanDtoAttributes(model, mealPlanDto);
+
                     return "mealPlan";
                 }
             } catch(Exception e){
@@ -101,24 +111,50 @@ public class MealPlanController {
         model.addAttribute("nextStartDate", getStartDateString(c));
         c.add(Calendar.DATE, -14);
         model.addAttribute("prevStartDate", getStartDateString(c));
-        // // need 14 dto attribute for processing
-        // setMealPlanDtoAttributes(model, mealPlanDto);
+
         return "mealplan";
 
     }
     
     @PostMapping("/mealPlanItem")
-    public String saveMealPlanItem(@Valid @ModelAttribute("mealPlanItemDto") MealPlanItemDto mealPlanItemDto, BindingResult result, Model model,
-    Principal principal) {
+    public String updateMealPlanItem(@ModelAttribute MealPlanItemDto mealPlanItemDto, Model model,
+    Principal principal, RedirectAttributes redirectAttributes) {
+
+        MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanItemDto.getMealPlanId());
+        mealPlanItemDto.setMealPlan(mealPlan);
+        // if mealplanitem id exist, find mealplanitem by id, set recipe then update/save
+        if(mealPlanItemDto.getId() != null) {
+            // try {
+                
+                mealPlanItemService.updateMealPlanItem(mealPlanItemDto);
+            // } catch (Exception e){
+            //     return "redirect:/user/mealplans";
+            // }        
+        } else if(mealPlanItemDto.getRecipeId() != null) {
+            // else, only update if there is a recipe it, if it doens't include a recipe id, it's just an empty dto
+            // try {
+                mealPlanItemService.saveMealPlanItem(mealPlanItemDto);
+            // } catch (Exception e) {
+            //     return "redirect:/user/mealplans";
+            // }
+        }
+       
+
+
         // need to return meal plan id and start date string
-        return "";
+        System.out.println(mealPlanItemDto.getMealType());
+        System.out.println(mealPlanItemDto.getMealPlanId());
+        System.out.println(mealPlanItemDto.getRecipeId());
+        redirectAttributes.addAttribute("mealPlan", mealPlanItemDto.getMealPlanId());
+        
+        return "redirect:/user/mealplans";
     }
 
-    private void setMealPlanDtoAttributes(Model model, MealPlanDto mealPlanDto) {
-        for(int i = 0; i < mealPlanDto.getMealPlanItemsDtos().size(); i++) {
-            model.addAttribute("mealPlanItem" + i, mealPlanDto.getMealPlanItemsDtos().get(i));
-        }
-    }
+    // private void setMealPlanDtoAttributes(Model model, MealPlanDto mealPlanDto) {
+    //     for(int i = 0; i < mealPlanDto.getMealPlanItemsDtos().size(); i++) {
+    //         model.addAttribute("mealPlanItem" + i, mealPlanDto.getMealPlanItemsDtos().get(i));
+    //     }
+    // }
 
     private void resetCalendar(Calendar calendar, String startDate) {
         String[] str = startDate.split("_");

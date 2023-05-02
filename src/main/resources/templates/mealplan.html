@@ -83,21 +83,24 @@
                   <div class="col menu-column">Sunday</div>
                 </div>
                
-                <div class="row">
+                <div class="row" style="border:1px solid #eee; padding: 10px;">
                   <div th:each="mealPlanItemDto, iter : ${mealPlan.mealPlanItemsDtos}" th:if="${iter.index % 2 == 0}" class="col menu-column" >
                     <form
                       method="POST"
                       role="form"
                       th:action="@{/user/mealplans/mealPlanItem}"
                     >
-                      <input type="text" th:name="mealType" th:value="${mealPlanItemDto.mealType}" />
-                      <input type="text" th:name="id" th:value="${mealPlanItemDto.id}" />
-                      <p th:text="*{mealType}" />
+                    <input th:name="mealType" th:value="${mealPlanItemDto.mealType}" type="hidden"/>
+                    <input th:name="id" th:value="${mealPlanItemDto.id}" type="hidden"/>
+                    <input th:name="recipeId" th:value="${mealPlanItemDto.recipeId}" />
+                    <p th:text="${mealPlanItemDto.recipe?.name}" style="min-height: 3rem;" />
+                    <input th:name="mealPlanId" th:value="${mealPlanItemDto.mealPlan.id}" />
+                      
                       <button class="submit" type="submit">Update</button>
                     </form>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row" style="border:1px solid #eee; padding: 10px;margin-bottom: 10px; background-color: whitesmoke">
                   <div th:each="mealPlanItemDto, iter : ${mealPlan.mealPlanItemsDtos}" th:if="${iter.index % 2 != 0}" class="col menu-column" >
                     
                     <form
@@ -105,9 +108,13 @@
                       role="form"
                       th:action="@{/user/mealplans/mealPlanItem}"
                     >
-                      <input type="text" th:name="mealType" th:value="${mealPlanItemDto.mealType}" />
-                      <input type="text" th:name="id" th:value="${mealPlanItemDto.id}" />
-                      <p th:text="*{mealType}" />
+                      <input th:name="mealType" th:value="${mealPlanItemDto.mealType}" type="hidden"/>
+                      <input th:name="id" th:value="${mealPlanItemDto.id}" type="hidden"/>
+                      <input th:name="recipeId" th:value="${mealPlanItemDto.recipeId}" />
+                      <p th:text="${mealPlanItemDto.recipe?.name}" style="min-height: 3rem;" />
+                      <input th:name="mealPlanId" th:value="${mealPlanItemDto.mealPlanId}" />
+                      
+                      
                       <button class="submit" type="submit">Update</button>
                     </form>
                   </div>
