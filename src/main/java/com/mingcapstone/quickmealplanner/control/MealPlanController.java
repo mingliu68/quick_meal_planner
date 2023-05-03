@@ -114,8 +114,6 @@ public class MealPlanController {
 
     }
     
-    // testing
-
     @PostMapping("/mealPlanItem")
     public String updateMealPlanItem(@ModelAttribute MealPlanItemDto mealPlanItemDto, Model model,
     Principal principal, RedirectAttributes redirectAttributes) {
@@ -168,12 +166,14 @@ public class MealPlanController {
         return startDate;
     }
 
-    private String[] getWeeklyDates(Calendar calendar) {
-        String[] weeklyDates = new String[7];
+    private String[][] getWeeklyDates(Calendar calendar) {
+        String[][] weeklyDates = new String[7][];
+        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
         String[] str;
         for(int i = 0; i < 7; i++) {
             str = calendar.getTime().toString().split(" ");
-            weeklyDates[i] = str[1] + " " + str[2] + ", " + str[5];
+            weeklyDates[i] = new String[] {str[1] + " " + str[2] + ", " + str[5], days[i]};
+            
             calendar.add(Calendar.DATE, 1);
         }
 

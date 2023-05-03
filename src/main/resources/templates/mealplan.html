@@ -71,20 +71,37 @@
               <!-- <p><span th:each="date: ${weeklyDates}" th:text="${date}"/> </p> -->
               <div class="container text-center">
                 <div class="row">
-                  <div th:each="date: ${weeklyDates}" th:text="${date}" class="col menu-column" />
+                  <div th:each="date, iter: ${weeklyDates}" class="col menu-column" >
+                    <p th:text="${date[0]}" />
+                    <p th:text="${date[1]}" />
+                    <div 
+                      th:object="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__]}"
+                      th:attr="
+                      data-recipeId=*{recipe?.id},
+                      data-mealPlanId=${mealPlan.id},
+                      data-mealType=*{mealType}"
+                      >
+                      <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].mealType}" />
+                      <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].recipe?.name}" />
+                    </div>
+                    <div 
+                      th:object="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__]}"
+                      th:attr="
+                      data-recipeId=*{recipe?.id},
+                      data-mealPlanId=${mealPlan.id},
+                      data-mealType=*{mealType}"
+                    >
+                      <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].mealType}" />
+                      <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].recipe?.name}" />
+                    </div>
+                  </div>
                 </div>
-                <div class="row">
-                  <div class="col menu-column">Monday</div>
-                  <div class="col menu-column">Tuesday</div>
-                  <div class="col menu-column">Wednesday</div>
-                  <div class="col menu-column">Thursday</div>
-                  <div class="col menu-column">Friday</div>
-                  <div class="col menu-column">Saturday</div>
-                  <div class="col menu-column">Sunday</div>
-                </div>
+
                
                 <div class="row" style="border:1px solid #eee; padding: 10px;">
                   <div th:each="mealPlanItemDto, iter : ${mealPlan.mealPlanItemsDtos}" th:if="${iter.index % 2 == 0}" class="col menu-column" >
+                    <p th:text="${weeklyDates[__${iter.index / 2}__][0]}" />
+                    <p th:text="${weeklyDates[__${iter.index / 2}__][1]}" />
                     <form
                       method="POST"
                       role="form"
