@@ -38,6 +38,15 @@ public class MealPlanController {
     private MealPlanService mealPlanService;
     private UserService userService;
     private RecipeService recipeService;
+    private String[] mealTypes = {
+        "MONDAY_LUNCH", "MONDAY_DINNER", 
+        "TUESDAY_LUNCH", "TUESDAY_DINNER",
+        "WEDNESDAY_LUNCH", "WEDNESDAY_DINNER",
+        "THURSDAY_LUNCH", "THURSDAY_DINNER",
+        "FRIDAY_LUNCH", "FRIDAY_DINNER",
+        "SATURDAY_LUNCH", "SATURDAY_DINNER",
+        "SUNDAY_LUNCH", "SUNDAY_DINNER"
+    };
 
     @Autowired
     public MealPlanController(MealPlanService mealPlanService, UserService userService, RecipeService recipeService) {
@@ -77,11 +86,14 @@ public class MealPlanController {
             try {
                 MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanId);
                 if(mealPlan != null && currentUser.getMealPlans().contains(mealPlan)) {
+
                     mealPlanDto = mealPlanService.mapToMealPlanDto(mealPlan);
+
                     model.addAttribute("user", currentUser);
                     model.addAttribute("mealPlan", mealPlanDto);
                     resetCalendar(c, mealPlan.getStartDate());
                     model.addAttribute("weeklyDates", getWeeklyDates(c));
+                    model.addAttribute("mealTypes", mealTypes);
                     model.addAttribute("nextStartDate", getStartDateString(c));
                     c.add(Calendar.DATE, -14);
                     model.addAttribute("prevStartDate", getStartDateString(c));
@@ -91,7 +103,6 @@ public class MealPlanController {
             } catch(Exception e){
                 return "redirect:/user/mealplans";
             }
-            
         }
 
         if(paramStartDate != null) {
@@ -106,6 +117,7 @@ public class MealPlanController {
         model.addAttribute("user", currentUser);
         model.addAttribute("mealPlan", mealPlanDto);
         model.addAttribute("weeklyDates", getWeeklyDates(c));
+        model.addAttribute("mealTypes", mealTypes);
         model.addAttribute("nextStartDate", getStartDateString(c));
         c.add(Calendar.DATE, -14);
         model.addAttribute("prevStartDate", getStartDateString(c));

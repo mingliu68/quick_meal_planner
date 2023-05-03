@@ -54,7 +54,9 @@
     <div class="container-fluid min-full-height dashboard-container">
       <div class="row full-height">
         <div class="col-md-3 col-lg-2 dashboard-nav-container-wrapper">
-          <div th:replace="~{fragments/general :: dash-nav(activeTab='mealPlan')}">
+          <div
+            th:replace="~{fragments/general :: dash-nav(activeTab='mealPlan')}"
+          >
             <p>Testing Side Nav</p>
           </div>
         </div>
@@ -63,31 +65,119 @@
           <div class="row">
             <div>
               <p th:text="${user.firstName}" />
-              <p><span th:text = "${#lists.size(user.mealPlans)}" />Meal Plans Saved</p>
+              <p>
+                <span th:text="${#lists.size(user.mealPlans)}" />Meal Plans
+                Saved
+              </p>
               <p th:text="${mealPlan.id}" />
               <p>Start Date: <span th:text="${mealPlan.startDate}" /></p>
-              <p>Next Start Date: <span th:text="${nextStartDate}"/></p>
-              <p>Previous Start Date: <span th:text="${prevStartDate}"/></p>
+              <p>Next Start Date: <span th:text="${nextStartDate}" /></p>
+              <p>Previous Start Date: <span th:text="${prevStartDate}" /></p>
               <!-- <p><span th:each="date: ${weeklyDates}" th:text="${date}"/> </p> -->
               <div class="d-flex justify-content-between">
-               
-              <a
-                    th:href="@{/user/mealplans(startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
-                    type="button"
-                    class="btn btn-primary btn-sm"
-                  >
-                    Previous Meal Plan
-              </a> 
-              <a
-              th:href="@{/user/mealplans(startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
-              type="button"
-              class="btn btn-primary btn-sm"
-              >
-                Next Meal Plan
-              </a>
+                <a
+                  th:href="@{/user/mealplans(startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                >
+                  Previous Meal Plan
+                </a>
+                <a
+                  th:href="@{/user/mealplans(startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                >
+                  Next Meal Plan
+                </a>
               </div>
-              
               <div class="container text-center">
+                <div
+                  th:with="map=${mealPlan.mealPlanItemsMap}"
+                  class="row"
+                  style="margin-bottom: 30px"
+                >
+                  <date
+                    th:each="date, iter: ${weeklyDates}"
+                    class="col menu-column px-2"
+                  >
+                    <div style="margin: 10px 0; height: 70px">
+                      <h4 th:text="${date[1]}" />
+                      <span th:text="${date[0]}" />
+                    </div>
+                    <div style="height: 400px">
+                      <!-- first row lunch -->
+                      <div
+                        th:with="mealType=${mealTypes[__${iter.index + iter.index}__]}"
+                        style="
+                          height: 50%;
+                          background-color: antiquewhite;
+                          padding: 10px;
+                        "
+                      >
+                        <!-- if mealtype exist, display mealplanitem -->
+                        <div th:if="${#maps.containsKey(map, mealType)}">
+                          <div
+                            th:object="${map.get(mealType)}"
+                            th:attr="
+                              data-recipeId=*{recipe?.id},
+                              data-mealPlanId=${mealPlan.id},
+                              data-mealType=*{mealType}"
+                          >
+                            <p th:text="*{mealType}" />
+                            <p th:text="*{recipe?.name} " />
+                          </div>
+                        </div>
+                        <!-- else display empty block -->
+                        <div th:unless="${#maps.containsKey(map, mealType)}">
+                          <div
+                            th:attr="
+                              data-mealPlanId=${mealPlan.id},
+                              data-mealType=${mealType}"
+                          >
+                            <p th:text="${mealType}" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- second row dinner -->
+                      <div
+                        th:with="mealType=${mealTypes[__${iter.index + iter.index + 1}__]}"
+                        style="
+                          height: 50%;
+                          background-color: beige;
+                          padding: 10px;
+                        "
+                      >
+                        <!-- if mealtype exist, display mealplanitem -->
+                        <div th:if="${#maps.containsKey(map, mealType)}">
+                          <div
+                            th:object="${map.get(mealType)}"
+                            th:attr="
+                                                data-recipeId=*{recipe?.id},
+                                                data-mealPlanId=${mealPlan.id},
+                                                data-mealType=*{mealType}"
+                          >
+                            <p th:text="*{mealType}" />
+                            <p th:text="*{recipe?.name} " />
+                          </div>
+                        </div>
+                        <!-- else display empty block -->
+                        <div th:unless="${#maps.containsKey(map, mealType)}">
+                          <div
+                            th:attr="
+                                                data-mealPlanId=${mealPlan.id},
+                                                data-mealType=${mealType}"
+                          >
+                            <p th:text="${mealType}" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </date>
+                </div>
+              </div>
+
+              <!-- <div class="container text-center">
                 <div class="row" style="margin-bottom: 30px;">
                   <div th:each="date, iter: ${weeklyDates}" class="col menu-column px-2"  >
                     <div style="margin: 10px 0; height: 70px;">
@@ -103,10 +193,10 @@
                       data-mealPlanId=${mealPlan.id},
                       data-mealType=*{mealType}"
                       style="height: 50%; background-color:antiquewhite; padding: 10px;"
-                      >
-                       <!-- <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].mealType}" />
+                      > -->
+              <!-- <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].mealType}" />
                         <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].recipe?.name}" /> -->
-                        <p th:text="*{mealType}" />
+              <!-- <p th:text="*{mealType}" />
                         <p th:text="*{recipe?.name} " />
                       </div>
                       <div 
@@ -116,71 +206,17 @@
                         data-mealPlanId=${mealPlan.id},
                         data-mealType=*{mealType}"
                         style="height: 50%; background-color:beige; padding: 10px;"
-                      >
-                        <!-- <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].mealType}" />
+                      > -->
+              <!-- <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].mealType}" />
                         <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].recipe?.name}" /> -->
-                        <p th:text="*{mealType}" />
+              <!-- <p th:text="*{mealType}" />
                         <p th:text="*{recipe?.name} " />
                       </div>
                     </div>
-                    
                   </div>
                 </div>
-
-               
-                <!-- <div class="row" style="border:1px solid #eee; padding: 10px;">
-                  <div th:each="mealPlanItemDto, iter : ${mealPlan.mealPlanItemsDtos}" th:if="${iter.index % 2 == 0}" class="col menu-column" >
-                    <p th:text="${weeklyDates[__${iter.index / 2}__][0]}" />
-                    <p th:text="${weeklyDates[__${iter.index / 2}__][1]}" />
-                    <form
-                      method="POST"
-                      role="form"
-                      th:action="@{/user/mealplans/mealPlanItem}"
-                    >
-                    <input th:name="mealType" th:value="${mealPlanItemDto.mealType}" type="hidden"/>
-                    <input th:name="id" th:value="${mealPlanItemDto.id}" type="hidden"/>
-                    <input th:name="recipeId" th:value="${mealPlanItemDto.recipeId}" />
-                    <p th:text="${mealPlanItemDto.recipe?.name}" style="min-height: 3rem;" />
-                    <input th:name="mealPlanId" th:value="${mealPlanItemDto.mealPlan.id}" />
-                      
-                      <button class="submit" type="submit">Update</button>
-                    </form>
-                  </div>
-                </div> -->
-                <!-- <div class="row" style="border:1px solid #eee; padding: 10px;margin-bottom: 10px; background-color: whitesmoke">
-                  <div th:each="mealPlanItemDto, iter : ${mealPlan.mealPlanItemsDtos}" th:if="${iter.index % 2 != 0}" class="col menu-column" >
-                    
-                    <form
-                      method="POST"
-                      role="form"
-                      th:action="@{/user/mealplans/mealPlanItem}"
-                    >
-                      <input th:name="mealType" th:value="${mealPlanItemDto.mealType}" type="hidden"/>
-                      <input th:name="id" th:value="${mealPlanItemDto.id}" type="hidden"/>
-                      <input th:name="recipeId" th:value="${mealPlanItemDto.recipeId}" />
-                      <p th:text="${mealPlanItemDto.recipe?.name}" style="min-height: 3rem;" />
-                      <input th:name="mealPlanId" th:value="${mealPlanItemDto.mealPlanId}" />
-                      
-                      
-                      <button class="submit" type="submit">Update</button>
-                    </form>
-                  </div>
-                </div> -->
-              </div>
-
-              <!-- <table>
-                <tr>
-                  <th>Meal Type</th>
-                  <th>Recipe</th>
-                </tr>
-                <tr th:each="item: ${mealPlan.mealPlanItemsDtos}">
-                  <td th:text="${item.mealType}" />
-                  <td th:text="${item.recipe?.name}" />
-                </tr>
-              </table> -->
+              </div> -->
             </div>
-             
-           
           </div>
         </div>
       </div>

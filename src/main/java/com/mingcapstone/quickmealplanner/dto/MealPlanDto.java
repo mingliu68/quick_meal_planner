@@ -1,6 +1,7 @@
 package com.mingcapstone.quickmealplanner.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
@@ -31,6 +32,8 @@ public class MealPlanDto {
     private List<MealPlanItemDto> mealPlanItemsDtos = new ArrayList<>();
 
     private List<MealPlanItem> mealPlanItems = new ArrayList<>();
+    
+    private HashMap<String, MealPlanItem> mealPlanItemsMap = new HashMap<>();
 
     
 
