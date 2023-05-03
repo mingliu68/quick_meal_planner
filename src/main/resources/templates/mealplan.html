@@ -93,7 +93,6 @@
                     <div style="margin: 10px 0; height: 70px;">
                       <h4 th:text="${date[1]}" />
                       <span th:text="${date[0]}" />
-                      
                     </div>
                     
                     <div style="height: 400px;">
@@ -105,8 +104,10 @@
                       data-mealType=*{mealType}"
                       style="height: 50%; background-color:antiquewhite; padding: 10px;"
                       >
-                       <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].mealType}" />
-                        <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].recipe?.name}" />
+                       <!-- <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].mealType}" />
+                        <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index}__].recipe?.name}" /> -->
+                        <p th:text="*{mealType}" />
+                        <p th:text="*{recipe?.name} " />
                       </div>
                       <div 
                         th:object="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__]}"
@@ -116,8 +117,10 @@
                         data-mealType=*{mealType}"
                         style="height: 50%; background-color:beige; padding: 10px;"
                       >
-                        <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].mealType}" />
-                        <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].recipe?.name}" />
+                        <!-- <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].mealType}" />
+                        <p th:text="${mealPlan.mealPlanItemsDtos[__${iter.index + iter.index + 1}__].recipe?.name}" /> -->
+                        <p th:text="*{mealType}" />
+                        <p th:text="*{recipe?.name} " />
                       </div>
                     </div>
                     
