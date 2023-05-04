@@ -37,11 +37,14 @@ const recipeButtons = document.getElementsByClassName("recipe-button");
 
 [...recipeButtons].forEach(button => {
     button.addEventListener("click", () => {
+        if(activeRecipeButton != null) {
+            activeRecipeButton.classList.remove("selected");
+        }
         activeRecipeButton = button;
+        button.classList.add("selected");
         updateButton.removeAttribute("data-dismiss", "modal");
         console.log("currently active recipe button: " + button.dataset.recipeid);
     })
-    
 });
 
 updateButton.addEventListener("click", () => {
@@ -49,7 +52,6 @@ updateButton.addEventListener("click", () => {
         updateMealPlanItem();
     }
 })
-
 
 async function updateMealPlanItem() {
 
@@ -59,14 +61,14 @@ async function updateMealPlanItem() {
         mealType: activeMenuItem.dataset.mealtype,
         recipeId: activeRecipeButton.dataset.recipeid
     }
-    console.log(obj);
+    // console.log(obj);
     const response = await fetch(`${base}api/mealPlanItem`, {
         method: "POST",
         body: JSON.stringify(obj),
         headers: headers
     })
     .catch(error => console.error(error.message))
-    const json = await response.json();
+    // console.log(response);
     if(response.status == 200) {
         window.location.href=`${base}user/mealplans?mealPlan=${activeMenuItem.dataset.mealplanid}`;
     }

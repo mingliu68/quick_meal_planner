@@ -91,6 +91,7 @@ body {
 
 .menu-item {
     border-radius: 10px;
+    position:relative;
 }
 
 .menu-item.lunch {
@@ -106,13 +107,39 @@ body {
     background-color: #89959f;
 }
 
+.recipe-button.selected {
+    color: white;
+    background-color: green;
+}
 .recipe-button.active {
     color: white;
     background-color: orange;
 }
 
-.recipe-button:not(.active):hover {
+.recipe-button:not(.active, .selected):hover {
     background-color: #6c757d;
     color: white;
 }
 
+.meal-date {
+    margin-bottom: 0;
+    color:#666666;
+}
+.meal-day {
+    font-size: 0.8rem;
+    color:#555555;
+}
+.meal-type-tag {
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: -1rem;
+    font-size: 2.2rem;
+    left: -0.2rem;
+}
+
+.meal-item-wrapper {
+    margin-top: 3rem;
+    color: #555555;
+}

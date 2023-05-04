@@ -35,20 +35,18 @@ public class MealPlanRestController {
     MealPlanService mealPlanService;
 
     @PostMapping("/mealPlanItem")
-    public MealPlanItemDto saveMealPlanItem(@RequestBody MealPlanItemDto mealPlanItemDto, Principal principal) {
-        User user = getLoggedInUser(principal);
+    public void saveMealPlanItem(@RequestBody MealPlanItemDto mealPlanItemDto, Principal principal) {
+        // User user = getLoggedInUser(principal);
         MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanItemDto.getMealPlanId());
         mealPlanItemDto.setMealPlan(mealPlan);
 
-        
-
         if(mealPlanItemDto.getId() != null) {
             mealPlanItemService.updateMealPlanItem(mealPlanItemDto);
-            return mealPlanItemDto;
+            // return mealPlanItemDto;
         }
         MealPlanItem dbMealPlanItem = mealPlanItemService.saveMealPlanItem(mealPlanItemDto); 
         mealPlanItemDto.setId(dbMealPlanItem.getId());
-        return mealPlanItemDto;
+        // return mealPlanItemDto;
     } 
 
     private User getLoggedInUser(Principal principal) {

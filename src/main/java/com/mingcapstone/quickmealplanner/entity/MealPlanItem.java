@@ -2,6 +2,8 @@ package com.mingcapstone.quickmealplanner.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,10 @@ public class MealPlanItem {
 
     @ManyToOne
     // @JsonBackReference
+    @JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property="id"
+    )
     @JoinColumn(name="meal_plan_id")
     private MealPlan mealPlan;
 
