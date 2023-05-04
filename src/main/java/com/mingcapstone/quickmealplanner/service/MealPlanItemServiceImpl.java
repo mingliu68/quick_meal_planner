@@ -45,6 +45,7 @@ public class MealPlanItemServiceImpl implements MealPlanItemService {
         return dbMealPlanItem;
     }
 
+   
     @Override
     public MealPlanItem findMealPlanItemById(Long id){
         Optional<MealPlanItem> result = mealPlanItemRepository.findById(id);
@@ -110,7 +111,8 @@ public class MealPlanItemServiceImpl implements MealPlanItemService {
             Recipe recipe = recipeService.findById(mealPlanItemDto.getRecipeId());
             mealPlanItem.setRecipe(recipe);
         }
-       
-        return mealPlanItemRepository.save(mealPlanItem);
+        
+        MealPlanItem dbMealPlanItem = mealPlanItemRepository.save(mealPlanItem);
+        return dbMealPlanItem;
     }
 }

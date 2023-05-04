@@ -2,6 +2,7 @@ package com.mingcapstone.quickmealplanner.control;
 
 import java.security.Principal;
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
+import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
@@ -76,6 +78,7 @@ public class MealPlanController {
             // if none is found, create a new mealPlan instance and return dto
 
         User currentUser = getLoggedInUser(principal);  
+        List<RecipeDto> savedRecipes = recipeService.getAllSavedRecipesByUser(currentUser);
         MealPlanDto mealPlanDto;
         Calendar c = Calendar.getInstance(); // current calendar obj   
         c.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
@@ -90,6 +93,7 @@ public class MealPlanController {
                     mealPlanDto = mealPlanService.mapToMealPlanDto(mealPlan);
 
                     model.addAttribute("user", currentUser);
+                    model.addAttribute("savedRecipes", savedRecipes);
                     model.addAttribute("mealPlan", mealPlanDto);
                     resetCalendar(c, mealPlan.getStartDate());
                     model.addAttribute("weeklyDates", getWeeklyDates(c));
@@ -115,6 +119,7 @@ public class MealPlanController {
         mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser, getStartDateString(c), c);
 
         model.addAttribute("user", currentUser);
+        model.addAttribute("savedRecipes", savedRecipes);
         model.addAttribute("mealPlan", mealPlanDto);
         model.addAttribute("weeklyDates", getWeeklyDates(c));
         model.addAttribute("mealTypes", mealTypes);

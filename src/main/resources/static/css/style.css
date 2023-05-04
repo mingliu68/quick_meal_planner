@@ -68,4 +68,51 @@ body {
     max-width: 14.25%;
 }
 
+.meal-plan-main_wrapper {
+    margin-bottom: 30px;
+}
+
+.meal-plan-main_wrapper .date {
+    margin: 10px 0; 
+    height: 70px
+}
+
+.meal-plan-main_wrapper .column-wrapper {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.meal-plan-main_wrapper .column-wrapper .menu-item-div
+ {
+    height: 49%;
+}
+
+.menu-item {
+    border-radius: 10px;
+}
+
+.menu-item.lunch {
+    background-color: antiquewhite;
+}
+
+.menu-item.dinner {
+    background-color: beige;
+}
+
+.recipe-button {
+    color: white;
+    background-color: #89959f;
+}
+
+.recipe-button.active {
+    color: white;
+    background-color: orange;
+}
+
+.recipe-button:not(.active):hover {
+    background-color: #6c757d;
+    color: white;
+}
 

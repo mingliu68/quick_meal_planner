@@ -10,7 +10,6 @@ const recipeObj = {
     directions : []
 };
 
-
 saveButton.addEventListener("click", (e)=>{
     recipeObj.name = recipeName;
     for(const ingredient of ingredients) {

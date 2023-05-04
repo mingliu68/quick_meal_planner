@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Getter 
 @Setter 
 @NoArgsConstructor  
@@ -38,6 +40,7 @@ public class MealPlan {
     private String startDate;
 
     @OneToMany(mappedBy="mealPlan", fetch = FetchType.EAGER)
+    // @JsonManagedReference
     private List<MealPlanItem> mealPlanItems = new ArrayList<>();
 
 
