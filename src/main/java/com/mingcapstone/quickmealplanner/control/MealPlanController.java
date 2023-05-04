@@ -2,20 +2,34 @@ package com.mingcapstone.quickmealplanner.control;
 
 import java.security.Principal;
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
+import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
+import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
+import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
+import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.repository.MealPlanRepository;
+import com.mingcapstone.quickmealplanner.service.MealPlanItemService;
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
+import com.mingcapstone.quickmealplanner.service.RecipeService;
+import com.mingcapstone.quickmealplanner.service.RecipeServiceImpl;
 import com.mingcapstone.quickmealplanner.service.UserService;
+
+import jakarta.validation.Valid;
 
 
 @Controller
@@ -25,12 +39,26 @@ public class MealPlanController {
 
     private MealPlanService mealPlanService;
     private UserService userService;
+    private RecipeService recipeService;
+    private String[] mealTypes = {
+        "MONDAY_LUNCH", "MONDAY_DINNER", 
+        "TUESDAY_LUNCH", "TUESDAY_DINNER",
+        "WEDNESDAY_LUNCH", "WEDNESDAY_DINNER",
+        "THURSDAY_LUNCH", "THURSDAY_DINNER",
+        "FRIDAY_LUNCH", "FRIDAY_DINNER",
+        "SATURDAY_LUNCH", "SATURDAY_DINNER",
+        "SUNDAY_LUNCH", "SUNDAY_DINNER"
+    };
 
     @Autowired
-    public MealPlanController(MealPlanService mealPlanService, UserService userService) {
+    public MealPlanController(MealPlanService mealPlanService, UserService userService, RecipeService recipeService) {
         this.mealPlanService = mealPlanService;
         this.userService = userService;
+        this.recipeService = recipeService;
     }
+    
+    @Autowired
+    MealPlanItemService mealPlanItemService;
 
     // get mealplan by using startdate
     @GetMapping
@@ -50,6 +78,7 @@ public class MealPlanController {
             // if none is found, create a new mealPlan instance and return dto
 
         User currentUser = getLoggedInUser(principal);  
+        List<RecipeDto> savedRecipes = recipeService.getAllSavedRecipesByUser(currentUser);
         MealPlanDto mealPlanDto;
         Calendar c = Calendar.getInstance(); // current calendar obj   
         c.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
@@ -60,21 +89,24 @@ public class MealPlanController {
             try {
                 MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanId);
                 if(mealPlan != null && currentUser.getMealPlans().contains(mealPlan)) {
+
                     mealPlanDto = mealPlanService.mapToMealPlanDto(mealPlan);
+
                     model.addAttribute("user", currentUser);
+                    model.addAttribute("savedRecipes", savedRecipes);
                     model.addAttribute("mealPlan", mealPlanDto);
                     resetCalendar(c, mealPlan.getStartDate());
-                    c.add(Calendar.DATE, 7);
+                    model.addAttribute("weeklyDates", getWeeklyDates(c));
+                    model.addAttribute("mealTypes", mealTypes);
                     model.addAttribute("nextStartDate", getStartDateString(c));
                     c.add(Calendar.DATE, -14);
                     model.addAttribute("prevStartDate", getStartDateString(c));
-                    
+
                     return "mealPlan";
                 }
             } catch(Exception e){
                 return "redirect:/user/mealplans";
             }
-            
         }
 
         if(paramStartDate != null) {
@@ -87,16 +119,58 @@ public class MealPlanController {
         mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser, getStartDateString(c), c);
 
         model.addAttribute("user", currentUser);
+        model.addAttribute("savedRecipes", savedRecipes);
         model.addAttribute("mealPlan", mealPlanDto);
-        c.add(Calendar.DATE, 7);
+        model.addAttribute("weeklyDates", getWeeklyDates(c));
+        model.addAttribute("mealTypes", mealTypes);
         model.addAttribute("nextStartDate", getStartDateString(c));
         c.add(Calendar.DATE, -14);
         model.addAttribute("prevStartDate", getStartDateString(c));
-        
+
         return "mealplan";
 
     }
     
+    @PostMapping("/mealPlanItem")
+    public String updateMealPlanItem(@ModelAttribute MealPlanItemDto mealPlanItemDto, Model model,
+    Principal principal, RedirectAttributes redirectAttributes) {
+
+        MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanItemDto.getMealPlanId());
+        mealPlanItemDto.setMealPlan(mealPlan);
+        // if mealplanitem id exist, find mealplanitem by id, set recipe then update/save
+        if(mealPlanItemDto.getId() != null) {
+            // try {
+                
+                mealPlanItemService.updateMealPlanItem(mealPlanItemDto);
+            // } catch (Exception e){
+            //     return "redirect:/user/mealplans";
+            // }        
+        } else if(mealPlanItemDto.getRecipeId() != null) {
+            // else, only update if there is a recipe it, if it doens't include a recipe id, it's just an empty dto
+            // try {
+                mealPlanItemService.saveMealPlanItem(mealPlanItemDto);
+            // } catch (Exception e) {
+            //     return "redirect:/user/mealplans";
+            // }
+        }
+       
+
+
+        // need to return meal plan id and start date string
+        System.out.println(mealPlanItemDto.getMealType());
+        System.out.println(mealPlanItemDto.getMealPlanId());
+        System.out.println(mealPlanItemDto.getRecipeId());
+        redirectAttributes.addAttribute("mealPlan", mealPlanItemDto.getMealPlanId());
+        
+        return "redirect:/user/mealplans";
+    }
+
+    // private void setMealPlanDtoAttributes(Model model, MealPlanDto mealPlanDto) {
+    //     for(int i = 0; i < mealPlanDto.getMealPlanItemsDtos().size(); i++) {
+    //         model.addAttribute("mealPlanItem" + i, mealPlanDto.getMealPlanItemsDtos().get(i));
+    //     }
+    // }
+
     private void resetCalendar(Calendar calendar, String startDate) {
         String[] str = startDate.split("_");
         calendar.set(Integer.parseInt(str[0]), getMonth(str[1]), Integer.parseInt(str[2]));
@@ -107,6 +181,20 @@ public class MealPlanController {
         String[] str = calendar.getTime().toString().split(" ");
         String startDate = str[5] + "_" + str[1] + "_" + str[2];
         return startDate;
+    }
+
+    private String[][] getWeeklyDates(Calendar calendar) {
+        String[][] weeklyDates = new String[7][];
+        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        String[] str;
+        for(int i = 0; i < 7; i++) {
+            str = calendar.getTime().toString().split(" ");
+            weeklyDates[i] = new String[] {str[1] + " " + str[2] + ", " + str[5], days[i]};
+            
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        return weeklyDates;
     }
 
     private int getMonth(String month) {

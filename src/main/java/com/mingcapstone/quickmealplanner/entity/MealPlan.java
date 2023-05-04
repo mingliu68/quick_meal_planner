@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Getter 
 @Setter 
 @NoArgsConstructor  
@@ -37,7 +41,12 @@ public class MealPlan {
     @Column(name="start_date")
     private String startDate;
 
-    @OneToMany(mappedBy="mealPlan")
+    @OneToMany(mappedBy="mealPlan", fetch = FetchType.EAGER)
+    // @JsonManagedReference
+    @JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property="id"
+    )
     private List<MealPlanItem> mealPlanItems = new ArrayList<>();
 
 

@@ -9,6 +9,8 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,6 +36,7 @@ public class Recipe {
     private List<User> users;
 
     @OneToMany(mappedBy="recipe")
+    // @JsonManagedReference
     private List<MealPlanItem> mealPlanItems;
     
     // @Column(name="saved")

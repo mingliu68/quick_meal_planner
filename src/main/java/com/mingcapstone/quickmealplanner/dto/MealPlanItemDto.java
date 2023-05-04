@@ -18,13 +18,18 @@ public class MealPlanItemDto {
 
     private MealPlan mealPlan;
 
+    private Long mealPlanId;
+
     private String mealType;
 
     private Recipe recipe;
 
+    private Long recipeId;
+
     public MealPlanItemDto(MealPlan mealPlan, String mealType) {
         this.mealPlan = mealPlan;
         this.mealType = mealType;
+        this.mealPlanId = mealPlan.getId();
     }
 
 }

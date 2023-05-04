@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,9 @@ public class AuthController {
 
     private UserService userService;
     // private User currentUser;
+
+    @Value("${admin_email}")
+    private String admin_email;
 
     @Autowired
     public AuthController(UserService userService) {
@@ -71,8 +75,6 @@ public class AuthController {
             return "/register";
         }
         userService.saveUser(userDto);
-        // User dbUser = userService.saveUser(userDto);
-        // System.out.println(dbUser.getRecipes());
 
         return "redirect:/register?success";
     }
@@ -115,16 +117,19 @@ public class AuthController {
 
     @GetMapping("/users")
     public String users(Model model, Principal principal) {
-        List<UserDto> users = userService.findAllUsers();
-        model.addAttribute("users", users);
-        // User currentUser = userService.findUserByEmail(principal.getName());
-        User currentUser = getPrincipal(principal);
-        model.addAttribute("user", currentUser);
+        if(principal.getName().equals(admin_email)) {
+           List<UserDto> users = userService.findAllUsers();
+            model.addAttribute("users", users);
+            // User currentUser = userService.findUserByEmail(principal.getName());
+            User currentUser = getPrincipal(principal);
+            model.addAttribute("user", currentUser);
 
-        System.out.println("Principal id: " + currentUser.getId());
-        System.out.println("Principal first role: " + currentUser.getRoles().get(0).getName());
+            System.out.println("Principal id: " + currentUser.getId());
+            System.out.println("Principal first role: " + currentUser.getRoles().get(0).getName());
 
-        return "users";
+            return "users"; 
+        }
+        return "redirect:/user";
     }
 
     @GetMapping("/user")

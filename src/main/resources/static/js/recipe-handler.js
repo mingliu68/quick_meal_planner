@@ -10,7 +10,6 @@ const recipeObj = {
     directions : []
 };
 
-
 saveButton.addEventListener("click", (e)=>{
     recipeObj.name = recipeName;
     for(const ingredient of ingredients) {
@@ -38,7 +37,8 @@ async function addRecipe(obj) {
         headers: headers
     })
     .catch(error => console.error(error.message))
+    const json = await response.json();
     if(response.status == 200) {
-        window.location.href=`${base}users`;
+        window.location.href=`${base}user/recipes/recipe?recipeId=${json.id}`;
     }
 }

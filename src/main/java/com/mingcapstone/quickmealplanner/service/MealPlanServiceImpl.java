@@ -2,6 +2,7 @@ package com.mingcapstone.quickmealplanner.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,12 +127,19 @@ public class MealPlanServiceImpl implements MealPlanService {
         mealPlanDto.setStartDate(mealPlan.getStartDate());
         mealPlanDto.setNext(mealPlan.getNext());
         mealPlanDto.setPrev(mealPlan.getPrev());
-        List<MealPlanItemDto> itemDtos= new ArrayList<>();
-        // get 14 dtos for both emtpies and existing mealplanitems
-        for(String mealType : mealTypes) {
-            itemDtos.add(mealPlanItemService.findMealPlanItemByMealPlanAndMealType(mealPlan, mealType));
-        }
-        mealPlanDto.setMealPlanItemsDtos(itemDtos);
+        // List<MealPlanItemDto> itemDtos= new ArrayList<>();
+        // // get 14 dtos for both emtpies and existing mealplanitems
+        // for(String mealType : mealTypes) {
+        //     itemDtos.add(mealPlanItemService.findMealPlanItemByMealPlanAndMealType(mealPlan, mealType));
+        // }
+        // mealPlanDto.setMealPlanItemsDtos(itemDtos);
+        HashMap<String, MealPlanItem> items = new HashMap<>();
+        for(MealPlanItem item : mealPlan.getMealPlanItems()) {
+            items.put(item.getMealType(), item);
+        }   
+        mealPlanDto.setMealPlanItemsMap(items);
+        System.out.println("MealPlanDto ItemsMap size: " + mealPlanDto.getMealPlanItemsMap().size());
+        System.out.println("MealPlan Items size: " + mealPlan.getMealPlanItems().size());
         return mealPlanDto;
     } 
     
