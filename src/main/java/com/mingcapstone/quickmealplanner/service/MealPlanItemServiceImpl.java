@@ -28,7 +28,6 @@ public class MealPlanItemServiceImpl implements MealPlanItemService {
         this.recipeService = recipeService;
     }
     
-
     @Override
     public MealPlanItem saveMealPlanItem(MealPlanItemDto mealPlanItemDto){
 

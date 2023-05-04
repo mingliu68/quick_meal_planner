@@ -22,6 +22,9 @@ const recipeButtons = document.getElementsByClassName("recipe-button");
 [...menuItems].forEach(item => {
     item.addEventListener('click', () => {
         activeMenuItem = item;
+        if(activeRecipeButton != null) {
+            activeRecipeButton.classList.remove("selected");
+        }
         activeRecipeButton = null;
         updateButton.setAttribute("data-dismiss", "modal");
         [...recipeButtons].forEach(button => {
