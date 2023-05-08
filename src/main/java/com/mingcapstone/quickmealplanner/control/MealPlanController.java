@@ -76,7 +76,7 @@ public class MealPlanController {
 
         UserDto currentUser = getLoggedInUser(principal);  
         List<RecipeDto> savedRecipes = recipeService.getAllSavedRecipesByUser(currentUser.getId());
-        // MealPlanDto mealPlanDto;
+        MealPlanDto mealPlanDto;
         Calendar c = Calendar.getInstance(); // current calendar obj   
         c.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
         c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  // set date to current Monday
@@ -84,7 +84,7 @@ public class MealPlanController {
         
         if(mealPlanId != null) {
             try {
-                MealPlanDto mealPlanDto = mealPlanService.findMealPlanDtoById(mealPlanId);
+                mealPlanDto = mealPlanService.findMealPlanDtoById(mealPlanId);
                 // if(mealPlanDto != null && currentUser.getMealPlans().contains(mealPlan)) {
                     if(mealPlanDto != null && currentUser.getId() == mealPlanDto.getUser().getId()) {
 
@@ -113,7 +113,7 @@ public class MealPlanController {
             System.out.println(c.getTime());
             c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
         } 
-        MealPlanDto mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser.getId(), getStartDateString(c), c);
+        mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser.getId(), getStartDateString(c), c);
 
         model.addAttribute("user", currentUser);
         model.addAttribute("savedRecipes", savedRecipes);

@@ -121,7 +121,6 @@ public class AuthController {
         if(principal.getName().equals(admin_email)) {
            List<UserDto> users = userService.findAllUsers();
             model.addAttribute("users", users);
-            // User currentUser = userService.findUserByEmail(principal.getName());
             UserDto currentUser = getPrincipal(principal);
             model.addAttribute("user", currentUser);
 
@@ -145,15 +144,8 @@ public class AuthController {
     @GetMapping("/user/profile")
     public String userProfileForm(Model model, Principal principal) {
         UserDto currentUser = getPrincipal(principal);
-        // UserDto userDto = new UserDto();
-        // userDto.setFirstName(currentUser.getFirstName());
-        // userDto.setLastName(currentUser.getLastName());
-        // userDto.setEmail(currentUser.getEmail());
-        // userDto.setId(currentUser.getId());
-        // userDto.setRecipes(currentUser.getRecipes());
-
+    
         model.addAttribute("user", currentUser);
-        // model.addAttribute("userDto", userDto);
 
         return "user-profile";
 

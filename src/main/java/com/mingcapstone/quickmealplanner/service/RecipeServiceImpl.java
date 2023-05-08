@@ -52,7 +52,6 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setName(recipeDto.getName());
         recipe.setDirections(recipeDto.getDirections());
         recipe.setIngredients(recipeDto.getIngredients());
-        // recipe.setSaved(1);
         Recipe dbRecipe = recipeRepository.save(recipe);
         user.addRecipe(dbRecipe);
         userRepository.save(user);
