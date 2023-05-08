@@ -10,9 +10,9 @@ import com.mingcapstone.quickmealplanner.entity.User;
 
 public interface UserService {
     
-    User saveUser(UserDto userDto);
+    UserDto saveUser(UserDto userDto);
     
-    User findUserByEmail(String email);
+    UserDto findUserByEmail(String email);
 
     User findUserById(Long id);
 
@@ -22,7 +22,7 @@ public interface UserService {
 
     User updateUser(UserDto userDto);
     
-    User addRecipeToList(Long recipeId, User user);
+    User addRecipeToList(Long recipeId, Long userId);
     
-    User removeRecipeFromList(Long recipeId, User user);
+    User removeRecipeFromList(Long recipeId, Long userId);
 }

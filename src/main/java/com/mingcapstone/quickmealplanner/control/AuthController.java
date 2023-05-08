@@ -66,7 +66,7 @@ public class AuthController {
     @PostMapping("/register/save")
     public String registration(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result, Model model) {
 
-        User existingUser = userService.findUserByEmail(userDto.getEmail());
+        UserDto existingUser = userService.findUserByEmail(userDto.getEmail());
         if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
             result.rejectValue("email", null, "There is already an account registered with that email address.");
         }
@@ -85,8 +85,9 @@ public class AuthController {
 
         System.out.println("userDto id: " + userDto.getId());
         System.out.println("userDto first name: " + userDto.getFirstName());
-        User currentUser = getPrincipal(principal);
-        User updatedUser = userService.findUserByEmail(userDto.getEmail());
+        UserDto currentUserDto = getPrincipal(principal);
+        User currentUser = userService.findUserById(currentUserDto.getId());
+        UserDto updatedUser = userService.findUserByEmail(userDto.getEmail());
 
         // user trying to update email
         if (updatedUser != null && updatedUser.getId() != currentUser.getId()) {
@@ -121,11 +122,11 @@ public class AuthController {
            List<UserDto> users = userService.findAllUsers();
             model.addAttribute("users", users);
             // User currentUser = userService.findUserByEmail(principal.getName());
-            User currentUser = getPrincipal(principal);
+            UserDto currentUser = getPrincipal(principal);
             model.addAttribute("user", currentUser);
 
             System.out.println("Principal id: " + currentUser.getId());
-            System.out.println("Principal first role: " + currentUser.getRoles().get(0).getName());
+            // System.out.println("Principal first role: " + currentUser.getRoles().get(0).getName());
 
             return "users"; 
         }
@@ -134,7 +135,7 @@ public class AuthController {
 
     @GetMapping("/user")
     public String currentUser(Model model, Principal principal) {
-        User currentUser = getPrincipal(principal);
+        UserDto currentUser = getPrincipal(principal);
         OptionsDto optionsDto = new OptionsDto();
         model.addAttribute("user", currentUser);
         model.addAttribute("optionsDto", optionsDto);
@@ -143,16 +144,16 @@ public class AuthController {
 
     @GetMapping("/user/profile")
     public String userProfileForm(Model model, Principal principal) {
-        User currentUser = getPrincipal(principal);
-        UserDto userDto = new UserDto();
-        userDto.setFirstName(currentUser.getFirstName());
-        userDto.setLastName(currentUser.getLastName());
-        userDto.setEmail(currentUser.getEmail());
-        userDto.setId(currentUser.getId());
-        userDto.setRecipes(currentUser.getRecipes());
+        UserDto currentUser = getPrincipal(principal);
+        // UserDto userDto = new UserDto();
+        // userDto.setFirstName(currentUser.getFirstName());
+        // userDto.setLastName(currentUser.getLastName());
+        // userDto.setEmail(currentUser.getEmail());
+        // userDto.setId(currentUser.getId());
+        // userDto.setRecipes(currentUser.getRecipes());
 
         model.addAttribute("user", currentUser);
-        model.addAttribute("userDto", userDto);
+        // model.addAttribute("userDto", userDto);
 
         return "user-profile";
 
@@ -163,7 +164,7 @@ public class AuthController {
     // return "recipes";
     // }
 
-    private User getPrincipal(Principal principal) {
+    private UserDto getPrincipal(Principal principal) {
 
         return userService.findUserByEmail(principal.getName());
     }

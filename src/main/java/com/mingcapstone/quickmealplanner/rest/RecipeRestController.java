@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
+import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
@@ -30,12 +31,11 @@ public class RecipeRestController {
 
     @PostMapping("/recipe")
     public Recipe saveRecipe(@RequestBody RecipeDto recipeDto, Principal principal) {
-        User user = getLoggedInUser(principal);
-        return recipeService.save(recipeDto, user);
-        
+        UserDto user = getLoggedInUser(principal);
+        return recipeService.save(recipeDto, user.getId());
     } 
 
-    private User getLoggedInUser(Principal principal) {
+    private UserDto getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
     }   
 }

@@ -41,11 +41,10 @@ public class UserServiceImpl implements UserService {
     RecipeRepository recipeRepository;
 
     @Override
-    public User saveUser(UserDto userDto) {
+    public UserDto saveUser(UserDto userDto) {
         User user = new User();
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
-        // user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         List<Recipe> recipes = new ArrayList<>();
@@ -55,9 +54,11 @@ public class UserServiceImpl implements UserService {
             role = checkRoleExist();
         }
         user.setRoles(Arrays.asList(role));
-        // User dbUser = userRepository.save(user);
+        User dbUser = userRepository.save(user);
+        userDto.setId(dbUser.getId());
 
-        return userRepository.save(user);
+        // return userRepository.save(user);
+        return userDto;
     }
 
     @Override
@@ -80,8 +81,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDto findUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user != null) {
+            return mapUserToDto(user);
+        }
+        return null; 
+    }
+
+    private UserDto mapUserToDto(User user) {
+        UserDto userDto = new UserDto();
+
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setRecipes(user.getRecipes());
+        userDto.setMealPlans(user.getMealPlans());
+
+        return userDto;
     }
 
     @Override
@@ -123,7 +141,8 @@ public class UserServiceImpl implements UserService {
 
     // adding recipe to user recipes list and update recipe saved count
     @Override
-    public User addRecipeToList(Long recipeId, User user) {
+    public User addRecipeToList(Long recipeId, Long userId) {
+        User user = findUserById(userId);
         Optional<Recipe> result = recipeRepository.findById(recipeId);
         Recipe recipe = new Recipe();
         if (result.isPresent()) {
@@ -138,7 +157,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User removeRecipeFromList(Long recipeId, User user) {
+    public User removeRecipeFromList(Long recipeId, Long userId) {
+        User user = findUserById(userId);
         Optional<Recipe> result = recipeRepository.findById(recipeId);
         Recipe recipe = new Recipe();
         if (result.isPresent()) {

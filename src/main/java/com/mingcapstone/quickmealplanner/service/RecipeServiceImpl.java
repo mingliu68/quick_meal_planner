@@ -20,12 +20,15 @@ public class RecipeServiceImpl implements RecipeService {
     
     private RecipeRepository recipeRepository;
     private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository, UserService userService) {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
+    
     
 
     @Override
@@ -43,7 +46,8 @@ public class RecipeServiceImpl implements RecipeService {
 
     // saving brand new user searched recipe 
     @Override
-    public Recipe save(RecipeDto recipeDto, User user){
+    public Recipe save(RecipeDto recipeDto, Long userId){
+        User user = userService.findUserById(userId);
         Recipe recipe = new Recipe();
         recipe.setName(recipeDto.getName());
         recipe.setDirections(recipeDto.getDirections());
@@ -69,7 +73,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeDto> getAllSavedRecipesByUser(User user){
+    public List<RecipeDto> getAllSavedRecipesByUser(Long userId){
+        User user = userService.findUserById(userId);
         return user.getRecipes().stream()
             .map((recipe) -> mapToRecipeDto(recipe))
             .collect(Collectors.toList());
@@ -99,7 +104,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
     
     @Override
-    public List<Recipe> getRecentRecipesNotByUser(User user){
+    public List<Recipe> getRecentRecipesNotByUser(Long userId){
+        User user = userService.findUserById(userId);
         List<Recipe> recentRecipes = getRecentRecipes();
         List<Recipe> recipes = new ArrayList<>();
         for(Recipe recipe: recentRecipes) {

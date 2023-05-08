@@ -2,6 +2,7 @@ package com.mingcapstone.quickmealplanner.dto;
 
 import java.util.List;
 
+import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
 
@@ -34,6 +35,8 @@ public class UserDto
     private String password;
     
     private List<Recipe> recipes;   
+
+    private List<MealPlan> mealPlans;
 
 
     // public UserDto(User user) {
