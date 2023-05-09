@@ -24,28 +24,15 @@ public class MealPlanServiceImpl implements MealPlanService {
     
     private MealPlanRepository mealPlanRepository;
     private MealPlanItemRepository mealPlanItemRepository;
-    private MealPlanItemService mealPlanItemService;
     private UserRepository userRepository;
     private RecipeService recipeService;
     private UserService userService;
 
-
-    private String[] mealTypes = {
-        "MONDAY_LUNCH", "MONDAY_DINNER", 
-        "TUESDAY_LUNCH", "TUESDAY_DINNER",
-        "WEDNESDAY_LUNCH", "WEDNESDAY_DINNER",
-        "THURSDAY_LUNCH", "THURSDAY_DINNER",
-        "FRIDAY_LUNCH", "FRIDAY_DINNER",
-        "SATURDAY_LUNCH", "SATURDAY_DINNER",
-        "SUNDAY_LUNCH", "SUNDAY_DINNER"
-    };
-
     @Autowired
-    public MealPlanServiceImpl(MealPlanRepository mealPlanRepository, MealPlanItemRepository mealPlanItemRepository, UserRepository userRepository, MealPlanItemService mealPlanItemService, RecipeService recipeService, UserService userService) {
+    public MealPlanServiceImpl(MealPlanRepository mealPlanRepository, MealPlanItemRepository mealPlanItemRepository, UserRepository userRepository, RecipeService recipeService, UserService userService) {
         this.mealPlanRepository = mealPlanRepository;
         this.mealPlanItemRepository = mealPlanItemRepository;
         this.userRepository = userRepository;
-        this.mealPlanItemService = mealPlanItemService;
         this.recipeService = recipeService;
         this.userService = userService;
     }
@@ -141,12 +128,6 @@ public class MealPlanServiceImpl implements MealPlanService {
         mealPlanDto.setStartDate(mealPlan.getStartDate());
         mealPlanDto.setNext(mealPlan.getNext());
         mealPlanDto.setPrev(mealPlan.getPrev());
-        // List<MealPlanItemDto> itemDtos= new ArrayList<>();
-        // // get 14 dtos for both emtpies and existing mealplanitems
-        // for(String mealType : mealTypes) {
-        //     itemDtos.add(mealPlanItemService.findMealPlanItemByMealPlanAndMealType(mealPlan, mealType));
-        // }
-        // mealPlanDto.setMealPlanItemsDtos(itemDtos);
         HashMap<String, MealPlanItem> items = new HashMap<>();
         for(MealPlanItem item : mealPlan.getMealPlanItems()) {
             items.put(item.getMealType(), item);
@@ -228,26 +209,19 @@ public class MealPlanServiceImpl implements MealPlanService {
         MealPlanItem mealPlanItem = mealPlanItemRepository.findById(mealPlanItemDto.getId()).get();
         System.out.println("Meal Plan Item id from service: " + mealPlanItem.getId());
 
-        // if(mealPlanItemDto.getRecipeId() == null) {
-        //     mealPlanItem.setRecipe(null);
-        // } else if (mealPlanItemDto.getRecipeId() != mealPlanItem.getRecipe().getId()) {
-        //     Recipe recipe = recipeService.findById(mealPlanItemDto.getRecipeId());
-        //     mealPlanItem.setRecipe(recipe);
-        // }
+        if(mealPlanItemDto.getRecipeId() == null) {
+            mealPlanItem.setRecipe(null);
+        } else if (mealPlanItemDto.getRecipeId() != mealPlanItem.getRecipe().getId()) {
+            Recipe recipe = recipeService.findById(mealPlanItemDto.getRecipeId());
+            mealPlanItem.setRecipe(recipe);
+        }
 
-        // MealPlan mealPlan = mealPlanRepository.findById(mealPlanItemDto.getMealPlanId()).get();
-        // mealPlan.removeMealPlanItem(mealPlanItem);
-        // mealPlanRepository.save(mealPlan);
-        mealPlanItemService.deleteMealPlanItem(mealPlanItemDto.getId());
-             
+        MealPlanItem dbMealPlanItem = mealPlanItemRepository.saveAndFlush(mealPlanItem);
         
-        // MealPlanItem dbMealPlanItem = mealPlanItemRepository.saveAndFlush(mealPlanItem);
-        
-        // System.out.println("Meal Plan Item id from service after Saving: " + dbMealPlanItem.getId());
+        System.out.println("Meal Plan Item id from service after Saving: " + dbMealPlanItem.getId());
 
-        // return dbMealPlanItem;
+        return dbMealPlanItem;
 
-        return saveMealPlanItem(mealPlanItemDto);
     
     }
  

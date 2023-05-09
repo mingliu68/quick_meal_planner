@@ -35,15 +35,6 @@ public class AuthController {
 
     @GetMapping("/index")
     public String home(Model model, Principal principal) {
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // if(principal == null) {
-        // currentUser = null;
-        // } else {
-        // getPrincipal(principal);
-        // }
-        // getPrincipal(principal);
-        // model.addAttribute("user", currentUser);
-
         return principal == null ? "index" : "redirect:/user";
 
     }

@@ -7,7 +7,6 @@ import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
-import com.mingcapstone.quickmealplanner.entity.User;
 
 public interface MealPlanService {
 

@@ -39,13 +39,10 @@ public class MealPlanRestController {
         if(mealPlanItemDto.getId() != null) {
             System.out.println("meal plan item id from controller: " + mealPlanItemDto.getId());
             mealPlanService.updateMealPlanItem(mealPlanItemDto);
-            // return;
-            // return mealPlanItemDto;
+        } else {
+            MealPlanItem dbMealPlanItem = mealPlanService.saveMealPlanItem(mealPlanItemDto); 
+            mealPlanItemDto.setId(dbMealPlanItem.getId());
         }
-        MealPlanItem dbMealPlanItem = mealPlanService.saveMealPlanItem(mealPlanItemDto); 
-        mealPlanItemDto.setId(dbMealPlanItem.getId());
-        // return;
-        // return mealPlanItemDto;
     } 
 
     private UserDto getLoggedInUser(Principal principal) {

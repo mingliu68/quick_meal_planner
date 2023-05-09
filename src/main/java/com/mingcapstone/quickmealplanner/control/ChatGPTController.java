@@ -19,8 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mingcapstone.quickmealplanner.dto.OptionsDto;
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
-import com.mingcapstone.quickmealplanner.entity.Recipe;
-import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
 import com.mingcapstone.quickmealplanner.service.UserService;
 import com.theokanning.openai.completion.CompletionRequest;

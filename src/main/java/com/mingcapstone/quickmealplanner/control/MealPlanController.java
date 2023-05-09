@@ -19,9 +19,6 @@ import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
-import com.mingcapstone.quickmealplanner.entity.MealPlan;
-
-import com.mingcapstone.quickmealplanner.entity.User;
 
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
@@ -85,10 +82,7 @@ public class MealPlanController {
         if(mealPlanId != null) {
             try {
                 mealPlanDto = mealPlanService.findMealPlanDtoById(mealPlanId);
-                // if(mealPlanDto != null && currentUser.getMealPlans().contains(mealPlan)) {
                     if(mealPlanDto != null && currentUser.getId() == mealPlanDto.getUser().getId()) {
-
-                    // mealPlanDto = mealPlanService.mapToMealPlanDto(mealPlan);
 
                     model.addAttribute("user", currentUser);
                     model.addAttribute("savedRecipes", savedRecipes);

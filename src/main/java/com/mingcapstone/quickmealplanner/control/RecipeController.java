@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
-import com.mingcapstone.quickmealplanner.entity.Recipe;
-import com.mingcapstone.quickmealplanner.entity.User;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
 import com.mingcapstone.quickmealplanner.service.UserService;
 
