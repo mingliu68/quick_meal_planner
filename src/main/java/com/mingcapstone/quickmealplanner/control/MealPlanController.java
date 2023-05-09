@@ -119,7 +119,6 @@ public class MealPlanController {
         model.addAttribute("prevStartDate", getStartDateString(c));
 
         return "mealplan";
-
     }
     
     @PostMapping("/mealPlanItem")
@@ -166,9 +165,19 @@ public class MealPlanController {
     }
 
     private String getStartDateString(Calendar calendar) {
+        String startDate;
+        String[] str;
+
+        Calendar currentWeek = Calendar.getInstance();// current calendar obj   
+        currentWeek.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
+        currentWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  // set date to current Monday
         
-        String[] str = calendar.getTime().toString().split(" ");
-        String startDate = str[5] + "_" + str[1] + "_" + str[2];
+        if(calendar.before(currentWeek)) {
+            str = currentWeek.getTime().toString().split(" ");
+        } else {
+            str = calendar.getTime().toString().split(" ");
+        }
+        startDate = str[5] + "_" + str[1] + "_" + str[2];
         return startDate;
     }
 

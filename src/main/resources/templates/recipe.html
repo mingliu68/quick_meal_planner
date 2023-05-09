@@ -120,25 +120,46 @@
             </a>
           </div>
         </div>
-        <div class="col-md-3" style="border-left: 1px solid #eee;">
+        <div class="col-md-3 sideBar-container-wrapper">
           
-          <div style="position: sticky;top: 0; padding: 10px;">
-          <h2 style="text-align:center;">Meal Plan</h2>
-          <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-            <div>Prev</div>
-            <div>Next</div>
+          <div class="sideBar-container">
+          <p th:text="${mealPlan.startDate}" />
+          <p>Prev Start Date: <span th:text="${prevStartDate}"/></p>
+          <p>Next Start Date: <span th:text="${nextStartDate}" /></p>
+          <h2 class="text-center">Meal Plan</h2>
+          <div class="d-flex mb-4" th:classappend="${mealPlan.startDate == prevStartDate ? 'justify-content-end' : 'justify-content-between'}">
+            <a    th:if="${mealPlan.startDate != prevStartDate}"
+                  th:href="@{/user/recipes/recipe?(recipeId=${recipe.id},startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                >
+                  Prev
+            </a>
+            <a
+                  th:href="@{/user/recipes/recipe?(recipeId=${recipe.id},startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                >
+                  Next
+            </a>
           </div>
-            <div th:each="weekday, iter: ${weekdays}" style="display:flex;height: 120px;margin: 5px 0;">
-              <div style="display: flex; flex-direction: column;padding: 5px;background-color: #eeeeee;">
-                <div style="height:30%;">
-                  <h5 style="padding: 0;margin: 0;display: flex;justify-content: center;align-items: center;">
-                    5/8
-                  </h5>
+            <div th:each="weekday, iter: ${weekdays}" class="d-flex my-1" style="height: 120px">
+              <div class="d-flex flex-column p-1" style="background-color: #eeeeee;">
+                <div style="height: 40px;">
+                  <h6 class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;">
+                    May
+                  </h6>
+                  <h6 class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;">
+                    8
+                  </h6>
                 </div>
-                <h4 th:text="${#strings.substring(weekday, 0, 3)}" style="writing-mode: vertical-lr;text-orientation: upright;padding:0;margin:0;letter-spacing: -6px;display: flex;align-items: center;justify-content: flex-start;"/></div>
-              <div style="height: 100%;display:flex;flex-direction: column;justify-content: space-between; width: 100%; padding-left:10px;">
-                <div style="background-color:antiquewhite; border-radius:10px; height: 48%; width:100%;"></div>
-                <div style="background-color:antiquewhite; border-radius:10px; height: 48%; width:100%;"></div>
+                <!-- <h4 th:text="${#strings.substring(weekday, 0, 3)}" class="vertical-letters"/> -->
+                <h4 th:text="${#strings.substring(weekday, 0, 1)}" style="font-weight:900;display: flex;justify-content: center;padding: 5px;border-radius: 50%;background-color: white;width: 40px;height: 40px;"/>
+
+              </div>
+              <div class="h-100 d-flex flex-column justify-content-between w-100 pl-3">
+                <div class="sideBar-menu-item empty"></div>
+                <div class="sideBar-menu-item empty"></div>
               </div>
             </div>
 

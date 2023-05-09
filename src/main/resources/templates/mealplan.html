@@ -64,31 +64,22 @@
         <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper">
           <div class="row">
             <div>
-              <!-- <p th:text="${user.firstName}" />
-              <p>
-                <span th:text="${#lists.size(user.mealPlans)}" />Meal Plans
-                Saved
-              </p>
-              <p th:text="${mealPlan.id}" />
-              <p>Start Date: <span th:text="${mealPlan.startDate}" /></p>
-              <p>Next Start Date: <span th:text="${nextStartDate}" /></p>
-              <p>Previous Start Date: <span th:text="${prevStartDate}" /></p> -->
-              <!-- <p><span th:each="date: ${weeklyDates}" th:text="${date}"/> </p> -->
-              <div class="d-flex justify-content-between my-3">
-                <a
-                  th:href="@{/user/mealplans(startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                >
-                  Previous
-                </a>
-                <a
-                  th:href="@{/user/mealplans(startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                >
-                  Next
-                </a>
+              <div class="d-flex my-3" th:classappend="${mealPlan.startDate == prevStartDate ? 'justify-content-end' : 'justify-content-between'}">
+                  <a 
+                    th:if="${mealPlan.startDate != prevStartDate}"
+                    th:href="@{/user/mealplans(startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                  >
+                    Previous
+                  </a>
+                  <a
+                    th:href="@{/user/mealplans(startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                  >
+                    Next
+                  </a>
               </div>
               <div class="container text-center">
                 <div
@@ -118,9 +109,8 @@
                               data-recipeid=*{recipe?.id},
                               data-mealplanid=${mealPlan.id},
                               data-mealtype=*{mealType}"
-                            class="btn h-100 w-100 menu-item lunch" type="button" data-toggle="modal" data-target="#savedRecipes"
+                            class="btn h-100 w-100 menu-item lunch" th:classappend="*{recipe} ? '' : empty" type="button" data-toggle="modal" data-target="#savedRecipes"
                           >
-                            <!-- <p th:text="*{mealType}" /> -->
                             <p class="meal-type-tag">Lunch</p>
                             <p class="meal-item-wrapper" th:text="*{recipe?.name} " />
                           </div>
@@ -133,10 +123,9 @@
                               data-recipeid=null,
                               data-mealplanid=${mealPlan.id},
                               data-mealtype=${mealType}"
-                              class="btn h-100 w-100 menu-item lunch" type="button" data-toggle="modal" data-target="#savedRecipes"
+                              class="btn h-100 w-100 menu-item empty lunch" type="button" data-toggle="modal" data-target="#savedRecipes"
                           >
-                            <!-- <p th:text="${mealType}" /> -->
-                            <p class="meal-type-tag">Lunch</p>
+                            <!-- <p class="meal-type-tag">Lunch</p> -->
                           </div>
                         </div>
                       </div>
@@ -157,7 +146,6 @@
                               data-mealtype=*{mealType}"
                               class="btn h-100 w-100 menu-item dinner" type="button" data-toggle="modal" data-target="#savedRecipes"
                           >
-                            <!-- <p th:text="*{mealType}" /> -->
                             <p class="meal-type-tag">Dinner</p>
                             <p class="meal-item-wrapper" th:text="*{recipe?.name} " />
                           </div>
@@ -170,10 +158,9 @@
                               data-recipeid=null,
                               data-mealplanid=${mealPlan.id},
                               data-mealtype=${mealType}"
-                              class="btn h-100 w-100 menu-item dinner"  type="button" data-toggle="modal" data-target="#savedRecipes"
+                              class="btn h-100 w-100 menu-item empty dinner"  type="button" data-toggle="modal" data-target="#savedRecipes"
                           >
-                            <!-- <p th:text="${mealType}" /> -->
-                            <p class="meal-type-tag">Dinner</p>
+                            <!-- <p class="meal-type-tag">Dinner</p> -->
                           </div>
                         </div>
                       </div>
