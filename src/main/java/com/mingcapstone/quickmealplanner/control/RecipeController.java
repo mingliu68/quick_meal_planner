@@ -22,6 +22,20 @@ public class RecipeController {
     private RecipeService recipeService;
     private UserService userService;
 
+    private String[] mealTypes = {
+        "MONDAY_LUNCH", "MONDAY_DINNER", 
+        "TUESDAY_LUNCH", "TUESDAY_DINNER",
+        "WEDNESDAY_LUNCH", "WEDNESDAY_DINNER",
+        "THURSDAY_LUNCH", "THURSDAY_DINNER",
+        "FRIDAY_LUNCH", "FRIDAY_DINNER",
+        "SATURDAY_LUNCH", "SATURDAY_DINNER",
+        "SUNDAY_LUNCH", "SUNDAY_DINNER"
+    };
+
+    private String[] weekdays = {
+        "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"
+    };
+
     @Autowired
     public RecipeController(RecipeService recipeService, UserService userService) {
         this.recipeService = recipeService;
@@ -47,6 +61,7 @@ public class RecipeController {
         model.addAttribute("user", user);
         model.addAttribute("recipe", recipe);
         model.addAttribute("savedByUser", savedByUser);
+        model.addAttribute("weekdays", weekdays);
 
         return "recipe";
     }

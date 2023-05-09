@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <div class="col-md-7 col-lg-8 dashboard-content-container-wrapper">
+        <div class="col-md-6 col-lg-7 dashboard-content-container-wrapper">
           <a
             th:if="${savedByUser}"
             th:href="@{/user/recipes}"
@@ -120,7 +120,31 @@
             </a>
           </div>
         </div>
-        <div class="col-md-2" style="border-left: 1px solid #eee;"></div>
+        <div class="col-md-3" style="border-left: 1px solid #eee;">
+          
+          <div style="position: sticky;top: 0; padding: 10px;">
+          <h2 style="text-align:center;">Meal Plan</h2>
+          <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+            <div>Prev</div>
+            <div>Next</div>
+          </div>
+            <div th:each="weekday, iter: ${weekdays}" style="display:flex;height: 120px;margin: 5px 0;">
+              <div style="display: flex; flex-direction: column;padding: 5px;background-color: #eeeeee;">
+                <div style="height:30%;">
+                  <h5 style="padding: 0;margin: 0;display: flex;justify-content: center;align-items: center;">
+                    5/8
+                  </h5>
+                </div>
+                <h4 th:text="${#strings.substring(weekday, 0, 3)}" style="writing-mode: vertical-lr;text-orientation: upright;padding:0;margin:0;letter-spacing: -6px;display: flex;align-items: center;justify-content: flex-start;"/></div>
+              <div style="height: 100%;display:flex;flex-direction: column;justify-content: space-between; width: 100%; padding-left:10px;">
+                <div style="background-color:antiquewhite; border-radius:10px; height: 48%; width:100%;"></div>
+                <div style="background-color:antiquewhite; border-radius:10px; height: 48%; width:100%;"></div>
+              </div>
+            </div>
+
+          </div>
+          
+        </div>
       </div>
     </div>
     <footer th:replace="~{fragments/general :: footer}">
