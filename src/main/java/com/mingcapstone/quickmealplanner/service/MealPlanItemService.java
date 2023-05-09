@@ -7,9 +7,6 @@ import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 
 public interface MealPlanItemService {
-    
-    MealPlanItem saveMealPlanItem(MealPlanItemDto mealPlanItemDto);
-
 
     MealPlanItem findMealPlanItemById(Long id);
 
@@ -18,8 +15,6 @@ public interface MealPlanItemService {
     List<MealPlanItem> findAllMealPlanItems();
 
     void deleteMealPlanItem(Long id);
-
-    MealPlanItem updateMealPlanItem(MealPlanItemDto mealPlanItemDto);
 
     MealPlanItemDto mapToMealPlanItemDto(MealPlanItem mealPlanItem);
 }

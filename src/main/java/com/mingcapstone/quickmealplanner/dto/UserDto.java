@@ -2,6 +2,7 @@ package com.mingcapstone.quickmealplanner.dto;
 
 import java.util.List;
 
+import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
 
@@ -35,6 +36,8 @@ public class UserDto
     
     private List<Recipe> recipes;   
 
+    private List<MealPlan> mealPlans;
+
 
     // public UserDto(User user) {
     //     if(user.getId() != null) {
@@ -60,4 +63,6 @@ public class UserDto
     public void removeRecipe(Recipe recipe) {
         recipes.remove(recipe);
     }
+
+   
 }

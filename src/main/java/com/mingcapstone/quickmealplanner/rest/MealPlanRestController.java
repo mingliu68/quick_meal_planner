@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
+import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.MealPlan;
 import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
 import com.mingcapstone.quickmealplanner.entity.User;
@@ -21,35 +22,30 @@ import com.mingcapstone.quickmealplanner.service.UserService;
 @RequestMapping("/api")
 public class MealPlanRestController {
     
-    private MealPlanItemService mealPlanItemService;
-    
+    private MealPlanService mealPlanService;
     private UserService userService;
 
     @Autowired
-    public MealPlanRestController(MealPlanItemService mealPlanItemService, UserService userService){
-        this.mealPlanItemService = mealPlanItemService;
+    public MealPlanRestController(MealPlanService mealPlanService, UserService userService){
+        this.mealPlanService = mealPlanService;
         this.userService = userService;
     }
-
-    @Autowired
-    MealPlanService mealPlanService;
 
     @PostMapping("/mealPlanItem")
     public void saveMealPlanItem(@RequestBody MealPlanItemDto mealPlanItemDto, Principal principal) {
         // User user = getLoggedInUser(principal);
-        MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanItemDto.getMealPlanId());
-        mealPlanItemDto.setMealPlan(mealPlan);
 
+        
         if(mealPlanItemDto.getId() != null) {
-            mealPlanItemService.updateMealPlanItem(mealPlanItemDto);
-            // return mealPlanItemDto;
+            System.out.println("meal plan item id from controller: " + mealPlanItemDto.getId());
+            mealPlanService.updateMealPlanItem(mealPlanItemDto);
+        } else {
+            MealPlanItem dbMealPlanItem = mealPlanService.saveMealPlanItem(mealPlanItemDto); 
+            mealPlanItemDto.setId(dbMealPlanItem.getId());
         }
-        MealPlanItem dbMealPlanItem = mealPlanItemService.saveMealPlanItem(mealPlanItemDto); 
-        mealPlanItemDto.setId(dbMealPlanItem.getId());
-        // return mealPlanItemDto;
     } 
 
-    private User getLoggedInUser(Principal principal) {
+    private UserDto getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
     }   
 }

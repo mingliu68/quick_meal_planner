@@ -8,20 +8,23 @@ import com.mingcapstone.quickmealplanner.entity.User;
 
 public interface RecipeService {
 
-    Recipe findById(Long id);
+    RecipeDto findDtoById(Long id);
 
-    Recipe save(RecipeDto RecipeDto, User user);
+    Recipe findById(Long id);    
+
+    Recipe save(RecipeDto RecipeDto, Long userId);
 
     void deleteById(Long id);
 
+
     List<RecipeDto> findAllRecipes();
 
-    List<RecipeDto> getAllSavedRecipesByUser(User user);
+    List<RecipeDto> getAllSavedRecipesByUser(Long userId);
 
     Recipe updateRecipe(RecipeDto recipeDto);
 
     List<Recipe> getRecentRecipes();
 
-    List<Recipe> getRecentRecipesNotByUser(User user);
+    List<RecipeDto> getRecentRecipesNotByUser(Long userId);
     
 }

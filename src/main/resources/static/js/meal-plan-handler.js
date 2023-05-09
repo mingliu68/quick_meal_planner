@@ -59,7 +59,7 @@ updateButton.addEventListener("click", () => {
 async function updateMealPlanItem() {
 
     const obj =  {
-        id : activeMenuItem.dataset.recipeid,
+        id : activeMenuItem.dataset.mealplanitemid,
         mealPlanId: activeMenuItem.dataset.mealplanid,
         mealType: activeMenuItem.dataset.mealtype,
         recipeId: activeRecipeButton.dataset.recipeid

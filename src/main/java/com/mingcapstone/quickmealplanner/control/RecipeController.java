@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.mingcapstone.quickmealplanner.entity.Recipe;
-import com.mingcapstone.quickmealplanner.entity.User;
+import com.mingcapstone.quickmealplanner.dto.RecipeDto;
+import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
 import com.mingcapstone.quickmealplanner.service.UserService;
 
@@ -30,7 +30,7 @@ public class RecipeController {
 
     @GetMapping
     public String recipes(Model model, Principal principal) {
-        User user = getLoggedInUser(principal);
+        UserDto user = getLoggedInUser(principal);
         model.addAttribute("user", user);
 
         return "recipes";
@@ -38,9 +38,11 @@ public class RecipeController {
 
     @GetMapping("/recipe")
     public String recipe(@RequestParam("recipeId") Long recipeId, Model model, Principal principal) {
-        User user = getLoggedInUser(principal);
-        Recipe recipe = recipeService.findById(recipeId);
-        Boolean savedByUser = user.getRecipes().contains(recipe);
+        UserDto user = getLoggedInUser(principal);
+
+        RecipeDto recipe = recipeService.findDtoById(recipeId);
+
+        Boolean savedByUser = userService.recipeSavedByUser(recipeId, user.getId());
 
         model.addAttribute("user", user);
         model.addAttribute("recipe", recipe);
@@ -51,8 +53,8 @@ public class RecipeController {
 
     @GetMapping("/otherRecipes")
     public String otherRecipe(Model model, Principal principal) {
-        User user = getLoggedInUser(principal);
-        List<Recipe> recipes = recipeService.getRecentRecipesNotByUser(user);
+        UserDto user = getLoggedInUser(principal);
+        List<RecipeDto> recipes = recipeService.getRecentRecipesNotByUser(user.getId());
         model.addAttribute("recipes", recipes);
         model.addAttribute("user", user);
 
@@ -62,19 +64,19 @@ public class RecipeController {
     @GetMapping("/removeRecipeFromList")
     public String removeRecipeFromList(@RequestParam("recipeId") Long recipeId, Principal principal) {
 
-        User user = getLoggedInUser(principal);
-        userService.removeRecipeFromList(recipeId, user);
+        UserDto user = getLoggedInUser(principal);
+        userService.removeRecipeFromList(recipeId, user.getId());
         return "redirect:/user/recipes";
     }
 
     @GetMapping("/addRecipeToList")
     public String addRecipeTolist(@RequestParam("recipeId") Long recipeId, Principal principal) {
-        User user = getLoggedInUser(principal);
-        userService.addRecipeToList(recipeId, user);
+        UserDto user = getLoggedInUser(principal);
+        userService.addRecipeToList(recipeId, user.getId());
         return "redirect:/user/recipes";
     }
 
-    private User getLoggedInUser(Principal principal) {
+    private UserDto getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
     }
 }

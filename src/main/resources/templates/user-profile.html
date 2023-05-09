@@ -72,7 +72,7 @@
               method="POST"
               role="form"
               th:action="@{/user}"
-              th:object="${userDto}"
+              th:object="${user}"
             >
               <input type="hidden" th:field="*{id}" />
               <input type="hidden" th:field="*{email}" />

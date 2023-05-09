@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,18 +18,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
-import com.mingcapstone.quickmealplanner.entity.MealPlan;
-import com.mingcapstone.quickmealplanner.entity.MealPlanItem;
-import com.mingcapstone.quickmealplanner.entity.Recipe;
-import com.mingcapstone.quickmealplanner.entity.User;
-import com.mingcapstone.quickmealplanner.repository.MealPlanRepository;
-import com.mingcapstone.quickmealplanner.service.MealPlanItemService;
+import com.mingcapstone.quickmealplanner.dto.UserDto;
+
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
-import com.mingcapstone.quickmealplanner.service.RecipeServiceImpl;
+
 import com.mingcapstone.quickmealplanner.service.UserService;
 
-import jakarta.validation.Valid;
+
 
 
 @Controller
@@ -40,6 +36,7 @@ public class MealPlanController {
     private MealPlanService mealPlanService;
     private UserService userService;
     private RecipeService recipeService;
+
     private String[] mealTypes = {
         "MONDAY_LUNCH", "MONDAY_DINNER", 
         "TUESDAY_LUNCH", "TUESDAY_DINNER",
@@ -56,9 +53,6 @@ public class MealPlanController {
         this.userService = userService;
         this.recipeService = recipeService;
     }
-    
-    @Autowired
-    MealPlanItemService mealPlanItemService;
 
     // get mealplan by using startdate
     @GetMapping
@@ -77,8 +71,8 @@ public class MealPlanController {
             // if one is found, return dto
             // if none is found, create a new mealPlan instance and return dto
 
-        User currentUser = getLoggedInUser(principal);  
-        List<RecipeDto> savedRecipes = recipeService.getAllSavedRecipesByUser(currentUser);
+        UserDto currentUser = getLoggedInUser(principal);  
+        List<RecipeDto> savedRecipes = recipeService.getAllSavedRecipesByUser(currentUser.getId());
         MealPlanDto mealPlanDto;
         Calendar c = Calendar.getInstance(); // current calendar obj   
         c.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
@@ -87,15 +81,13 @@ public class MealPlanController {
         
         if(mealPlanId != null) {
             try {
-                MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanId);
-                if(mealPlan != null && currentUser.getMealPlans().contains(mealPlan)) {
-
-                    mealPlanDto = mealPlanService.mapToMealPlanDto(mealPlan);
+                mealPlanDto = mealPlanService.findMealPlanDtoById(mealPlanId);
+                    if(mealPlanDto != null && currentUser.getId() == mealPlanDto.getUser().getId()) {
 
                     model.addAttribute("user", currentUser);
                     model.addAttribute("savedRecipes", savedRecipes);
                     model.addAttribute("mealPlan", mealPlanDto);
-                    resetCalendar(c, mealPlan.getStartDate());
+                    resetCalendar(c, mealPlanDto.getStartDate());
                     model.addAttribute("weeklyDates", getWeeklyDates(c));
                     model.addAttribute("mealTypes", mealTypes);
                     model.addAttribute("nextStartDate", getStartDateString(c));
@@ -115,8 +107,7 @@ public class MealPlanController {
             System.out.println(c.getTime());
             c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
         } 
-
-        mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser, getStartDateString(c), c);
+        mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser.getId(), getStartDateString(c), c);
 
         model.addAttribute("user", currentUser);
         model.addAttribute("savedRecipes", savedRecipes);
@@ -135,20 +126,18 @@ public class MealPlanController {
     public String updateMealPlanItem(@ModelAttribute MealPlanItemDto mealPlanItemDto, Model model,
     Principal principal, RedirectAttributes redirectAttributes) {
 
-        MealPlan mealPlan = mealPlanService.findMealPlanById(mealPlanItemDto.getMealPlanId());
-        mealPlanItemDto.setMealPlan(mealPlan);
         // if mealplanitem id exist, find mealplanitem by id, set recipe then update/save
         if(mealPlanItemDto.getId() != null) {
             // try {
                 
-                mealPlanItemService.updateMealPlanItem(mealPlanItemDto);
+                mealPlanService.updateMealPlanItem(mealPlanItemDto);
             // } catch (Exception e){
             //     return "redirect:/user/mealplans";
             // }        
         } else if(mealPlanItemDto.getRecipeId() != null) {
             // else, only update if there is a recipe it, if it doens't include a recipe id, it's just an empty dto
             // try {
-                mealPlanItemService.saveMealPlanItem(mealPlanItemDto);
+                mealPlanService.saveMealPlanItem(mealPlanItemDto);
             // } catch (Exception e) {
             //     return "redirect:/user/mealplans";
             // }
@@ -215,7 +204,7 @@ public class MealPlanController {
         return 0;
     }
 
-    private User getLoggedInUser(Principal principal) {
+    private UserDto getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
     }
 }

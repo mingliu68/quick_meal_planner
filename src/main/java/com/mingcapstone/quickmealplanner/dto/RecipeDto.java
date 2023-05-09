@@ -2,6 +2,8 @@ package com.mingcapstone.quickmealplanner.dto;
 
 import java.util.List;
 
+import com.mingcapstone.quickmealplanner.entity.User;
+
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +26,8 @@ public class RecipeDto {
 
     @NotEmpty 
     private List<String> directions;
+
+    private List<User> users;
 
     // private int saved;
 
