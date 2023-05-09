@@ -114,6 +114,7 @@
                           <div
                             th:object="${map.get(mealType)}"
                             th:attr="
+                              data-mealplanitemid=*{id},
                               data-recipeid=*{recipe?.id},
                               data-mealplanid=${mealPlan.id},
                               data-mealtype=*{mealType}"
@@ -128,6 +129,7 @@
                         <div th:unless="${#maps.containsKey(map, mealType)}" class="h-100">
                           <div
                             th:attr="
+                              data-mealplanitemid=null,
                               data-recipeid=null,
                               data-mealplanid=${mealPlan.id},
                               data-mealtype=${mealType}"
@@ -149,6 +151,7 @@
                           <div
                             th:object="${map.get(mealType)}"
                             th:attr="
+                              data-mealplanitemid=*{id},
                               data-recipeid=*{recipe?.id},
                               data-mealplanid=${mealPlan.id},
                               data-mealtype=*{mealType}"
@@ -163,6 +166,7 @@
                         <div th:unless="${#maps.containsKey(map, mealType)}" class="h-100">
                           <div
                             th:attr="
+                              data-mealplanitemid=null,
                               data-recipeid=null,
                               data-mealplanid=${mealPlan.id},
                               data-mealtype=${mealType}"

@@ -119,7 +119,7 @@ public class AuthController {
     @GetMapping("/users")
     public String users(Model model, Principal principal) {
         if(principal.getName().equals(admin_email)) {
-           List<UserDto> users = userService.findAllUsers();
+            List<UserDto> users = userService.findAllUsers();
             model.addAttribute("users", users);
             UserDto currentUser = getPrincipal(principal);
             model.addAttribute("user", currentUser);

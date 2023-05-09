@@ -1,5 +1,6 @@
 package com.mingcapstone.quickmealplanner.service;
 
+import java.rmi.StubNotFoundException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -69,23 +70,13 @@ public class MealPlanServiceImpl implements MealPlanService {
         } else {
             throw new RuntimeException("Meal Plan Not Found.");
         }
-
-
-
         return mealPlan;
     }
 
     @Override
     public MealPlanDto findMealPlanDtoById(Long id){
-        Optional<MealPlan> result = mealPlanRepository.findById(id);
-        MealPlan mealPlan = null;
-        if(result.isPresent()) {
-            mealPlan = result.get();
-        } else {
-            throw new RuntimeException("Meal Plan Not Found.");
-        }
 
-        return mapToMealPlanDto(mealPlan);
+        return mapToMealPlanDto(findMealPlanById(id));
     }
 
 
@@ -159,10 +150,11 @@ public class MealPlanServiceImpl implements MealPlanService {
         HashMap<String, MealPlanItem> items = new HashMap<>();
         for(MealPlanItem item : mealPlan.getMealPlanItems()) {
             items.put(item.getMealType(), item);
+            System.out.println(item.getId());
         }   
         mealPlanDto.setMealPlanItemsMap(items);
-        System.out.println("MealPlanDto ItemsMap size: " + mealPlanDto.getMealPlanItemsMap().size());
-        System.out.println("MealPlan Items size: " + mealPlan.getMealPlanItems().size());
+        System.out.println("MealPlanDto ItemsMap size from mapToMealPlanDto: " + mealPlanDto.getMealPlanItemsMap().size());
+        System.out.println("MealPlan Items size mapToMealPlanDto: " + mealPlan.getMealPlanItems().size());
         return mealPlanDto;
     } 
     
@@ -189,6 +181,7 @@ public class MealPlanServiceImpl implements MealPlanService {
         return mealPlanRepository.save(mealPlan);
     }
     
+    // adding meal plan item to meal plan
     @Override
     public MealPlan addMealPlanItem(MealPlan mealPlan, MealPlanItem mealPlanItem){
         mealPlan.addMealPlanItem(mealPlanItem);
@@ -228,17 +221,34 @@ public class MealPlanServiceImpl implements MealPlanService {
     @Override
     public MealPlanItem updateMealPlanItem(MealPlanItemDto mealPlanItemDto){
         // mealplanitem update method only update recipe.  all other stays the same
-        MealPlanItem mealPlanItem = mealPlanItemService.findMealPlanItemById(mealPlanItemDto.getId());
+        System.out.println(mealPlanItemDto.getId());
+        System.out.println(mealPlanItemDto.getRecipeId());
 
-        if(mealPlanItemDto.getRecipeId() == null) {
-            mealPlanItem.setRecipe(null);
-        } else if (mealPlanItemDto.getRecipeId() != mealPlanItem.getRecipe().getId()) {
-            Recipe recipe = recipeService.findById(mealPlanItemDto.getRecipeId());
-            mealPlanItem.setRecipe(recipe);
-        }
+        // MealPlanItem mealPlanItem = mealPlanItemService.findMealPlanItemById(mealPlanItemDto.getId());
+        MealPlanItem mealPlanItem = mealPlanItemRepository.findById(mealPlanItemDto.getId()).get();
+        System.out.println("Meal Plan Item id from service: " + mealPlanItem.getId());
+
+        // if(mealPlanItemDto.getRecipeId() == null) {
+        //     mealPlanItem.setRecipe(null);
+        // } else if (mealPlanItemDto.getRecipeId() != mealPlanItem.getRecipe().getId()) {
+        //     Recipe recipe = recipeService.findById(mealPlanItemDto.getRecipeId());
+        //     mealPlanItem.setRecipe(recipe);
+        // }
+
+        // MealPlan mealPlan = mealPlanRepository.findById(mealPlanItemDto.getMealPlanId()).get();
+        // mealPlan.removeMealPlanItem(mealPlanItem);
+        // mealPlanRepository.save(mealPlan);
+        mealPlanItemService.deleteMealPlanItem(mealPlanItemDto.getId());
+             
         
-        MealPlanItem dbMealPlanItem = mealPlanItemRepository.save(mealPlanItem);
-        return dbMealPlanItem;
+        // MealPlanItem dbMealPlanItem = mealPlanItemRepository.saveAndFlush(mealPlanItem);
+        
+        // System.out.println("Meal Plan Item id from service after Saving: " + dbMealPlanItem.getId());
+
+        // return dbMealPlanItem;
+
+        return saveMealPlanItem(mealPlanItemDto);
+    
     }
  
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.User;
@@ -40,8 +41,10 @@ public class RecipeController {
     @GetMapping("/recipe")
     public String recipe(@RequestParam("recipeId") Long recipeId, Model model, Principal principal) {
         UserDto user = getLoggedInUser(principal);
-        Recipe recipe = recipeService.findById(recipeId);
-        Boolean savedByUser = user.getRecipes().contains(recipe);
+
+        RecipeDto recipe = recipeService.findDtoById(recipeId);
+
+        Boolean savedByUser = userService.recipeSavedByUser(recipeId, user.getId());
 
         model.addAttribute("user", user);
         model.addAttribute("recipe", recipe);
@@ -53,7 +56,7 @@ public class RecipeController {
     @GetMapping("/otherRecipes")
     public String otherRecipe(Model model, Principal principal) {
         UserDto user = getLoggedInUser(principal);
-        List<Recipe> recipes = recipeService.getRecentRecipesNotByUser(user.getId());
+        List<RecipeDto> recipes = recipeService.getRecentRecipesNotByUser(user.getId());
         model.addAttribute("recipes", recipes);
         model.addAttribute("user", user);
 

@@ -32,6 +32,11 @@ public class RecipeServiceImpl implements RecipeService {
     
 
     @Override
+    public RecipeDto findDtoById(Long id){
+        return mapToRecipeDto(findById(id));
+    }
+
+    @Override
     public Recipe findById(Long id){
         Optional<Recipe> result = recipeRepository.findById(id);
         Recipe recipe = null;
@@ -40,7 +45,6 @@ public class RecipeServiceImpl implements RecipeService {
         } else {
             throw new RuntimeException("Recipe not found");
         }
-
         return recipe;
     }
 
@@ -89,21 +93,29 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setName(recipeDto.getName());
         recipe.setDirections(recipeDto.getDirections());
         recipe.setIngredients(recipeDto.getIngredients());
-        // recipe.setSaved(recipeDto.getSaved());
         
         return recipeRepository.save(recipe);
     }   
 
     
+    // public List<RecipeDto> findAllRecipes(){
+    //     List<Recipe> recipes = recipeRepository.findAll();
+    //     return recipes.stream()
+    //         .map((recipe) -> mapToRecipeDto(recipe))
+    //         .collect(Collectors.toList());
+    // }
+
+
+    
 
     @Override
     public List<Recipe> getRecentRecipes(){
-        // need new query in repository
+        
         return recipeRepository.findRecentRecipes();
     }
     
     @Override
-    public List<Recipe> getRecentRecipesNotByUser(Long userId){
+    public List<RecipeDto> getRecentRecipesNotByUser(Long userId){
         User user = userService.findUserById(userId);
         List<Recipe> recentRecipes = getRecentRecipes();
         List<Recipe> recipes = new ArrayList<>();
@@ -112,10 +124,10 @@ public class RecipeServiceImpl implements RecipeService {
                 recipes.add(recipe);
             }
         }
-
-        return recipes;
+        return recipes.stream()
+        .map( recipe -> mapToRecipeDto(recipe))
+        .collect(Collectors.toList());
     }
-
 
 
     private RecipeDto mapToRecipeDto(Recipe recipe) {
@@ -124,7 +136,7 @@ public class RecipeServiceImpl implements RecipeService {
         recipeDto.setName(recipe.getName());
         recipeDto.setDirections(recipe.getDirections());
         recipeDto.setIngredients(recipe.getIngredients());
-        // recipeDto.setSaved(recipe.getSaved());
+        recipeDto.setUsers(recipe.getUsers());
         return recipeDto;
     }
 

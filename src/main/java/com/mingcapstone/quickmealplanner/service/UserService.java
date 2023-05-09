@@ -25,4 +25,6 @@ public interface UserService {
     User addRecipeToList(Long recipeId, Long userId);
     
     User removeRecipeFromList(Long recipeId, Long userId);
+
+    Boolean recipeSavedByUser(Long recipeId, Long userId);
 }

@@ -40,6 +40,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     RecipeRepository recipeRepository;
 
+
+    
+
     @Override
     public UserDto saveUser(UserDto userDto) {
         User user = new User();
@@ -139,6 +142,21 @@ public class UserServiceImpl implements UserService {
         return roleRepository.save(role);
     }
 
+    @Override
+    public Boolean recipeSavedByUser(Long recipeId, Long userId) {
+        User user = findUserById(userId);
+        Optional<Recipe> result = recipeRepository.findById(recipeId);
+        Recipe recipe = new Recipe();
+        if (result.isPresent()) {
+            recipe = result.get();
+        } else {
+            throw new RuntimeException("Recipe not found");
+        }
+        return user.getRecipes().contains(recipe);
+    }
+    
+    
+    
     // adding recipe to user recipes list and update recipe saved count
     @Override
     public User addRecipeToList(Long recipeId, Long userId) {

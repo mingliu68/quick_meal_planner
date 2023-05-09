@@ -10,4 +10,6 @@ public class QuickMealPlannerApplication {
 		SpringApplication.run(QuickMealPlannerApplication.class, args);
 	}
 
+
+	
 }

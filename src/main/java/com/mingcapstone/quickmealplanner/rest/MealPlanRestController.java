@@ -35,8 +35,9 @@ public class MealPlanRestController {
     public void saveMealPlanItem(@RequestBody MealPlanItemDto mealPlanItemDto, Principal principal) {
         // User user = getLoggedInUser(principal);
 
-
+        
         if(mealPlanItemDto.getId() != null) {
+            System.out.println("meal plan item id from controller: " + mealPlanItemDto.getId());
             mealPlanService.updateMealPlanItem(mealPlanItemDto);
             // return;
             // return mealPlanItemDto;
