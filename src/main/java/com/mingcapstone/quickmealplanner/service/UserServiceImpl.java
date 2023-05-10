@@ -126,9 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto mapToUserDto(User user) {
-        // System.out.println(user.getRecipes());
         UserDto userDto = new UserDto();
-        // String[] str = user.getName().split(" ");
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
@@ -165,7 +163,6 @@ public class UserServiceImpl implements UserService {
         Recipe recipe = new Recipe();
         if (result.isPresent()) {
             recipe = result.get();
-            // recipe.setSaved(1);
         } else {
             throw new RuntimeException("Recipe not found");
         }
@@ -181,7 +178,6 @@ public class UserServiceImpl implements UserService {
         Recipe recipe = new Recipe();
         if (result.isPresent()) {
             recipe = result.get();
-            // recipe.setSaved(-1);
         } else {
             throw new RuntimeException("Recipe not found");
         }

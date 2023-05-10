@@ -143,9 +143,9 @@
             th:attr="data-startdate=${mealPlan.startDate}" 
 
           >
-            <h2 class="text-center">Meal Plan</h2>
+            <h2 class="text-center m-0">Meal Plan</h2>
             <div
-              class="d-flex mb-4"
+              class="d-flex mb-2"
               th:classappend="${mealPlan.startDate == prevStartDate ? 'justify-content-end' : 'justify-content-between'}"
             >
               <a
@@ -209,7 +209,7 @@
                         data-recipeid=*{recipe?.id},
                         data-mealplanid=${mealPlan.id},
                         data-mealtype=*{mealType}"
-                      class="sideBar-menu-item"
+                      class="sideBar-menu-item lunch"
                       th:classappend="*{recipe} ? '' : empty"
                     >
                       <p th:text="*{recipe?.name} " />
@@ -253,7 +253,7 @@
                       data-recipeid=*{recipe?.id},
                       data-mealplanid=${mealPlan.id},
                       data-mealtype=*{mealType}"
-                      class="sideBar-menu-item"
+                      class="sideBar-menu-item dinner"
                       th:classappend="*{recipe} ? '' : empty"
                     >
                       <p th:text="*{recipe?.name} " />

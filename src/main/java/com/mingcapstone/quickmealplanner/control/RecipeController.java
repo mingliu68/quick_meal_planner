@@ -91,7 +91,6 @@ public class RecipeController {
                     model.addAttribute("user", user);
                     model.addAttribute("recipe", recipe);
                     model.addAttribute("savedByUser", savedByUser);
-                    model.addAttribute("weekdays", weekdays);
 
                     return "recipe";
                 }
@@ -105,14 +104,10 @@ public class RecipeController {
         if(paramStartDate != null) {
             // if startDate param exist, set calendar to startDate param
             resetCalendar(c, paramStartDate); 
-            System.out.println("Reseting Calendar: " + c.getTime().toString());        
-
             c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); 
-            System.out.println("Setting to Monday: " + c.getTime().toString());        
         } 
 
         mealPlanDto = mealPlanService.findUserMealPlanByStartDate(user.getId(), getStartDateString(c), c);
-        System.out.println("After getting mealPlanDto: " + c.getTime().toString());
         model.addAttribute("mealPlan", mealPlanDto);
         model.addAttribute("weeklyDates", getWeeklyDates(c));
         model.addAttribute("mealTypes", mealTypes);
@@ -123,7 +118,6 @@ public class RecipeController {
         model.addAttribute("user", user);
         model.addAttribute("recipe", recipe);
         model.addAttribute("savedByUser", savedByUser);
-        model.addAttribute("weekdays", weekdays);
 
         return "recipe";
     }

@@ -74,15 +74,12 @@ public class AuthController {
     public String updateUser(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult result, Model model,
             Principal principal) {
 
-        System.out.println("userDto id: " + userDto.getId());
-        System.out.println("userDto first name: " + userDto.getFirstName());
         UserDto currentUserDto = getPrincipal(principal);
         User currentUser = userService.findUserById(currentUserDto.getId());
         UserDto updatedUser = userService.findUserByEmail(userDto.getEmail());
 
         // user trying to update email
         if (updatedUser != null && updatedUser.getId() != currentUser.getId()) {
-            System.out.println("REJECTED");
             result.rejectValue("email", null, "There is already an account registered with that email address.");
         }
         if (userDto.getFirstName().isEmpty()) {
@@ -114,9 +111,6 @@ public class AuthController {
             model.addAttribute("users", users);
             UserDto currentUser = getPrincipal(principal);
             model.addAttribute("user", currentUser);
-
-            System.out.println("Principal id: " + currentUser.getId());
-            // System.out.println("Principal first role: " + currentUser.getRoles().get(0).getName());
 
             return "users"; 
         }

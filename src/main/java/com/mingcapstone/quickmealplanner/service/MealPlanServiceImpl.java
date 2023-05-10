@@ -65,8 +65,6 @@ public class MealPlanServiceImpl implements MealPlanService {
         return mapToMealPlanDto(findMealPlanById(id));
     }
 
-
-
     @Override
     public MealPlanDto findUserMealPlanByStartDate(Long userId, String startDate, Calendar calendar) {
         User user = userService.findUserById(userId);
@@ -130,11 +128,9 @@ public class MealPlanServiceImpl implements MealPlanService {
         HashMap<String, MealPlanItem> items = new HashMap<>();
         for(MealPlanItem item : mealPlan.getMealPlanItems()) {
             items.put(item.getMealType(), item);
-            System.out.println(item.getId());
         }   
         mealPlanDto.setMealPlanItemsMap(items);
-        System.out.println("MealPlanDto ItemsMap size from mapToMealPlanDto: " + mealPlanDto.getMealPlanItemsMap().size());
-        System.out.println("MealPlan Items size mapToMealPlanDto: " + mealPlan.getMealPlanItems().size());
+
         return mealPlanDto;
     } 
     
@@ -180,12 +176,9 @@ public class MealPlanServiceImpl implements MealPlanService {
      // saving a brand new meal plan item
      @Override
      public MealPlanItem saveMealPlanItem(MealPlanItemDto mealPlanItemDto){
-        //  System.out.println(mealPlanItemDto.toString());
  
          MealPlanItem mealPlanItem = new MealPlanItem();
          MealPlan mealPlan = findMealPlanById(mealPlanItemDto.getMealPlanId());
- 
-        //  System.out.println("MealPlanID from service: " + mealPlan.getId());
  
          mealPlanItem.setMealPlan(mealPlan);
          mealPlanItem.setMealType(mealPlanItemDto.getMealType());
@@ -201,12 +194,8 @@ public class MealPlanServiceImpl implements MealPlanService {
     @Override
     public MealPlanItem updateMealPlanItem(MealPlanItemDto mealPlanItemDto){
         // mealplanitem update method only update recipe.  all other stays the same
-        System.out.println(mealPlanItemDto.getId());
-        System.out.println(mealPlanItemDto.getRecipeId());
 
-        // MealPlanItem mealPlanItem = mealPlanItemService.findMealPlanItemById(mealPlanItemDto.getId());
         MealPlanItem mealPlanItem = mealPlanItemRepository.findById(mealPlanItemDto.getId()).get();
-        System.out.println("Meal Plan Item id from service: " + mealPlanItem.getId());
 
         if(mealPlanItemDto.getRecipeId() == null) {
             mealPlanItem.setRecipe(null);
@@ -217,8 +206,6 @@ public class MealPlanServiceImpl implements MealPlanService {
 
         MealPlanItem dbMealPlanItem = mealPlanItemRepository.saveAndFlush(mealPlanItem);
         
-        System.out.println("Meal Plan Item id from service after Saving: " + dbMealPlanItem.getId());
-
         return dbMealPlanItem;
 
     

@@ -188,10 +188,18 @@ body {
     height: 100%; 
     margin-left: 10px;
     padding: 10px 15px;
-    background-color: antiquewhite;
     position: relative;
     cursor:pointer;
 }
+
+.sideBar-container .sideBar-menu-item.lunch {
+    background-color:#faebd785;
+}
+
+.sideBar-container .sideBar-menu-item.dinner {
+    background-color: antiquewhite;
+}
+
 
 .sideBar-container .sideBar-menu-item.empty {
     border: 3px dashed #ffbdb5;
@@ -232,6 +240,7 @@ body {
     top: 10px;
     color: #00000030;
     display: none;
+    font-size:0.9rem;
 }
 
 .sideBar-menu-item:hover > .sideBar-menu-item-label {

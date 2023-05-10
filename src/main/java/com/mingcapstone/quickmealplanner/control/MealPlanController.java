@@ -104,7 +104,6 @@ public class MealPlanController {
         if(paramStartDate != null) {
             // if startDate param exist, set calendar to startDate param
             resetCalendar(c, paramStartDate); 
-            System.out.println(c.getTime());
             c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
         } 
         mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser.getId(), getStartDateString(c), c);
@@ -145,9 +144,6 @@ public class MealPlanController {
 
 
         // need to return meal plan id and start date string
-        System.out.println(mealPlanItemDto.getMealType());
-        System.out.println(mealPlanItemDto.getMealPlanId());
-        System.out.println(mealPlanItemDto.getRecipeId());
         redirectAttributes.addAttribute("mealPlan", mealPlanItemDto.getMealPlanId());
         
         return "redirect:/user/mealplans";

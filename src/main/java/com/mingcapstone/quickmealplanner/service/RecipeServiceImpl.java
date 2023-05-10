@@ -97,17 +97,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.save(recipe);
     }   
 
-    
-    // public List<RecipeDto> findAllRecipes(){
-    //     List<Recipe> recipes = recipeRepository.findAll();
-    //     return recipes.stream()
-    //         .map((recipe) -> mapToRecipeDto(recipe))
-    //         .collect(Collectors.toList());
-    // }
-
-
-    
-
     @Override
     public List<Recipe> getRecentRecipes(){
         

@@ -6,7 +6,9 @@ const recipeId = document.getElementById("recipe").dataset.activerecipeid;
 const startDate = document.getElementById("mealplan").dataset.startdate;
 
 const sideBarMenuItems = document.getElementsByClassName("sideBar-menu-item");
-const menuItems = [...sideBarMenuItems]
+
+const menuItems = [...sideBarMenuItems];
+
 const base = "http://localhost:8080/";
 
 const headers = {
