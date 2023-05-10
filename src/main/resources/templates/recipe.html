@@ -54,14 +54,20 @@
 
     <div class="container-fluid min-full-height dashboard-container">
       <div class="row full-height">
-        <div th:if="${!savedByUser}" class="col-md-3 col-lg-2 dashboard-nav-container-wrapper">
+        <div
+          th:if="${!savedByUser}"
+          class="col-md-3 col-lg-2 dashboard-nav-container-wrapper"
+        >
           <div
             th:replace="~{fragments/general :: dash-nav(activeTab='otherRecipes')}"
           >
             <p>Testing Side Nav</p>
           </div>
         </div>
-        <div th:if="${savedByUser}" class="col-md-3 col-lg-2 dashboard-nav-container-wrapper">
+        <div
+          th:if="${savedByUser}"
+          class="col-md-3 col-lg-2 dashboard-nav-container-wrapper"
+        >
           <div
             th:replace="~{fragments/general :: dash-nav(activeTab='recipes')}"
           >
@@ -70,97 +76,132 @@
         </div>
 
         <div class="col-md-6 col-lg-7 dashboard-content-container-wrapper">
-          <a
-            th:if="${savedByUser}"
-            th:href="@{/user/recipes}"
-            type="button"
-            class="btn btn-primary btn-sm mt-4 mb-4 mr-4"
-          >
-            Back to saved recipes
-          </a>
-          <a
-            th:if="${!savedByUser}"
-            th:href="@{/user/recipes/otherRecipes}"
-            type="button"
-            class="btn btn-primary btn-sm mt-4 mb-4 mr-4"
-          >
-            Back to recently saved recipes by other users
-          </a>
-
-          <h1 th:text="${recipe.name}" class="text-center" />
-          <hr />
-          <div>
-            <h4>Ingredients:</h4>
-            <div th:each="ingredient: ${recipe.ingredients}">
-              <p th:text="${ingredient}" />
-            </div>
-            <h4>Directions:</h4>
-            <div th:each="direction: ${recipe.directions}">
-              <p th:text="${direction}" />
-            </div>
-
-            <p>
-              Saved by <span th:text="${#lists.size(recipe.users)}" /> users
-            </p>
+          <div class="recipe-wrapper">
             <a
-              th:if="${savedByUser}"
-              th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
-              type="button"
-              class="btn btn-warning btn-sm"
-            >
-              Unsave
-            </a>
-            <a
-              th:if="${!savedByUser}"
-              th:href="@{/user/recipes/addRecipeToList(recipeId=${recipe.id})}"
-              type="button"
-              class="btn btn-warning btn-sm"
-            >
-              save
-            </a>
+                th:if="${savedByUser}"
+                th:href="@{/user/recipes}"
+                type="button"
+                class="btn btn-primary btn-sm mt-4 mb-4 mr-4"
+              >
+                Back to saved recipes
+              </a>
+              <a
+                th:if="${!savedByUser}"
+                th:href="@{/user/recipes/otherRecipes}"
+                type="button"
+                class="btn btn-primary btn-sm mt-4 mb-4 mr-4"
+              >
+                Back to recently saved recipes by other users
+              </a>
+
+              <h1 
+                th:text="${recipe.name}" 
+                th:attr="data-activerecipeid=*{recipe.id}" 
+                id="recipe" 
+                class="text-center" 
+              />
+              <hr />
+              <div>
+                <h4>Ingredients:</h4>
+                <div th:each="ingredient: ${recipe.ingredients}">
+                  <p th:text="${ingredient}" />
+                </div>
+                <h4>Directions:</h4>
+                <div th:each="direction: ${recipe.directions}">
+                  <p th:text="${direction}" />
+                </div>
+
+                <p>
+                  Saved by <span th:text="${#lists.size(recipe.users)}" /> users
+                </p>
+                <a
+                  th:if="${savedByUser}"
+                  th:href="@{/user/recipes/removeRecipeFromList(recipeId=${recipe.id})}"
+                  type="button"
+                  class="btn btn-warning btn-sm"
+                >
+                  Unsave
+                </a>
+                <a
+                  th:if="${!savedByUser}"
+                  th:href="@{/user/recipes/addRecipeToList(recipeId=${recipe.id})}"
+                  type="button"
+                  class="btn btn-warning btn-sm"
+                >
+                  save
+                </a>
+              </div>
+
           </div>
+          
         </div>
         <div class="col-md-3 sideBar-container-wrapper">
-          
-          <div 
-            th:with="map=${mealPlan.mealPlanItemsMap}" 
-            class="sideBar-container">
-          <!-- <p th:text="${mealPlan.startDate}" />
-          <p>Prev Start Date: <span th:text="${prevStartDate}"/></p>
-          <p>Next Start Date: <span th:text="${nextStartDate}" /></p> -->
-          <h2 class="text-center">Meal Plan</h2>
-          <div class="d-flex mb-4" th:classappend="${mealPlan.startDate == prevStartDate ? 'justify-content-end' : 'justify-content-between'}">
-            <a    th:if="${mealPlan.startDate != prevStartDate}"
-                  th:href="@{/user/recipes/recipe?(recipeId=${recipe.id},startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                >
-                  Prev
-            </a>
-            <a
-                  th:href="@{/user/recipes/recipe?(recipeId=${recipe.id},startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                >
-                  Next
-            </a>
-          </div>
-            <div th:each="weekday, iter: ${weeklyDates}" class="d-flex" style="height: 120px;border-top: 1px solid #f8f8f8;padding: 10px 0;">
-              <div class="d-flex flex-column" style="background-color: #eeeeee; border-radius: 50px;padding: 15px 5px 8px;justify-content: space-between;">
-                <div style="height: 40px;">
-                  <h6 th:text="${weekday[0]}" class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;" />  
-                  <h6 th:text="${weekday[1]}" class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;" />
+          <div
+            th:with="map=${mealPlan.mealPlanItemsMap}"
+            class="sideBar-container"
+            id="mealplan"
+            th:attr="data-startdate=${mealPlan.startDate}" 
 
+          >
+            <h2 class="text-center">Meal Plan</h2>
+            <div
+              class="d-flex mb-4"
+              th:classappend="${mealPlan.startDate == prevStartDate ? 'justify-content-end' : 'justify-content-between'}"
+            >
+              <a
+                th:if="${mealPlan.startDate != prevStartDate}"
+                th:href="@{/user/recipes/recipe?(recipeId=${recipe.id},startDate=${prevStartDate},mealPlan=${mealPlan.prev?.id})}"
+                type="button"
+                class="btn btn-secondary btn-sm"
+              >
+                Prev
+              </a>
+              <a
+                th:href="@{/user/recipes/recipe?(recipeId=${recipe.id},startDate=${nextStartDate},mealPlan=${mealPlan.next?.id})}"
+                type="button"
+                class="btn btn-secondary btn-sm"
+              >
+                Next
+              </a>
+            </div>
+            <div
+              th:each="weekday, iter: ${weeklyDates}"
+              class="d-flex"
+              style="
+                height: 120px;
+                border-top: 1px solid #f8f8f8;
+                padding: 10px 0;
+              "
+            >
+              <div class="d-flex flex-column justify-content-between date-wrapper ">
+                <div class="date-box">
+                  <h6
+                    th:text="${weekday[0]}"
+                    class="p-0 m-0 d-flex justify-content-center align-items-center"
+                  />
+                  <h6
+                    th:text="${weekday[1]}"
+                    class="p-0 m-0 d-flex justify-content-center align-items-center"
+                  />
                 </div>
-                <h4 th:text="${#strings.substring(weekday[2], 0, 1)}" class="m-0 d-flex justify-content-center p-1" style="font-weight:900;border-radius: 50%;background-color: white;width: 40px;height: 40px;"/>
-
+                <h4
+                  th:text="${#strings.substring(weekday[2], 0, 1)}"
+                  class="m-0 d-flex justify-content-center p-1"
+                />
               </div>
-              <div class="h-100 d-flex flex-column justify-content-between w-100 pl-3">
+              <div
+                class="h-100 d-flex flex-column justify-content-between w-100 pl-3"
+              >
                 <!-- first row lunch -->
-                <div th:with="mealType=${mealTypes[__${iter.index + iter.index}__]}" style="height: 46%;">
-
+                <div
+                  th:with="mealType=${mealTypes[__${iter.index + iter.index}__]}"
+                  class="sideBar-menu-item-wrapper"
+                >
                   <!-- if mealtype exist, display mealplanitem -->
-                  <div th:if="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                  <div
+                    th:if="${#maps.containsKey(map, mealType)}"
+                    class="h-100"
+                  >
                     <div
                       th:object="${map.get(mealType)}"
                       th:attr="
@@ -168,73 +209,85 @@
                         data-recipeid=*{recipe?.id},
                         data-mealplanid=${mealPlan.id},
                         data-mealtype=*{mealType}"
-                      class="sideBar-menu-item" th:classappend="*{recipe} ? '' : empty"
+                      class="sideBar-menu-item"
+                      th:classappend="*{recipe} ? '' : empty"
                     >
                       <p th:text="*{recipe?.name} " />
+                      <div class="sideBar-menu-item-label">Change</div>
                     </div>
-                  </div>  
+                  </div>
 
                   <!-- else display empty block -->
-                  <div th:unless="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                  <div
+                    th:unless="${#maps.containsKey(map, mealType)}"
+                    class="h-100"                  
+                    >
                     <div
                       th:attr="
                         data-mealplanitemid=null,
                         data-recipeid=null,
                         data-mealplanid=${mealPlan.id},
                         data-mealtype=${mealType}"
-                        class="sideBar-menu-item empty"
+                      class="sideBar-menu-item empty"
                     >
-                    </div>
+                    <div class="sideBar-menu-item-label">Add</div>
                   </div>
-
+                  </div>
                 </div>
-               <!-- <div class="sideBar-menu-item empty"></div> -->
+                <!-- <div class="sideBar-menu-item empty"></div> -->
 
-               <!-- second row dinner -->
-               <div th:with="mealType=${mealTypes[__${iter.index + iter.index + 1}__]}" style="height: 46%;">
-                
-                <!-- if mealtype exist, display mealplanitem -->
-                <div th:if="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                <!-- second row dinner -->
+                <div
+                  th:with="mealType=${mealTypes[__${iter.index + iter.index + 1}__]}"
+                  class="sideBar-menu-item-wrapper"
+                >
+                  <!-- if mealtype exist, display mealplanitem -->
                   <div
-                    th:object="${map.get(mealType)}"
-                    th:attr="
+                    th:if="${#maps.containsKey(map, mealType)}"
+                    class="h-100"                  
+                    >
+                    <div
+                      th:object="${map.get(mealType)}"
+                      th:attr="
                       data-mealplanitemid=*{id},
                       data-recipeid=*{recipe?.id},
                       data-mealplanid=${mealPlan.id},
                       data-mealtype=*{mealType}"
-                    class="sideBar-menu-item" th:classappend="*{recipe} ? '' : empty"
-                  >
-                    <p th:text="*{recipe?.name} " />
+                      class="sideBar-menu-item"
+                      th:classappend="*{recipe} ? '' : empty"
+                    >
+                      <p th:text="*{recipe?.name} " />
+                      <div class="sideBar-menu-item-label">Change</div>
+                    </div>
                   </div>
-                </div>  
 
-                <!-- else display empty block -->
-                <div th:unless="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                  <!-- else display empty block -->
                   <div
-                    th:attr="
+                    th:unless="${#maps.containsKey(map, mealType)}"
+                    class="h-100"
+                  >
+                    <div
+                      th:attr="
                       data-mealplanitemid=null,
                       data-recipeid=null,
                       data-mealplanid=${mealPlan.id},
                       data-mealtype=${mealType}"
                       class="sideBar-menu-item empty"
-                  >
+                    >
+                    <div class="sideBar-menu-item-label">Add</div>
+                  </div>
                   </div>
                 </div>
-
-              </div>
-
-
-                
               </div>
             </div>
-
           </div>
-          
         </div>
       </div>
     </div>
     <footer th:replace="~{fragments/general :: footer}">
       <p>Testing Footer</p>
     </footer>
+    <script src="/js/meal-plan-sidebar-handler.js" type="application/javascript"></script>
+
   </body>
 </html>
