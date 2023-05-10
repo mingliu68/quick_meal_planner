@@ -158,12 +158,13 @@ body {
 
 .sideBar-container-wrapper {
     border-left: 1px solid rgba(0,0,0,.125);
+    padding: 2.5rem 10px 10px;
 }
 
 .sideBar-container {
     position: sticky;
     top: 0; 
-    padding: 10px;
+    /* padding: 10px; */
 }
 
 .vertical-letters {
@@ -178,11 +179,18 @@ body {
     font-weight: 900;
 }
 
+.sideBar-container .sideBar-menu-item {
+    border-radius:10px; 
+    height: 100%; 
+    /* width:100%; */
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: antiquewhite;
+}
+
 .sideBar-container .sideBar-menu-item.empty {
     
-    border-radius:10px; 
-    height: 48%; 
-    width:100%;
+    background: none;
     border: 3px dashed antiquewhite;
 
 }

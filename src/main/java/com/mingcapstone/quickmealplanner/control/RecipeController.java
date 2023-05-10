@@ -185,7 +185,8 @@ public class RecipeController {
         String[] str;
         for(int i = 0; i < 7; i++) {
             str = calendar.getTime().toString().split(" ");
-            weeklyDates[i] = new String[] {str[1] + " " + str[2] + ", " + str[5], days[i]};
+            // {month, day, day of the week}
+            weeklyDates[i] = new String[] {str[1] , str[2] , days[i]};
             
             calendar.add(Calendar.DATE, 1);
         }

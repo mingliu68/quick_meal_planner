@@ -122,10 +122,12 @@
         </div>
         <div class="col-md-3 sideBar-container-wrapper">
           
-          <div class="sideBar-container">
-          <p th:text="${mealPlan.startDate}" />
+          <div 
+            th:with="map=${mealPlan.mealPlanItemsMap}" 
+            class="sideBar-container">
+          <!-- <p th:text="${mealPlan.startDate}" />
           <p>Prev Start Date: <span th:text="${prevStartDate}"/></p>
-          <p>Next Start Date: <span th:text="${nextStartDate}" /></p>
+          <p>Next Start Date: <span th:text="${nextStartDate}" /></p> -->
           <h2 class="text-center">Meal Plan</h2>
           <div class="d-flex mb-4" th:classappend="${mealPlan.startDate == prevStartDate ? 'justify-content-end' : 'justify-content-between'}">
             <a    th:if="${mealPlan.startDate != prevStartDate}"
@@ -143,23 +145,86 @@
                   Next
             </a>
           </div>
-            <div th:each="weekday, iter: ${weekdays}" class="d-flex my-1" style="height: 120px">
-              <div class="d-flex flex-column p-1" style="background-color: #eeeeee;">
+            <div th:each="weekday, iter: ${weeklyDates}" class="d-flex" style="height: 120px;border-top: 1px solid #f8f8f8;padding: 10px 0;">
+              <div class="d-flex flex-column" style="background-color: #eeeeee; border-radius: 50px;padding: 15px 5px 8px;justify-content: space-between;">
                 <div style="height: 40px;">
-                  <h6 class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;">
-                    May
-                  </h6>
-                  <h6 class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;">
-                    8
-                  </h6>
+                  <h6 th:text="${weekday[0]}" class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;" />  
+                  <h6 th:text="${weekday[1]}" class="p-0 m-0 d-flex justify-content-center align-items-center" style="font-size:0.8rem;" />
+
                 </div>
-                <!-- <h4 th:text="${#strings.substring(weekday, 0, 3)}" class="vertical-letters"/> -->
-                <h4 th:text="${#strings.substring(weekday, 0, 1)}" style="font-weight:900;display: flex;justify-content: center;padding: 5px;border-radius: 50%;background-color: white;width: 40px;height: 40px;"/>
+                <h4 th:text="${#strings.substring(weekday[2], 0, 1)}" class="m-0 d-flex justify-content-center p-1" style="font-weight:900;border-radius: 50%;background-color: white;width: 40px;height: 40px;"/>
 
               </div>
               <div class="h-100 d-flex flex-column justify-content-between w-100 pl-3">
-                <div class="sideBar-menu-item empty"></div>
-                <div class="sideBar-menu-item empty"></div>
+                <!-- first row lunch -->
+                <div th:with="mealType=${mealTypes[__${iter.index + iter.index}__]}" style="height: 46%;">
+
+                  <!-- if mealtype exist, display mealplanitem -->
+                  <div th:if="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                    <div
+                      th:object="${map.get(mealType)}"
+                      th:attr="
+                        data-mealplanitemid=*{id},
+                        data-recipeid=*{recipe?.id},
+                        data-mealplanid=${mealPlan.id},
+                        data-mealtype=*{mealType}"
+                      class="sideBar-menu-item" th:classappend="*{recipe} ? '' : empty"
+                    >
+                      <p th:text="*{recipe?.name} " />
+                    </div>
+                  </div>  
+
+                  <!-- else display empty block -->
+                  <div th:unless="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                    <div
+                      th:attr="
+                        data-mealplanitemid=null,
+                        data-recipeid=null,
+                        data-mealplanid=${mealPlan.id},
+                        data-mealtype=${mealType}"
+                        class="sideBar-menu-item empty"
+                    >
+                    </div>
+                  </div>
+
+                </div>
+               <!-- <div class="sideBar-menu-item empty"></div> -->
+
+               <!-- second row dinner -->
+               <div th:with="mealType=${mealTypes[__${iter.index + iter.index + 1}__]}" style="height: 46%;">
+                
+                <!-- if mealtype exist, display mealplanitem -->
+                <div th:if="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                  <div
+                    th:object="${map.get(mealType)}"
+                    th:attr="
+                      data-mealplanitemid=*{id},
+                      data-recipeid=*{recipe?.id},
+                      data-mealplanid=${mealPlan.id},
+                      data-mealtype=*{mealType}"
+                    class="sideBar-menu-item" th:classappend="*{recipe} ? '' : empty"
+                  >
+                    <p th:text="*{recipe?.name} " />
+                  </div>
+                </div>  
+
+                <!-- else display empty block -->
+                <div th:unless="${#maps.containsKey(map, mealType)}" style="height: 100%;">
+                  <div
+                    th:attr="
+                      data-mealplanitemid=null,
+                      data-recipeid=null,
+                      data-mealplanid=${mealPlan.id},
+                      data-mealtype=${mealType}"
+                      class="sideBar-menu-item empty"
+                  >
+                  </div>
+                </div>
+
+              </div>
+
+
+                
               </div>
             </div>
 
