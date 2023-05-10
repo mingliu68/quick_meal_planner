@@ -94,6 +94,17 @@ body {
     position:relative;
 }
 
+
+.menu-item.empty.lunch {
+    border: 5px dashed antiquewhite;
+    background:none;
+}
+
+.menu-item.empty.dinner {
+    border: 5px dashed beige;
+    background:none;
+}
+
 .menu-item.lunch {
     background-color: antiquewhite;
 }
@@ -130,16 +141,99 @@ body {
     color:#555555;
 }
 .meal-type-tag {
-    color: white;
-    font-weight: bold;
+    color: #fff;
+    font-weight: 900;
     text-transform: uppercase;
     position: absolute;
     top: -1rem;
     font-size: 2.2rem;
     left: -0.2rem;
+  
 }
 
 .meal-item-wrapper {
     margin-top: 3rem;
     color: #555555;
+}
+
+.sideBar-container-wrapper {
+    border-left: 1px solid rgba(0,0,0,.125);
+    padding: 2.5rem 10px 10px;
+}
+
+.sideBar-container {
+    position: sticky;
+    top: 0; 
+    /* padding: 10px; */
+}
+
+.vertical-letters {
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    padding:0;
+    margin:0;
+    letter-spacing: -6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 900;
+}
+
+.sideBar-container .sideBar-menu-item-wrapper {
+    height: 46%
+}
+
+.sideBar-container .sideBar-menu-item {
+    border-radius:10px; 
+    height: 100%; 
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: antiquewhite;
+    position: relative;
+    cursor:pointer;
+}
+
+.sideBar-container .sideBar-menu-item.empty {
+    border: 3px dashed #ffbdb5;
+    background-color: #fff8ee;
+
+}
+
+.sideBar-container .date-wrapper {
+    background-color: #eeeeee;
+    border-radius: 50px;
+    padding: 15px 5px 8px;
+}
+
+.sideBar-container .date-box {
+    height: 40px;
+}
+
+.date-box h6 {
+    font-size: 0.8rem
+}
+
+.date-wrapper h4 {
+    font-weight: 900;
+    border-radius: 50%;
+    background-color: white;
+    width: 40px;
+    height: 40px;
+}
+
+.recipe-wrapper {
+    position:sticky;
+    top:0;
+}
+
+.sideBar-menu-item-label {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #00000030;
+    display: none;
+}
+
+.sideBar-menu-item:hover > .sideBar-menu-item-label {
+    display: block;
 }
