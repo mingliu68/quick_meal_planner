@@ -64,6 +64,19 @@ body {
     padding-bottom: 5rem;
 }
 
+.dashboard-content-container-wrapper .card-title.recipe-title {
+    width: 80%;
+}
+
+.dashboard-content-container-wrapper .card-title.recipe-title a {
+    text-decoration: none;
+    color: #666;
+}
+.dashboard-content-container-wrapper .card-title.recipe-title a:hover {
+    color: #333;
+    
+}
+
 .dashboard-content-container-wrapper .menu-column {
     max-width: 14.25%;
 }
