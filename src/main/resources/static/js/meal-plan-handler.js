@@ -64,14 +64,12 @@ async function updateMealPlanItem() {
         mealType: activeMenuItem.dataset.mealtype,
         recipeId: activeRecipeButton.dataset.recipeid
     }
-    // console.log(obj);
     const response = await fetch(`${base}api/mealPlanItem`, {
         method: "POST",
         body: JSON.stringify(obj),
         headers: headers
     })
     .catch(error => console.error(error.message))
-    // console.log(response);
     if(response.status == 200) {
         window.location.href=`${base}user/mealplans?mealPlan=${activeMenuItem.dataset.mealplanid}`;
     }

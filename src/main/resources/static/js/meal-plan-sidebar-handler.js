@@ -19,8 +19,6 @@ menuItems.forEach(item => {
         if(activeMenuItem.dataset.recipeid != recipeId) {
             updateMealPlanItem();
         }
-        // console.log("Currently Active: " + activeMenuItem.dataset.mealtype);
-       
     })
 });
 
@@ -33,14 +31,12 @@ async function updateMealPlanItem() {
         mealType: activeMenuItem.dataset.mealtype,
         recipeId: recipeId
     }
-    // console.log(obj);
     const response = await fetch(`${base}api/mealPlanItem`, {
         method: "POST",
         body: JSON.stringify(obj),
         headers: headers
     })
     .catch(error => console.error(error.message))
-    // console.log(response);
     if(response.status == 200) {
         window.location.href=`${base}user/recipes/recipe?recipeId=${recipeId}&startDate=${startDate}&mealPlan=${activeMenuItem.dataset.mealplanid}`;
     }
