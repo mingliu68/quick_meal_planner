@@ -81,18 +81,18 @@ public class MealPlanController {
             c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
         }
 
-        
+        model.addAttribute("user", currentUser);
+        model.addAttribute("savedRecipes", savedRecipes);
+        model.addAttribute("mealTypes", mealTypes);
+
         if(mealPlanId != null) {
             try {
                 mealPlanDto = mealPlanService.findMealPlanDtoById(mealPlanId);
                     if(mealPlanDto != null && currentUser.getId() == mealPlanDto.getUser().getId()) {
 
-                    model.addAttribute("user", currentUser);
-                    model.addAttribute("savedRecipes", savedRecipes);
                     model.addAttribute("mealPlan", mealPlanDto);
                     resetCalendar(c, mealPlanDto.getStartDate());
                     model.addAttribute("weeklyDates", getWeeklyDates(c));
-                    model.addAttribute("mealTypes", mealTypes);
                     model.addAttribute("nextStartDate", getStartDateString(c));
                     c.add(Calendar.DATE, -14);
                     model.addAttribute("prevStartDate", getStartDateString(c));
@@ -105,29 +105,14 @@ public class MealPlanController {
         }
 
         if(paramStartDate != null) {
-            // if startDate param exist, set calendar to startDate param
-            // System.out.println("-----------------------");
-            // System.out.println("param start date: " + paramStartDate);
-            // System.out.println("Before reset calendar: " + c.getTime().toString());
-            
+            // if startDate param exist, set calendar to startDate param      
             c = resetCalendar(c, paramStartDate); 
-
-            // System.out.println("After reset calendar: " + c.getTime().toString());
-            // System.out.println("-------------------------");
-
         } 
-        // System.out.println("-------------------------");
-        // System.out.println("Start");
-        mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser.getId(), getStartDateString(c), c);
-        // System.out.println("Start Date from mealplan dto: " + mealPlanDto.getStartDate());
-        // System.out.println("End");
-        // System.out.println("-------------------------");
 
-        model.addAttribute("user", currentUser);
-        model.addAttribute("savedRecipes", savedRecipes);
+        mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser.getId(), getStartDateString(c), c);
+
         model.addAttribute("mealPlan", mealPlanDto);
         model.addAttribute("weeklyDates", getWeeklyDates(c));
-        model.addAttribute("mealTypes", mealTypes);
         model.addAttribute("nextStartDate", getStartDateString(c));
         c.add(Calendar.DATE, -14);
         model.addAttribute("prevStartDate", getStartDateString(c));
@@ -171,18 +156,13 @@ public class MealPlanController {
     // }
 
     private Calendar resetCalendar(Calendar calendar, String startDate) {
-        // System.out.println();
-        // System.out.println("-------- in resetCalendar -------");
-        // System.out.println("param start date: " + startDate);
-        // System.out.println("before reseting calendar: " + calendar.getTime().toString());
+
         String[] str = startDate.split("_");
         calendar.set(Integer.parseInt(str[0]), getMonth(str[1]), Integer.parseInt(str[2]));
         if(calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
         }
-        // System.out.println("after reseting calendar: " + calendar.getTime().toString());
-        // System.out.println("------- end of resetCalendar -------");
-        // System.out.println();
+
         return calendar;
     }
 
@@ -196,11 +176,6 @@ public class MealPlanController {
         if(currentWeek.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
             currentWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
         }
-        
-        // System.out.println();
-        // System.out.println("currentWeek monday Start: " + currentWeek.getTime().toString());
-        // System.out.println("calendar monday Start: " + calendar.getTime().toString());
-        
 
         if(calendar.before(currentWeek)) {
             str = currentWeek.getTime().toString().split(" ");
@@ -208,8 +183,7 @@ public class MealPlanController {
             str = calendar.getTime().toString().split(" ");
         }
         startDate = str[5] + "_" + str[1] + "_" + str[2];
-        // System.out.println("start date from getStartDateString: " + startDate);
-        // System.out.println();
+
         return startDate;
     }
 

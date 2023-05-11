@@ -37,10 +37,6 @@ public class RecipeController {
         "SUNDAY_LUNCH", "SUNDAY_DINNER"
     };
 
-    private String[] weekdays = {
-        "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"
-    };
-
     @Autowired
     public RecipeController(RecipeService recipeService, UserService userService, MealPlanService mealPlanService) {
         this.recipeService = recipeService;
@@ -80,6 +76,11 @@ public class RecipeController {
 
         Boolean savedByUser = userService.recipeSavedByUser(recipeId, user.getId());
 
+        model.addAttribute("mealTypes", mealTypes);
+        model.addAttribute("user", user);
+        model.addAttribute("recipe", recipe);
+        model.addAttribute("savedByUser", savedByUser);
+
         if(mealPlanId != null) {
             try {
                 mealPlanDto = mealPlanService.findMealPlanDtoById(mealPlanId);
@@ -88,14 +89,9 @@ public class RecipeController {
                     model.addAttribute("mealPlan", mealPlanDto);
                     resetCalendar(c, mealPlanDto.getStartDate());
                     model.addAttribute("weeklyDates", getWeeklyDates(c));
-                    model.addAttribute("mealTypes", mealTypes);
                     model.addAttribute("nextStartDate", getStartDateString(c));
                     c.add(Calendar.DATE, -14); 
                     model.addAttribute("prevStartDate", getStartDateString(c));
-
-                    model.addAttribute("user", user);
-                    model.addAttribute("recipe", recipe);
-                    model.addAttribute("savedByUser", savedByUser);
 
                     return "recipe";
                 }
@@ -114,14 +110,9 @@ public class RecipeController {
         mealPlanDto = mealPlanService.findUserMealPlanByStartDate(user.getId(), getStartDateString(c), c);
         model.addAttribute("mealPlan", mealPlanDto);
         model.addAttribute("weeklyDates", getWeeklyDates(c));
-        model.addAttribute("mealTypes", mealTypes);
         model.addAttribute("nextStartDate", getStartDateString(c));
         c.add(Calendar.DATE, -14);
         model.addAttribute("prevStartDate", getStartDateString(c));
-       
-        model.addAttribute("user", user);
-        model.addAttribute("recipe", recipe);
-        model.addAttribute("savedByUser", savedByUser);
 
         return "recipe";
     }
