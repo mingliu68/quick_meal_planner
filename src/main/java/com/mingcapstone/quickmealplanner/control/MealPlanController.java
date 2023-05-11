@@ -76,7 +76,10 @@ public class MealPlanController {
         MealPlanDto mealPlanDto;
         Calendar c = Calendar.getInstance(); // current calendar obj   
         c.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  // set date to current Monday
+        // if date is not on monday, set date to current Monday
+        if(c.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
+        }
 
         
         if(mealPlanId != null) {
@@ -103,10 +106,22 @@ public class MealPlanController {
 
         if(paramStartDate != null) {
             // if startDate param exist, set calendar to startDate param
-            resetCalendar(c, paramStartDate); 
-            c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
+            // System.out.println("-----------------------");
+            // System.out.println("param start date: " + paramStartDate);
+            // System.out.println("Before reset calendar: " + c.getTime().toString());
+            
+            c = resetCalendar(c, paramStartDate); 
+
+            // System.out.println("After reset calendar: " + c.getTime().toString());
+            // System.out.println("-------------------------");
+
         } 
+        // System.out.println("-------------------------");
+        // System.out.println("Start");
         mealPlanDto = mealPlanService.findUserMealPlanByStartDate(currentUser.getId(), getStartDateString(c), c);
+        // System.out.println("Start Date from mealplan dto: " + mealPlanDto.getStartDate());
+        // System.out.println("End");
+        // System.out.println("-------------------------");
 
         model.addAttribute("user", currentUser);
         model.addAttribute("savedRecipes", savedRecipes);
@@ -155,9 +170,20 @@ public class MealPlanController {
     //     }
     // }
 
-    private void resetCalendar(Calendar calendar, String startDate) {
+    private Calendar resetCalendar(Calendar calendar, String startDate) {
+        // System.out.println();
+        // System.out.println("-------- in resetCalendar -------");
+        // System.out.println("param start date: " + startDate);
+        // System.out.println("before reseting calendar: " + calendar.getTime().toString());
         String[] str = startDate.split("_");
         calendar.set(Integer.parseInt(str[0]), getMonth(str[1]), Integer.parseInt(str[2]));
+        if(calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
+        }
+        // System.out.println("after reseting calendar: " + calendar.getTime().toString());
+        // System.out.println("------- end of resetCalendar -------");
+        // System.out.println();
+        return calendar;
     }
 
     private String getStartDateString(Calendar calendar) {
@@ -166,14 +192,24 @@ public class MealPlanController {
 
         Calendar currentWeek = Calendar.getInstance();// current calendar obj   
         currentWeek.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
-        currentWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  // set date to current Monday
+        // if current date is not monday, set date to current Monday 
+        if(currentWeek.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            currentWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
+        }
         
+        // System.out.println();
+        // System.out.println("currentWeek monday Start: " + currentWeek.getTime().toString());
+        // System.out.println("calendar monday Start: " + calendar.getTime().toString());
+        
+
         if(calendar.before(currentWeek)) {
             str = currentWeek.getTime().toString().split(" ");
         } else {
             str = calendar.getTime().toString().split(" ");
         }
         startDate = str[5] + "_" + str[1] + "_" + str[2];
+        // System.out.println("start date from getStartDateString: " + startDate);
+        // System.out.println();
         return startDate;
     }
 

@@ -72,7 +72,12 @@ public class RecipeController {
 
         Calendar c = Calendar.getInstance(); // current calendar obj   
         c.setFirstDayOfWeek(Calendar.MONDAY);  // set first day from Sunday to Monday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  // set date to current Monday
+               
+        // if date is not on monday, set date to current Monday
+        if(c.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
+        }
+
         Boolean savedByUser = userService.recipeSavedByUser(recipeId, user.getId());
 
         if(mealPlanId != null) {
@@ -104,7 +109,6 @@ public class RecipeController {
         if(paramStartDate != null) {
             // if startDate param exist, set calendar to startDate param
             resetCalendar(c, paramStartDate); 
-            c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); 
         } 
 
         mealPlanDto = mealPlanService.findUserMealPlanByStartDate(user.getId(), getStartDateString(c), c);
@@ -152,8 +156,12 @@ public class RecipeController {
     }
 
     private void resetCalendar(Calendar calendar, String startDate) {
+        // {year, month, day}
         String[] str = startDate.split("_");
         calendar.set(Integer.parseInt(str[0]), getMonth(str[1]), Integer.parseInt(str[2]));
+        if(calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
+        }
     }
 
     private String getStartDateString(Calendar calendar) {
@@ -169,6 +177,7 @@ public class RecipeController {
         } else {
             str = calendar.getTime().toString().split(" ");
         }
+
         startDate = str[5] + "_" + str[1] + "_" + str[2];
         return startDate;
     }
