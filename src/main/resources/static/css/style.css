@@ -109,21 +109,31 @@ body {
 
 
 .menu-item.empty.lunch {
-    border: 5px dashed antiquewhite;
-    background:none;
+    /* border: 5px dashed antiquewhite;
+    background:none; */
+    background-color: #fff8ee;
 }
 
 .menu-item.empty.dinner {
-    border: 5px dashed beige;
-    background:none;
+    /* border: 5px dashed beige;
+    background:none; */
+    background-color: #fff8ee;
+}
+
+.menu-item.empty {
+    border: 5px dashed #ffbdb5;
+    /* background-color: #fff8ee; */
 }
 
 .menu-item.lunch {
-    background-color: antiquewhite;
+    /* background-color: antiquewhite; */
+    background-color:#faebd785;
 }
 
 .menu-item.dinner {
-    background-color: beige;
+    /* background-color: beige; */
+    background-color: antiquewhite;
+
 }
 
 .recipe-button {
@@ -167,6 +177,15 @@ body {
 .meal-item-wrapper {
     margin-top: 3rem;
     color: #555555;
+}
+
+.meal-item-wrapper a.recipe-link {
+    color: #888888;
+    text-decoration: none;
+}
+
+.meal-item-wrapper a.recipe-link:hover {
+    color: #333333;
 }
 
 .sideBar-container-wrapper {

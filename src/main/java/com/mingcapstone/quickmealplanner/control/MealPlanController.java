@@ -140,8 +140,7 @@ public class MealPlanController {
             //     return "redirect:/user/mealplans";
             // }
         }
-       
-
+    
 
         // need to return meal plan id and start date string
         redirectAttributes.addAttribute("mealPlan", mealPlanItemDto.getMealPlanId());
@@ -149,11 +148,12 @@ public class MealPlanController {
         return "redirect:/user/mealplans";
     }
 
-    // private void setMealPlanDtoAttributes(Model model, MealPlanDto mealPlanDto) {
-    //     for(int i = 0; i < mealPlanDto.getMealPlanItemsDtos().size(); i++) {
-    //         model.addAttribute("mealPlanItem" + i, mealPlanDto.getMealPlanItemsDtos().get(i));
-    //     }
-    // }
+    @GetMapping("/shoppinglist")
+    public String getShoppingList(@RequestParam("mealPlanId") Long mealPlanid, Model model, Principal principal) {
+        
+
+        return "shopping-list";
+    }
 
     private Calendar resetCalendar(Calendar calendar, String startDate) {
 
@@ -222,4 +222,6 @@ public class MealPlanController {
     private UserDto getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
     }
+
+    
 }

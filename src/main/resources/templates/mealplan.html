@@ -112,7 +112,15 @@
                             class="btn h-100 w-100 menu-item lunch" th:classappend="*{recipe} ? '' : empty" type="button" data-toggle="modal" data-target="#savedRecipes"
                           >
                             <p class="meal-type-tag">Lunch</p>
-                            <p class="meal-item-wrapper" th:text="*{recipe?.name} " />
+                            
+                            <p class="meal-item-wrapper">
+                              <a 
+                                th:if="*{recipe}"
+                                th:href="@{/user/recipes/recipe(recipeId=*{recipe.id})}"
+                                th:text="*{recipe.name}"
+                                class="recipe-link"
+                              />
+                            </p>
                           </div>
                         </div>
                         <!-- else display empty block -->
@@ -125,7 +133,6 @@
                               data-mealtype=${mealType}"
                               class="btn h-100 w-100 menu-item empty lunch" type="button" data-toggle="modal" data-target="#savedRecipes"
                           >
-                            <!-- <p class="meal-type-tag">Lunch</p> -->
                           </div>
                         </div>
                       </div>
@@ -147,7 +154,15 @@
                               class="btn h-100 w-100 menu-item dinner" type="button" data-toggle="modal" data-target="#savedRecipes"
                           >
                             <p class="meal-type-tag">Dinner</p>
-                            <p class="meal-item-wrapper" th:text="*{recipe?.name} " />
+                          
+                            <p class="meal-item-wrapper">
+                              <a 
+                                th:if="*{recipe}"
+                                th:href="@{/user/recipes/recipe(recipeId=*{recipe.id})}"
+                                th:text="*{recipe.name}"
+                                class="recipe-link"
+                              />
+                            </p>
                           </div>
                         </div>
                         <!-- else display empty block -->

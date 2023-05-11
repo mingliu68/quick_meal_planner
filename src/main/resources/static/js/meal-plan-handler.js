@@ -18,6 +18,13 @@ const menuItems = document.getElementsByClassName("menu-item");
 
 const recipeButtons = document.getElementsByClassName("recipe-button");
 
+const recipeLinks = document.getElementsByClassName("recipe-link");
+
+[...recipeLinks].forEach( item => {
+    item.addEventListener('click', e => {
+        e.stopPropagation();
+    })
+});
 
 [...menuItems].forEach(item => {
     item.addEventListener('click', () => {
