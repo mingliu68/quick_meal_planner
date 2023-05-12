@@ -207,9 +207,10 @@ public class MealPlanController {
         for(int i = 0; i < ingredientArr.length; i++) {
             
             if(Character.isDigit(ingredientArr[i].charAt(0))) {
-                amount += ingredientArr[i] + " ";
+                amount += amount.length() == 0 ? ingredientArr[i] : (" " + ingredientArr[i]);
                 prevIdx = i;
             } else if (ingredientArr[i].charAt(0) == '¼' || ingredientArr[i].charAt(0) == '½') {
+                amount += amount.length() != 0 ? " " : "";
                 amount += ingredientArr[i].charAt(0) == '¼' ? "1/4 " : "1/2 ";
                 prevIdx = i;
             } else if (

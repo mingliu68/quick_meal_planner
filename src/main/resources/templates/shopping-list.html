@@ -78,14 +78,14 @@
             Consolidated
 
             <table>
-              <tr>
+              <tr style="background-color: #666666; color: white">
                 
                 <th>Amount</th>
                 <th>Measure</th>
                 <th>Name</th>
                 <th>Note</th>
               </tr>
-              <tr th:each="ingredient : ${ingredientDtos}">
+              <tr th:each="ingredient, iter : ${ingredientDtos}" th:style="${iter.index % 2 == 0 ? 'background-color: #eee' : 'background-color: none'}">
                 <td th:text="${ingredient.amount}" />
                 <td th:text="${ingredient.measure}" />
                 <td th:text="${ingredient.name}" />
