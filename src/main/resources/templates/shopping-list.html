@@ -74,8 +74,25 @@
                     Try generating a new shopping list from <a th:href="@{/user/mealplans}"> meal plan </a>
                 </p>
             </div>
-           Consolidated
-           <p th:each="main: ${shoppingList.mainIngredients}" th:text="${main}" />
+          
+            Consolidated
+
+            <table>
+              <tr>
+                
+                <th>Amount</th>
+                <th>Measure</th>
+                <th>Name</th>
+                <th>Note</th>
+              </tr>
+              <tr th:each="ingredient : ${ingredientDtos}">
+                <td th:text="${ingredient.amount}" />
+                <td th:text="${ingredient.measure}" />
+                <td th:text="${ingredient.name}" />
+                <td th:text="${ingredient.note}" />
+              </tr>
+            </table>
+
           </div>
         </div>
       </div>
