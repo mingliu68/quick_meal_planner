@@ -249,15 +249,19 @@ public class ShoppingListController {
 
         switch(measure) {
             case "tsp" :
+            case "tsp." :
             case "teaspoon" : 
                 return "teaspoon";
             case "tbsp" :
+            case "tbsp." :
             case "tablespoon" :
                 return "tablespoon";
             case "lb" :
+            case "lb." :
             case "pound" :
                 return "pound";
             case "oz" :
+            case "oz." :
             case "ounce" :
                 return "ounce";
             case "small" :
@@ -265,9 +269,11 @@ public class ShoppingListController {
             case "large" :
                 return "whole " + measure;
             case "qt" :
+            case "qt." :
             case "quart" :
                 return "quart";
             case "pt" :
+            case "pt." :
             case "pint" :
                 return "pint";
             default:
