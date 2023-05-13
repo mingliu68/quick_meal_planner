@@ -16,7 +16,7 @@ public class ListItemMeasurementTotalDto {
     
     private String measure;
 
-    private double amount;
+    public double amount;
 
     private List<String> notes = new ArrayList<>();
 

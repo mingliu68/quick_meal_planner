@@ -75,7 +75,7 @@
                 </p>
             </div>
           
-            Consolidated
+            <h1>Consolidated Table</h1>
 
             <table>
               <tr style="background-color: #666666; color: white">
@@ -94,6 +94,23 @@
                 <td th:text="${ingredient.note}" />
               </tr>
             </table>
+
+            <h1 style="background-color: #999; color:white;">Shopping List</h1>
+            <div th:each="ingredient : ${shoppingList}" th:if="${ingredient.key != 'Salt' && ingredient.key != 'Black pepper'}">
+              <p th:text="${ingredient.key}" style="background-color: #999; color:white;"/>
+              <div th:each="measure : ${ingredient.value}" class="row">
+                <div class="col col-lg-2" th:text="${measure.amount}" />
+                <div class="col col-lg-3" th:text="${measure.measure}" />
+                <div class="col col-lg-7" >
+                  <p th:each="note : ${measure.notes}" th:text="${note}" />
+                </div>
+              </div>
+            </div>
+            <div>
+              <p style="background-color: #999; color:white;"> Salt and Black Pepper to taste
+
+            </div>
+
 
           </div>
         </div>

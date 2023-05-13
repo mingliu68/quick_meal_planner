@@ -1,6 +1,5 @@
 package com.mingcapstone.quickmealplanner.control;
 
-import java.rmi.StubNotFoundException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,16 +57,17 @@ public class ShoppingListController {
 
         HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = consolidateShoppingList(ingredientTagDtos);
 
-        shoppingList.forEach((key, value) -> {
-            System.out.println();
-            System.out.println(key);
-            for(ListItemMeasurementTotalDto dto : value) {
-                System.out.println(dto.getAmount() + " " + dto.getMeasure() + " " + dto.getNotes());
-            }
-        });
+        // shoppingList.forEach((key, value) -> {
+        //     System.out.println();
+        //     System.out.println(key);
+        //     for(ListItemMeasurementTotalDto dto : value) {
+        //         System.out.println(dto.getAmount() + " " + dto.getMeasure() + " " + dto.getNotes());
+        //     }
+        // });
 
         model.addAttribute("allIngredients", allIngredients);
         model.addAttribute("ingredientDtos", ingredientTagDtos);
+        model.addAttribute("shoppingList" , shoppingList);
 
         return "shopping-list";
     }
@@ -77,15 +77,6 @@ public class ShoppingListController {
         HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = new HashMap<>();
 
         Map<String, List<IngredientTagDto>> ingredientDtoPerName = ingredientTagDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getDbName));
-        
-
-        // ingredientDtoPerName.forEach((key, value) -> {
-        //     System.out.println();
-        //     System.out.print(key + ": ");
-        //     for(IngredientTagDto dto : value) {
-        //         System.out.print(dto.getAmount() + " " + dto.getMeasure() + " " + dto.getName());
-        //     }
-        // });
 
         // key -> ingredient db name, value -> list of IngredientTagDto
         ingredientDtoPerName.forEach((key, value) -> {
@@ -401,8 +392,6 @@ public class ShoppingListController {
         ingredientTagDto.setMeasure(measure);
         ingredientTagDto.setNote(note);
 
-        // System.out.println("Name: " + name + ", Amount: " + amount + ", Measure: " + measure + ", Note: " + note + ", Index: " + prevIdx);
-        // System.out.println();
         return ingredientTagDto;
     }
 
