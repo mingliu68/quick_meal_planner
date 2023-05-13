@@ -5,19 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter 
+@Setter 
+@NoArgsConstructor  
+@AllArgsConstructor 
 public class IngredientDto {
     
+    private Long id;
+
     private String name;
 
-    private String amount;
-
-    private String measure;
-
-    private String note;
-
+    private String category;
 
 }

@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mingcapstone.quickmealplanner.dto.IngredientDto;
+import com.mingcapstone.quickmealplanner.dto.IngredientTagDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
-
+import com.mingcapstone.quickmealplanner.entity.Ingredient;
+import com.mingcapstone.quickmealplanner.service.IngredientService;
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
 import com.mingcapstone.quickmealplanner.service.RecipeService;
 
@@ -41,6 +43,7 @@ public class MealPlanController {
     private MealPlanService mealPlanService;
     private UserService userService;
     private RecipeService recipeService;
+    private IngredientService ingredientService;
 
     private String[] mealTypes = {
         "MONDAY_LUNCH", "MONDAY_DINNER", 
@@ -53,10 +56,11 @@ public class MealPlanController {
     };
 
     @Autowired
-    public MealPlanController(MealPlanService mealPlanService, UserService userService, RecipeService recipeService) {
+    public MealPlanController(MealPlanService mealPlanService, UserService userService, RecipeService recipeService, IngredientService ingredientService) {
         this.mealPlanService = mealPlanService;
         this.userService = userService;
         this.recipeService = recipeService;
+        this.ingredientService = ingredientService;
     }
 
     // get mealplan by using startdate
@@ -162,24 +166,24 @@ public class MealPlanController {
         });
         System.out.println(allIngredients);
 
-        List<IngredientDto> ingredientDtos = mapIngredientToDto(allIngredients);    
+        List<IngredientTagDto> ingredientTagDtos = mapIngredientToDto(allIngredients);    
 
-        Collections.sort(ingredientDtos, new Comparator<IngredientDto>() {
-            public int compare(IngredientDto dto1, IngredientDto dto2) {
+        Collections.sort(ingredientTagDtos, new Comparator<IngredientTagDto>() {
+            public int compare(IngredientTagDto dto1, IngredientTagDto dto2) {
                 return dto1.getName().toLowerCase().compareTo(dto2.getName().toLowerCase());
             }
         });
         
 
         model.addAttribute("allIngredients", allIngredients);
-        model.addAttribute("ingredientDtos", ingredientDtos);
+        model.addAttribute("ingredientDtos", ingredientTagDtos);
 
         return "shopping-list";
     }
 
 
-    private List<IngredientDto> mapIngredientToDto(List<String> ingredients) {
-        List<IngredientDto> dtoList = new ArrayList<>();
+    private List<IngredientTagDto> mapIngredientToDto(List<String> ingredients) {
+        List<IngredientTagDto> dtoList = new ArrayList<>();
         for(String ingredient : ingredients) {
 
             String[] arr = ingredient.split(" ");
@@ -190,9 +194,9 @@ public class MealPlanController {
         return dtoList;
     }
 
-    private IngredientDto ingredientTagging(String[] ingredientArr) {
+    private IngredientTagDto ingredientTagging(String[] ingredientArr) {
 
-        IngredientDto ingredientDto = new IngredientDto();
+        IngredientTagDto ingredientTagDto = new IngredientTagDto();
 
         String amount = "";
         String measure = "";
@@ -255,6 +259,7 @@ public class MealPlanController {
             measure = "whole";
         }
        
+        // get preliminary name
         for(int i = prevIdx+1; i < ingredientArr.length; i++) {
             if(ingredientArr[i].charAt(0) == '(') {
                 // starting searching for closing parenthesis and add them to note variable
@@ -276,15 +281,85 @@ public class MealPlanController {
             }
         }
 
-        ingredientDto.setName(name);
-        ingredientDto.setAmount(amount);
-        ingredientDto.setMeasure(measure);
-        ingredientDto.setNote(note);
+        // name drill down, 1st separating by comma, search each term, then separating by space, 
+        String[] nameArrByComma = name.split(",");
+        IngredientDto dbIngredient = null;
+        
+        // start with searching by each individual phrases, seperated by comma
+        for(int i = 0; i < nameArrByComma.length; i++) {  
+            nameArrByComma[i] = nameArrByComma[i].trim();
+            System.out.println("Initial Search term: " + nameArrByComma[i]);
 
-        System.out.println();
+            if(nameArrByComma[i].length() - 2 >= 0 && nameArrByComma[i].substring(nameArrByComma[i].length() - 2).equals("es")) {
+                dbIngredient = pluralSearch(nameArrByComma[i], 2);
+            } else if(nameArrByComma[i].length() - 1 >= 0 && nameArrByComma[i].substring(nameArrByComma[i].length() - 1).equals("s")) {
+                dbIngredient = pluralSearch(nameArrByComma[i], 1);
+            } else {
+                dbIngredient = ingredientService.findIngredientByName(nameArrByComma[i]);
+            }
+           
+            if(dbIngredient != null) {
+                ingredientTagDto.setDbNameDto(dbIngredient); 
+                break;
+            }
+        }
+        
+        // if no result came from split by comma (initial search), continue with greedy search and drill down more
+        if (ingredientTagDto.getDbNameDto() == null) {
+            for(int i = 0; i < nameArrByComma.length; i++) {
+                String[] nameArrBySpace = nameArrByComma[i].split(" ");
+                for(int j = 0; j < nameArrBySpace.length; j++) {
+                    // max combination is length - 1
+                    // if length is 4, max combination is 3
+                    int searchLength = nameArrBySpace.length - 1;
+                    while(searchLength >  0) {
+                        if((j + searchLength) > nameArrBySpace.length) {
+                            searchLength--;
+                        } else {
+                            String searchName = "";
+                            for(int k = 0; k < searchLength; k++) {
+                                if(searchName != "") {
+                                    searchName += " ";
+                                }
+                                searchName += nameArrBySpace[j + k];
+                            }
+                            System.out.println("Search name: " + searchName);
+
+                            if(searchName.length() - 2 >= 0 && searchName.substring(searchName.length() - 2).equals("es")) {
+                                dbIngredient = pluralSearch(searchName, 2);
+                            } else if(searchName.length() - 1 >= 0 && searchName.substring(searchName.length() - 1).equals("s")) {
+                                dbIngredient = pluralSearch(searchName, 1);
+                            } else {
+                                dbIngredient = ingredientService.findIngredientByName(searchName);
+                            }
+
+                            if(dbIngredient != null) {
+                                ingredientTagDto.setDbNameDto(dbIngredient); 
+                                break; // break out of the while loop
+                            }
+                            searchLength--;
+                        }  
+                    }
+                    if (ingredientTagDto.getDbNameDto() != null) {
+                        break; // break out of the for loop
+                    }
+                }
+                if (ingredientTagDto.getDbNameDto() != null) {
+                    break; // break out of the for loop
+                }
+            }
+        }
+
+        
+        ingredientTagDto.setDbName(ingredientTagDto.getDbNameDto() != null ? ingredientTagDto.getDbNameDto().getName() : "");
+        ingredientTagDto.setName(name);
+        ingredientTagDto.setAmount(amount);
+        ingredientTagDto.setMeasure(measure);
+        ingredientTagDto.setNote(note);
+
         System.out.println("Name: " + name + ", Amount: " + amount + ", Measure: " + measure + ", Note: " + note + ", Index: " + prevIdx);
-
-        return ingredientDto;
+        System.out.println();
+        return ingredientTagDto;
     }
 
 
@@ -326,6 +401,18 @@ public class MealPlanController {
                 return "";
 
         }
+    }
+
+    private IngredientDto pluralSearch(String searchTerm, int count) {
+        IngredientDto dbIngredient = null;
+        for(int i = 0; i <= count; i++) {
+            dbIngredient = ingredientService.findIngredientByName(searchTerm.substring(0, searchTerm.length() - i));
+            if(dbIngredient != null) {
+                break;
+            }
+        }
+
+        return dbIngredient;
     }
 
 

@@ -9,6 +9,6 @@ import com.mingcapstone.quickmealplanner.entity.Recipe;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long>{
     
-    @Query("SELECT r from Recipe r Order BY id LIMIT 50")
+    @Query("SELECT r from Recipe r Order BY id DESC LIMIT 50")
     List<Recipe> findRecentRecipes();
 }
