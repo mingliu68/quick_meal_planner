@@ -92,6 +92,31 @@ public class ShoppingListController {
                 amount += amount.length() != 0 ? " " : "";
                 amount += ingredientArr[i].charAt(0) == '¼' ? "1/4 " : "1/2 ";
                 prevIdx = i;
+            } else if (ingredientArr[i].toLowerCase().equals("half") || ingredientArr[i].toLowerCase().equals("quarter")){
+                if(i == 0) {
+                    amount += amount.length() != 0 ? " " : "";
+                    amount = ingredientArr[i].toLowerCase().equals("half") ? "1/2" : "1/4";
+                    prevIdx = getIdxAfterConvertingHalfQuarter(ingredientArr, i);
+                    i = prevIdx;  
+                }
+            } else if (ingredientArr[i].toLowerCase().equals("one") || 
+                        ingredientArr[i].toLowerCase().equals("a") || 
+                        ingredientArr[i].toLowerCase().equals("an")) {
+                    if((i+1) < ingredientArr.length && ingredientArr[i+1].toLowerCase().equals("half") || 
+                        (i+1) < ingredientArr.length && ingredientArr[i+1].toLowerCase().equals("quarter")) {
+                        amount += amount.length() != 0 ? " " : "";
+                        amount = ingredientArr[i+1].toLowerCase().equals("half") ? "1/2" : "1/4";
+                        prevIdx = getIdxAfterConvertingHalfQuarter(ingredientArr, i+1);
+                        i = prevIdx;
+                    // } else if(ingredientArr[i+1].toLowerCase().equals("and")) {
+                    //     amount += amount.length() != 0 ? " " : "";
+                    //     amount += "1";
+                    //     prevIdx = i;
+                    } else {
+                        amount += amount.length() != 0 ? " " : "";
+                        amount += "1";
+                        prevIdx = i; 
+                    }
             } else if (
                 ((ingredientArr[i].charAt(0) == '/' || ingredientArr[i].charAt(0) == '-') && ingredientArr[i].length() == 1) 
                 || 
@@ -236,6 +261,20 @@ public class ShoppingListController {
         // System.out.println("Name: " + name + ", Amount: " + amount + ", Measure: " + measure + ", Note: " + note + ", Index: " + prevIdx);
         // System.out.println();
         return ingredientTagDto;
+    }
+
+    // if word in index is either "half" or "quarter", check the words that follows and look for common pattern and adjust index
+    private int getIdxAfterConvertingHalfQuarter(String[] ingredientArr, int idx) {
+        // idx is position of half or quarter
+        if((idx + 1) < ingredientArr.length && ingredientArr[idx+1].equals("of") ) {
+            if((idx + 2) < ingredientArr.length && (ingredientArr[idx+2].equals("a") || ingredientArr[idx+2].equals("an"))) {
+                return idx + 2;
+            }
+            else return idx + 1;
+        } else if((idx + 1) < ingredientArr.length && (ingredientArr[idx+1].equals("a") || ingredientArr[idx+1].equals("an"))) {
+            return idx + 1;
+        }
+        return idx;
     }
 
 
