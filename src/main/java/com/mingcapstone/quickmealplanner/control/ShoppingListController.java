@@ -1,11 +1,15 @@
 package com.mingcapstone.quickmealplanner.control;
 
+import java.rmi.StubNotFoundException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mingcapstone.quickmealplanner.dto.IngredientDto;
 import com.mingcapstone.quickmealplanner.dto.IngredientTagDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
+import com.mingcapstone.quickmealplanner.dto.ListItemMeasurementTotalDto;
 import com.mingcapstone.quickmealplanner.service.IngredientService;
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
 
@@ -51,12 +56,141 @@ public class ShoppingListController {
             }
         });
 
+        HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = consolidateShoppingList(ingredientTagDtos);
+
+        shoppingList.forEach((key, value) -> {
+            System.out.println();
+            System.out.println(key);
+            for(ListItemMeasurementTotalDto dto : value) {
+                System.out.println(dto.getAmount() + " " + dto.getMeasure() + " " + dto.getNotes());
+            }
+        });
+
         model.addAttribute("allIngredients", allIngredients);
         model.addAttribute("ingredientDtos", ingredientTagDtos);
 
         return "shopping-list";
     }
 
+    private HashMap<String, ArrayList<ListItemMeasurementTotalDto>> consolidateShoppingList(List<IngredientTagDto> ingredientTagDtos) {
+        // key => name of ingredient, value => list of total quantity by measurement and original name / desc
+        HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = new HashMap<>();
+
+        Map<String, List<IngredientTagDto>> ingredientDtoPerName = ingredientTagDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getDbName));
+        
+
+        // ingredientDtoPerName.forEach((key, value) -> {
+        //     System.out.println();
+        //     System.out.print(key + ": ");
+        //     for(IngredientTagDto dto : value) {
+        //         System.out.print(dto.getAmount() + " " + dto.getMeasure() + " " + dto.getName());
+        //     }
+        // });
+
+        // key -> ingredient db name, value -> list of IngredientTagDto
+        ingredientDtoPerName.forEach((key, value) -> {
+
+            // key -> measurement, value -> list of IngredientTagDto
+            Map<String, List<IngredientTagDto>> dtosPerMeasurement = value.stream().collect(Collectors.groupingBy(IngredientTagDto::getMeasure));
+            
+            // list of measure dtos
+            ArrayList<ListItemMeasurementTotalDto> measureDtos = new ArrayList<>();
+
+            dtosPerMeasurement.forEach((subKey, subValue) -> {
+                ListItemMeasurementTotalDto measureDto = new ListItemMeasurementTotalDto();
+                measureDto.setMeasure(subKey);
+
+                for(IngredientTagDto dto : subValue) {
+                    // first see if amount can be parsed
+                    double amount = 0;
+
+                    String[] amountArr = dto.getAmount().split(" ");
+                    
+                    for(String amountStr : amountArr) {
+                        amount += convertAmount(amountStr);
+                    }
+                   
+                    measureDto.setAmount(measureDto.getAmount() + amount);
+
+                    String str = dto.getAmount() + " " + dto.getMeasure() + " " + dto.getName();
+                    if(dto.getNote() != "") {
+                        str += " - " + dto.getNote();
+                    }
+                    measureDto.addNote(str);
+                }
+                measureDtos.add(measureDto);
+            });
+            shoppingList.put(key, measureDtos);
+            
+        });
+
+        return shoppingList;
+    }
+
+    private double convertAmount(String amountStr) {
+        if(amountStr.contains("-")) {
+            amountStr = amountStr.substring(amountStr.lastIndexOf("-") + 1);
+        }
+        switch(amountStr) {
+            case("1/4") :
+            case("2/8") :
+            case("4/16") :
+                return 0.25;
+            case("3/4") :
+            case("6/8") :
+            case("12/16") :
+                return 0.75;
+            case("1/2") :
+            case("4/8") :
+            case("8/16") :
+                return 0.50;
+            case("1/8") :
+            case("2/16") :
+                return 0.125;
+            case("3/8") :
+            case("6/16") :
+                return 0.375;
+            case("5/8") :
+            case("10/16") :
+                return 0.625;
+            case("7/8") :
+            case("14/16") :
+                return 0.875;
+            case("1/16") :
+                return 0.625;
+            case("3/16") :
+                return 0.1875;
+            case("5/16") :
+                return 0.3125;
+            case("7/16") : 
+                return 0.4375;
+            case("9/16") :
+                return 0.5625;
+            case("11/16") :
+                return 0.6875;
+            case("13/16") :
+                return 0.8125;
+            case("15/16") :
+                return 0.9375;
+            case("1/3") :
+                return 0.33;
+            case("2/3") :
+                return 0.66;
+            case("1/5") :
+                return 0.2;
+            case("2/5") :
+                return 0.4;
+            case("3/5") :
+                return 0.6;
+            case("4/5") :
+                return 0.8;
+            default:    
+                return Double.parseDouble(amountStr);
+
+                
+        }
+       
+    }
 
     private List<IngredientTagDto> mapIngredientToDto(List<String> ingredients) {
         List<IngredientTagDto> dtoList = new ArrayList<>();
@@ -86,7 +220,12 @@ public class ShoppingListController {
         for(int i = 0; i < ingredientArr.length; i++) {
             
             if(Character.isDigit(ingredientArr[i].charAt(0))) {
-                amount += amount.length() == 0 ? ingredientArr[i] : (" " + ingredientArr[i]);
+                if(Character.isDigit(ingredientArr[i].charAt(ingredientArr[i].length() - 1))) {
+                    amount += amount.length() == 0 ? ingredientArr[i] : (" " + ingredientArr[i]);
+                 
+                } else {
+                    amount += parsingComboAmount(ingredientArr[i]);
+                }   
                 prevIdx = i;
             } else if (ingredientArr[i].charAt(0) == '¼' || ingredientArr[i].charAt(0) == '½') {
                 amount += amount.length() != 0 ? " " : "";
@@ -157,6 +296,10 @@ public class ShoppingListController {
             prevIdx++;
         } else {
             measure = "whole";
+        }
+
+        if(measure.equals("whole") && amount.equals("")) {
+            amount = "1";
         }
        
         // get preliminary name
@@ -263,6 +406,67 @@ public class ShoppingListController {
         return ingredientTagDto;
     }
 
+    private String parsingComboAmount(String str) {
+
+        String amount = "";
+        for(int i = 0; i < str.length(); i++) {
+            if(Character.isDigit(str.charAt(i))) {
+                amount += str.charAt(i);
+            } else {
+                switch(str) {
+                    case("½"):
+                        if(amount != "") amount += " ";
+                        amount += "1/2";
+                    case("⅓"):
+                        if(amount != "") amount += " ";
+                        amount +=  "1/3";
+                    case("⅔"):
+                        if(amount != "") amount += " ";
+                        amount +=  "2/3";
+                    case("¼"):
+                        if(amount != "") amount += " ";
+                        amount +=  "1/4";
+                    case("¾"):
+                        if(amount != "") amount += " ";
+                        amount +=  "3/4";
+                    case("⅕"):
+                        if(amount != "") amount += " ";
+                        amount +=  "1/5";
+                    case("⅖"):
+                        if(amount != "") amount += " ";
+                        amount +=  "2/5";
+                    case("⅗"):
+                        if(amount != "") amount += " ";
+                        amount +=  "3/5";
+                    case("⅘"):
+                        if(amount != "") amount += " ";
+                        amount +=  "4/5";
+                    case("⅙"):
+                        if(amount != "") amount += " ";
+                        amount +=  "1/6";
+                    case("⅚"):
+                        if(amount != "") amount += " ";
+                        amount +=  "5/6";
+                    case("⅛"):
+                        if(amount != "") amount += " ";
+                        amount +=  "1/8";
+                    case("⅜"):
+                        if(amount != "") amount += " ";
+                        amount +=  "3/8";
+                    case("⅝"):
+                        if(amount != "") amount += " ";
+                        amount +=  "5/8";
+                    case("⅞"):
+                        if(amount != "") amount += " ";
+                        amount +=  "7/8";
+                    default: 
+                        amount += "";
+                }
+            }
+        }
+        return amount;
+    }
+
     // if word in index is either "half" or "quarter", check the words that follows and look for common pattern and adjust index
     private int getIdxAfterConvertingHalfQuarter(String[] ingredientArr, int idx) {
         // idx is position of half or quarter
@@ -276,7 +480,6 @@ public class ShoppingListController {
         }
         return idx;
     }
-
 
     private String measureConversion(String measure) {
         // removing plural
