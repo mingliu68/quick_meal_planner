@@ -1,6 +1,5 @@
 package com.mingcapstone.quickmealplanner.control;
 
-import java.rmi.StubNotFoundException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.SslConfigurationValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +50,6 @@ public class ShoppingListController {
         mealPlan.getMealPlanItemsMap().forEach((key, value) -> {
             allIngredients.addAll(value.getRecipe().getIngredients()); 
         });
-        // System.out.println(allIngredients);
 
         ArrayList<IngredientTagDto> ingredientTagDtos = mapIngredientToDto(allIngredients);    
 
@@ -62,27 +59,7 @@ public class ShoppingListController {
             }
         });
 
-        // HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = consolidateShoppingList(ingredientTagDtos);
         HashMap<String, HashMap<String, ArrayList<ListItemMeasurementTotalDto>>> shoppingList = consolidateShppingList(ingredientTagDtos);
-
-        // shoppingList.forEach((key, value) -> {
-        //     System.out.println();
-        //     System.out.println(key);
-        //     for(ListItemMeasurementTotalDto dto : value) {
-        //         System.out.println(dto.getAmount() + " " + dto.getMeasure() + " " + dto.getNotes());
-        //     }
-        // });
-
-        // shoppingList.forEach((key, value) -> {
-        //     System.out.println();
-        //     System.out.println(key);
-        //     value.forEach((name, dtos) -> {
-        //         System.out.println(" - " + name);
-        //         for(ListItemMeasurementTotalDto dto : dtos) {
-        //             System.out.println("   " + dto.getAmount() + " " + dto.getMeasure() + " " + dto.getNotes() );
-        //         }
-        //     });
-        // });
 
         model.addAttribute("allIngredients", allIngredients);
         model.addAttribute("ingredientDtos", ingredientTagDtos);
@@ -101,8 +78,6 @@ public class ShoppingListController {
 
        // key => category, value => list of ingredient tag dtos
        Map<String, List<IngredientTagDto>> ingredientDtosPerCategory = ingredientTagDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getCategory)); 
-
-
 
         ingredientDtosPerCategory.forEach((category, categoryDtos) -> {
             
@@ -142,8 +117,7 @@ public class ShoppingListController {
                     }
                     measureDtosList.add(measureTotalDto);
                 });
-                nameDtosMap.put(dbName, measureDtosList);    
-            
+                nameDtosMap.put(dbName, measureDtosList);   
             });
             shoppingList.put(category, nameDtosMap);
         });
@@ -151,54 +125,6 @@ public class ShoppingListController {
 
         return shoppingList;
     }
-
-    // private HashMap<String, ArrayList<ListItemMeasurementTotalDto>> consolidateShoppingList(List<IngredientTagDto> ingredientTagDtos) {
-  
-
-    //     // key => name of ingredient, value => list of total quantity by measurement and original name / desc
-    //     HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = new HashMap<>();
-
-    //     Map<String, List<IngredientTagDto>> ingredientDtoPerName = ingredientTagDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getDbName));
-
-    //     // key -> ingredient db name, value -> list of IngredientTagDto
-    //     ingredientDtoPerName.forEach((key, value) -> {
-
-    //         // key -> measurement, value -> list of IngredientTagDto
-    //         Map<String, List<IngredientTagDto>> dtosPerMeasurement = value.stream().collect(Collectors.groupingBy(IngredientTagDto::getMeasure));
-            
-    //         // list of measure dtos
-    //         ArrayList<ListItemMeasurementTotalDto> measureDtos = new ArrayList<>();
-
-            // dtosPerMeasurement.forEach((subKey, subValue) -> {
-            //     ListItemMeasurementTotalDto measureDto = new ListItemMeasurementTotalDto();
-            //     measureDto.setMeasure(subKey);
-
-            //     for(IngredientTagDto dto : subValue) {
-            //         // first see if amount can be parsed
-            //         double amount = 0;
-
-            //         String[] amountArr = dto.getAmount().split(" ");
-                    
-            //         for(String amountStr : amountArr) {
-            //             amount += convertAmount(amountStr);
-            //         }
-                   
-            //         measureDto.setAmount(measureDto.getAmount() + amount);
-
-            //         String str = dto.getAmount() + " " + dto.getMeasure() + " " + dto.getName();
-            //         if(dto.getNote() != "") {
-            //             str += " - " + dto.getNote();
-            //         }
-            //         measureDto.addNote(str);
-            //     }
-            //     measureDtos.add(measureDto);
-            // });
-            // shoppingList.put(key, measureDtos);
-            
-    //     });
-
-    //     return shoppingList;
-    // }
 
     
     private double convertAmount(String amountStr) {
@@ -261,9 +187,7 @@ public class ShoppingListController {
             default:    
                 return Double.parseDouble(amountStr);
 
-                
         }
-       
     }
 
     
@@ -395,17 +319,13 @@ public class ShoppingListController {
             }
         }
 
-
         // name drill down, 1st separating by comma, search each term, then separating by space, 
         String[] nameArrByComma = name.split(",");
         IngredientDto dbIngredient = null;
         
         // start with searching by each individual phrases, seperated by comma
-
-
         for(int i = 0; i < nameArrByComma.length; i++) {  
             nameArrByComma[i] = nameArrByComma[i].trim();
-
 
             if(nameArrByComma[i].length() - 2 >= 0 && nameArrByComma[i].substring(nameArrByComma[i].length() - 2).equals("es")) {
                 dbIngredient = pluralSearch(nameArrByComma[i], 2);
@@ -423,7 +343,6 @@ public class ShoppingListController {
         
         // if no result came from split by comma (initial search), 
         // continue with greedy search and drill down more by spliting each phrase by space and do combo search
-
         if(ingredientTagDto.getDbNameDto() == null) {
             for(int i = 0; i < nameArrByComma.length; i++) {
                 String[] nameArrBySpace = nameArrByComma[i].split(" ");
