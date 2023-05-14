@@ -28,5 +28,7 @@ public class IngredientTagDto {
     
     private String dbName;
 
+    private String category;
+
 
 }

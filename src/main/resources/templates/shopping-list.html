@@ -84,6 +84,7 @@
                 <th>Measure</th>
                 <th>Name</th>
                 <th>DB Names</th>
+                <th>Category</th>
                 <th>Note</th>
               </tr>
               <tr th:each="ingredient, iter : ${ingredientDtos}" th:style="${iter.index % 2 == 0 ? 'background-color: #eee' : 'background-color: none'}">
@@ -91,6 +92,7 @@
                 <td th:text="${ingredient.measure}" />
                 <td th:text="${ingredient.name}" />
                 <td th:text="${ingredient.dbName}"/>
+                <td th:text="${ingredient.category}" />
                 <td th:text="${ingredient.note}" />
               </tr>
             </table>

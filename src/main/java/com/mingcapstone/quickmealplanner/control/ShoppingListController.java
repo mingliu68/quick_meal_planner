@@ -385,9 +385,9 @@ public class ShoppingListController {
                 }
             }
         }
-
-        ingredientTagDto.setDbName(ingredientTagDto.getDbNameDto() != null ? ingredientTagDto.getDbNameDto().getName() : "");
         ingredientTagDto.setName(name);
+        ingredientTagDto.setDbName(ingredientTagDto.getDbNameDto() != null ? ingredientTagDto.getDbNameDto().getName() : ingredientTagDto.getName());
+        ingredientTagDto.setCategory(ingredientTagDto.getDbNameDto() != null ? ingredientTagDto.getDbNameDto().getCategory() : "General");
         ingredientTagDto.setAmount(amount);
         ingredientTagDto.setMeasure(measure);
         ingredientTagDto.setNote(note);
