@@ -1,5 +1,6 @@
 package com.mingcapstone.quickmealplanner.control;
 
+import java.rmi.StubNotFoundException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.server.SslConfigurationValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -146,9 +148,6 @@ public class ShoppingListController {
             shoppingList.put(category, nameDtosMap);
         });
         // end of mapping, should add to shopping list before closing
-
-
-
 
         return shoppingList;
     }
@@ -323,10 +322,6 @@ public class ShoppingListController {
                         amount = ingredientArr[i+1].toLowerCase().equals("half") ? "1/2" : "1/4";
                         prevIdx = getIdxAfterConvertingHalfQuarter(ingredientArr, i+1);
                         i = prevIdx;
-                    // } else if(ingredientArr[i+1].toLowerCase().equals("and")) {
-                    //     amount += amount.length() != 0 ? " " : "";
-                    //     amount += "1";
-                    //     prevIdx = i;
                     } else {
                         amount += amount.length() != 0 ? " " : "";
                         amount += "1";
@@ -406,8 +401,11 @@ public class ShoppingListController {
         IngredientDto dbIngredient = null;
         
         // start with searching by each individual phrases, seperated by comma
+
+
         for(int i = 0; i < nameArrByComma.length; i++) {  
             nameArrByComma[i] = nameArrByComma[i].trim();
+
 
             if(nameArrByComma[i].length() - 2 >= 0 && nameArrByComma[i].substring(nameArrByComma[i].length() - 2).equals("es")) {
                 dbIngredient = pluralSearch(nameArrByComma[i], 2);
@@ -441,7 +439,6 @@ public class ShoppingListController {
                             }    
                             searchTerm += nameArrBySpace[k];
                         }
-
                         // checking for plurals and search database after getting search term
                         if(searchTerm.length() - 2 >= 0 && searchTerm.substring(searchTerm.length() - 2).equals("es")) {
                             dbIngredient = pluralSearch(searchTerm, 2);
