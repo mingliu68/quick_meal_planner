@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mingcapstone.quickmealplanner.dto.IngredientDto;
 import com.mingcapstone.quickmealplanner.dto.IngredientTagDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
+import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.dto.ListItemMeasurementTotalDto;
 import com.mingcapstone.quickmealplanner.service.IngredientService;
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
+import com.mingcapstone.quickmealplanner.service.UserService;
 
 @Controller
 @RequestMapping("/user/shoppinglist")
@@ -31,23 +33,26 @@ public class ShoppingListController {
 
     private IngredientService ingredientService;
     private MealPlanService mealPlanService;
+    private UserService userService;
 
     @Autowired
-    public ShoppingListController(IngredientService ingredientService, MealPlanService mealPlanService) {
+    public ShoppingListController(IngredientService ingredientService, MealPlanService mealPlanService, UserService userService) {
         this.ingredientService = ingredientService;
         this.mealPlanService = mealPlanService;
+        this.userService = userService;
     }
 
     @GetMapping
     public String getShoppingList(@RequestParam("mealPlan") Long mealPlanid, Model model, Principal principal) {
+        UserDto user = getLoggedInUser(principal);
         MealPlanDto mealPlan = mealPlanService.findMealPlanDtoById(mealPlanid);
-        List<String> allIngredients = new ArrayList<>();
+        ArrayList<String> allIngredients = new ArrayList<>();
         mealPlan.getMealPlanItemsMap().forEach((key, value) -> {
             allIngredients.addAll(value.getRecipe().getIngredients()); 
         });
-        System.out.println(allIngredients);
+        // System.out.println(allIngredients);
 
-        List<IngredientTagDto> ingredientTagDtos = mapIngredientToDto(allIngredients);    
+        ArrayList<IngredientTagDto> ingredientTagDtos = mapIngredientToDto(allIngredients);    
 
         Collections.sort(ingredientTagDtos, new Comparator<IngredientTagDto>() {
             public int compare(IngredientTagDto dto1, IngredientTagDto dto2) {
@@ -55,7 +60,8 @@ public class ShoppingListController {
             }
         });
 
-        HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = consolidateShoppingList(ingredientTagDtos);
+        // HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = consolidateShoppingList(ingredientTagDtos);
+        HashMap<String, HashMap<String, ArrayList<ListItemMeasurementTotalDto>>> shoppingList = consolidateShppingList(ingredientTagDtos);
 
         // shoppingList.forEach((key, value) -> {
         //     System.out.println();
@@ -65,59 +71,137 @@ public class ShoppingListController {
         //     }
         // });
 
+        // shoppingList.forEach((key, value) -> {
+        //     System.out.println();
+        //     System.out.println(key);
+        //     value.forEach((name, dtos) -> {
+        //         System.out.println(" - " + name);
+        //         for(ListItemMeasurementTotalDto dto : dtos) {
+        //             System.out.println("   " + dto.getAmount() + " " + dto.getMeasure() + " " + dto.getNotes() );
+        //         }
+        //     });
+        // });
+
         model.addAttribute("allIngredients", allIngredients);
         model.addAttribute("ingredientDtos", ingredientTagDtos);
         model.addAttribute("shoppingList" , shoppingList);
+        model.addAttribute("user", user);
 
         return "shopping-list";
     }
 
-    private HashMap<String, ArrayList<ListItemMeasurementTotalDto>> consolidateShoppingList(List<IngredientTagDto> ingredientTagDtos) {
-        // key => name of ingredient, value => list of total quantity by measurement and original name / desc
-        HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = new HashMap<>();
+    HashMap<String, HashMap<String, ArrayList<ListItemMeasurementTotalDto>>> consolidateShppingList(ArrayList<IngredientTagDto> ingredientTagDtos) {
 
-        Map<String, List<IngredientTagDto>> ingredientDtoPerName = ingredientTagDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getDbName));
+        // Key => category, Value => hashmap of <Name of ingredient, List of measurement dtos>
+        HashMap<String, HashMap<String, ArrayList<ListItemMeasurementTotalDto>>> shoppingList = new HashMap<>();
+       
+        // first group all ingredient tag dtos by category, then group ingredient tag dtos in each category by ingredient name
 
-        // key -> ingredient db name, value -> list of IngredientTagDto
-        ingredientDtoPerName.forEach((key, value) -> {
+       // key => category, value => list of ingredient tag dtos
+       Map<String, List<IngredientTagDto>> ingredientDtosPerCategory = ingredientTagDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getCategory)); 
 
-            // key -> measurement, value -> list of IngredientTagDto
-            Map<String, List<IngredientTagDto>> dtosPerMeasurement = value.stream().collect(Collectors.groupingBy(IngredientTagDto::getMeasure));
+
+
+        ingredientDtosPerCategory.forEach((category, categoryDtos) -> {
             
-            // list of measure dtos
-            ArrayList<ListItemMeasurementTotalDto> measureDtos = new ArrayList<>();
+            // key => ingredient dbName, value => list of ingredient tag dtos
+            Map<String, List<IngredientTagDto>> ingredientDtosPerName = categoryDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getDbName));
 
-            dtosPerMeasurement.forEach((subKey, subValue) -> {
-                ListItemMeasurementTotalDto measureDto = new ListItemMeasurementTotalDto();
-                measureDto.setMeasure(subKey);
+            // key => ingredient dbName, value => list of measure total dtos
+            HashMap<String, ArrayList<ListItemMeasurementTotalDto>> nameDtosMap = new HashMap<>();
 
-                for(IngredientTagDto dto : subValue) {
-                    // first see if amount can be parsed
-                    double amount = 0;
+            ingredientDtosPerName.forEach((dbName, nameDtos) -> {
 
-                    String[] amountArr = dto.getAmount().split(" ");
-                    
-                    for(String amountStr : amountArr) {
-                        amount += convertAmount(amountStr);
+                // key => measure, value => list of ingredient tag dtos
+                Map<String, List<IngredientTagDto>> ingredientDtosPerMeasure = nameDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getMeasure));
+                
+                //list of measure dtos for each ingredients
+                ArrayList<ListItemMeasurementTotalDto> measureDtosList = new ArrayList<>();
+
+                ingredientDtosPerMeasure.forEach((measure, measureDtos) -> {
+                    ListItemMeasurementTotalDto measureTotalDto = new ListItemMeasurementTotalDto();
+                    measureTotalDto.setMeasure(measure);
+
+                    for(IngredientTagDto measureDto: measureDtos) {
+                        // first see if the amount can be parsed
+                        double amount = 0;
+                        String[] amountArr = measureDto.getAmount().split(" ");
+
+                        for(String amountStr : amountArr) {
+                            amount += convertAmount(amountStr);
+                        }
+
+                        measureTotalDto.setAmount(measureTotalDto.getAmount() + amount);
+                        String str = measureDto.getAmount() + " " + measureDto.getMeasure() + " " + measureDto.getName();
+                        if(measureDto.getNote() != "") {
+                            str += " - " + measureDto.getNote();
+                        }
+                        measureTotalDto.addNote(str);
                     }
-                   
-                    measureDto.setAmount(measureDto.getAmount() + amount);
-
-                    String str = dto.getAmount() + " " + dto.getMeasure() + " " + dto.getName();
-                    if(dto.getNote() != "") {
-                        str += " - " + dto.getNote();
-                    }
-                    measureDto.addNote(str);
-                }
-                measureDtos.add(measureDto);
+                    measureDtosList.add(measureTotalDto);
+                });
+                nameDtosMap.put(dbName, measureDtosList);    
+            
             });
-            shoppingList.put(key, measureDtos);
-            
+            shoppingList.put(category, nameDtosMap);
         });
+        // end of mapping, should add to shopping list before closing
+
+
+
 
         return shoppingList;
     }
 
+    // private HashMap<String, ArrayList<ListItemMeasurementTotalDto>> consolidateShoppingList(List<IngredientTagDto> ingredientTagDtos) {
+  
+
+    //     // key => name of ingredient, value => list of total quantity by measurement and original name / desc
+    //     HashMap<String, ArrayList<ListItemMeasurementTotalDto>> shoppingList = new HashMap<>();
+
+    //     Map<String, List<IngredientTagDto>> ingredientDtoPerName = ingredientTagDtos.stream().collect(Collectors.groupingBy(IngredientTagDto::getDbName));
+
+    //     // key -> ingredient db name, value -> list of IngredientTagDto
+    //     ingredientDtoPerName.forEach((key, value) -> {
+
+    //         // key -> measurement, value -> list of IngredientTagDto
+    //         Map<String, List<IngredientTagDto>> dtosPerMeasurement = value.stream().collect(Collectors.groupingBy(IngredientTagDto::getMeasure));
+            
+    //         // list of measure dtos
+    //         ArrayList<ListItemMeasurementTotalDto> measureDtos = new ArrayList<>();
+
+            // dtosPerMeasurement.forEach((subKey, subValue) -> {
+            //     ListItemMeasurementTotalDto measureDto = new ListItemMeasurementTotalDto();
+            //     measureDto.setMeasure(subKey);
+
+            //     for(IngredientTagDto dto : subValue) {
+            //         // first see if amount can be parsed
+            //         double amount = 0;
+
+            //         String[] amountArr = dto.getAmount().split(" ");
+                    
+            //         for(String amountStr : amountArr) {
+            //             amount += convertAmount(amountStr);
+            //         }
+                   
+            //         measureDto.setAmount(measureDto.getAmount() + amount);
+
+            //         String str = dto.getAmount() + " " + dto.getMeasure() + " " + dto.getName();
+            //         if(dto.getNote() != "") {
+            //             str += " - " + dto.getNote();
+            //         }
+            //         measureDto.addNote(str);
+            //     }
+            //     measureDtos.add(measureDto);
+            // });
+            // shoppingList.put(key, measureDtos);
+            
+    //     });
+
+    //     return shoppingList;
+    // }
+
+    
     private double convertAmount(String amountStr) {
         if(amountStr.contains("-")) {
             amountStr = amountStr.substring(amountStr.lastIndexOf("-") + 1);
@@ -183,8 +267,9 @@ public class ShoppingListController {
        
     }
 
-    private List<IngredientTagDto> mapIngredientToDto(List<String> ingredients) {
-        List<IngredientTagDto> dtoList = new ArrayList<>();
+    
+    private ArrayList<IngredientTagDto> mapIngredientToDto(ArrayList<String> ingredients) {
+        ArrayList<IngredientTagDto> dtoList = new ArrayList<>();
         for(String ingredient : ingredients) {
 
             String[] arr = ingredient.split(" ");
@@ -526,6 +611,10 @@ public class ShoppingListController {
         }
 
         return dbIngredient;
+    }
+
+    private UserDto getLoggedInUser(Principal principal) {
+        return userService.findUserByEmail(principal.getName());
     }
 
 }
