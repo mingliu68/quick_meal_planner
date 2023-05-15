@@ -18,7 +18,7 @@ body {
 
 .cover_column::before {
     content: "";
-    background-color: rgba(0,0,0,.4);
+    background-color: rgba(0,0,0,.5);
     position: absolute;
     top: 0;
     left: 0;
@@ -28,7 +28,7 @@ body {
 }
 
 .cover_column:hover::before {
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0,0,0,.3);
 }
 
 .cover_column_text {

@@ -145,8 +145,8 @@
                   <div th:each="measure : ${ingredient.value}" class="row col col-lg-12">
                     <div class="col col-lg-2" th:text="${measure.amount}" />
                     <div class="col col-lg-3" th:text="${measure.measure}" />
-                    <div class="col col-lg-7">
-                      <p th:each="note : ${measure.notes}" th:text="${note}" style="padding: none; margin: 0; font-size: 0.8rem;"/>
+                    <div class="col col-lg-7 d-flex flex-column align-items-start justify-content-center">
+                      <p th:each="note : ${measure.notes}" th:text="${note}" style="padding: none; margin: 0; font-size: 0.8rem"/>
                     </div>
                   </div>
                 </div>
