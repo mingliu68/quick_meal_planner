@@ -61,6 +61,24 @@
 
         <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper">
           <div class="row">
+            <div class="col-lg-3 col-sm-4 mb-3 d-flex align-items-stretch">
+              <div class="card mb-4 px-3 py-2 rounded-3 shadow-sm">
+               
+                  <div th:text="${#lists.size(user.recipes)}" style="font-size:2rem;font-weight:900"/>
+                  <p>recipes saved</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-4 mb-3 d-flex align-items-stretch">
+              <div class="card mb-4 px-3 py-2 rounded-3 shadow-sm">
+               
+                  <div th:text="${#lists.size(user.mealPlans)}"  style="font-size:2rem;font-weight:900"/>
+                  <p>meal plans created</p>
+              </div>
+            </div>
+            
+
+          </div>
+          <div class="row">
             <div class="col-lg-4 mb-3 d-flex align-items-stretch">
               <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">

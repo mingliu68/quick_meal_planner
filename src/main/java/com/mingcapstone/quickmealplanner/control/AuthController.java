@@ -41,9 +41,9 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login(Principal principal) {
-        // if(principal != null) {
-        // return "redirect:/user";
-        // }
+        if(principal != null) {
+        return "redirect:/user";
+        }
         return "login";
     }
 
