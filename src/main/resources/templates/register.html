@@ -30,8 +30,8 @@
     </div>
   </div>
 </nav>
-<div class="container min-full-height">
-  <div class="row col-md-8 offset-md-2">
+<div class="min-full-height d-flex justify-content-center align-items-center dish-collage-bg">
+  <div class="col-md-8"  style="box-shadow: 0 0 20px #00000060;">
     <div class="card">
       <div class="card-header">
           <h2 class="text-center">Registration</h2>
@@ -103,7 +103,7 @@
               <p th:errors = "*{password}" class="text-danger"
                  th:if="${#fields.hasErrors('password')}"></p>
             </div>
-            <div class="form-group">
+             <div class="form-group mt-4 mb-2 d-flex justify-content-between">
               <button class="btn btn-primary" type="submit">Register</button>
               <span>Already registered? <a th:href="@{/login}">Login here</a></span>
             </div>

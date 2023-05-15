@@ -51,6 +51,7 @@
         </div>
       </div>
     </nav>
+
     <div class="container-fluid min-full-height dashboard-container">
       <div class="row full-height">
         <div class="col-md-3 col-lg-2 dashboard-nav-container-wrapper">
@@ -61,9 +62,9 @@
           </div>
         </div>
 
-        <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper">
+        <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper shopping-list">
           <div class="row">
-            <div th:if="${allIngredients != null}">
+            <!-- <div th:if="${allIngredients != null}">
               <p
                 th:each="ingredient : ${allIngredients}"
                 th:text="${ingredient}"
@@ -75,8 +76,8 @@
                 generating a new shopping list from
                 <a th:href="@{/user/mealplans}"> meal plan </a>
               </p>
-            </div>
-
+            </div> -->
+<!-- 
             <h1>Ingredient Tagging Table</h1>
 
             <table>
@@ -99,9 +100,9 @@
                 <td th:text="${ingredient.category}" />
                 <td th:text="${ingredient.note}" />
               </tr>
-            </table>
+            </table> -->
 
-            <h1 style="background-color: #999; color: white">Shopping List</h1>
+            <!-- <h1 style="background-color: #999; color: white">Shopping List</h1>
             <div th:each="category : ${shoppingList}">
               <h3 th:text="${category.key}" />
               <div
@@ -120,25 +121,26 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <h1 style="background-color: #999; color: white">Shopping List</h1>
-            <div th:each="category : ${shoppingList}">
-              <h3 th:text="${category.key}" />
+            <h1>Shopping List</h1>
+            <hr />
+            <div th:each="category : ${shoppingList}" style="padding-bottom: 20px;border-bottom: 1px solid #ccc;">
+              <h3 th:text="${category.key}" class="ingredient-category" />
               <!-- <div
                 th:each="ingredient : ${category.value}"
                 th:if="${ingredient.key != 'Salt' && ingredient.key != 'Black pepper'}"
                 class="row"
               > -->
               <div
-                th:each="ingredient : ${category.value}"
-                class="row"
+                th:each="ingredient, iter : ${category.value}"
+                class="d-flex ingredient-line" th:classappend="${iter.index % 2 == 0 ? 'even' : ''}"
               >
                 <div
                   th:text="${ingredient.key}"
-                  class="col col-lg-3 row"
+                  class="col col-lg-3 "
                 />
-                <div class="row flex-column col col-lg-9">
+                <div class=" flex-column col col-lg-9">
                   <div th:each="measure : ${ingredient.value}" class="row col col-lg-12">
                     <div class="col col-lg-2" th:text="${measure.amount}" />
                     <div class="col col-lg-3" th:text="${measure.measure}" />

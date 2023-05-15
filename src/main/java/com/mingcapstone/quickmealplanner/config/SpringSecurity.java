@@ -40,6 +40,7 @@ public class SpringSecurity {
                         .requestMatchers("/index").permitAll()
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
+                        .requestMatchers("/img/**").permitAll()
                         // .requestMatchers("/users").hasRole("USER")
                         .anyRequest().authenticated())
                 .formLogin(
