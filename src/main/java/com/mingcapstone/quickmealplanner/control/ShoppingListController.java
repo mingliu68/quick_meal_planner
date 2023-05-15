@@ -115,6 +115,7 @@ public class ShoppingListController {
                         }
                         measureTotalDto.addNote(str);
                     }
+                    measureTotalDto.setAmount(Math.round(measureTotalDto.getAmount() * 100.0) / 100.0);
                     measureDtosList.add(measureTotalDto);
                 });
                 nameDtosMap.put(dbName, measureDtosList);   
@@ -332,7 +333,11 @@ public class ShoppingListController {
             } else if(nameArrByComma[i].length() - 1 >= 0 && nameArrByComma[i].substring(nameArrByComma[i].length() - 1).equals("s")) {
                 dbIngredient = pluralSearch(nameArrByComma[i], 1);
             } else {
-                dbIngredient = ingredientService.findIngredientByName(nameArrByComma[i]);
+                if(measure.equals("teaspoon") || measure.equals("talespoon")) {
+                    dbIngredient = ingredientService.findIngredientByName(specialNameAlteration(nameArrByComma[i]));
+                } else {
+                    dbIngredient = ingredientService.findIngredientByName(nameArrByComma[i]);
+                }
             }
            
             if(dbIngredient != null) {
@@ -364,7 +369,12 @@ public class ShoppingListController {
                         } else if(searchTerm.length() - 1 >= 0 && searchTerm.substring(searchTerm.length() - 1).equals("s")) {
                             dbIngredient = pluralSearch(searchTerm, 1);
                         } else {
-                            dbIngredient = ingredientService.findIngredientByName(searchTerm);
+                            if(measure.equals("teaspoon") || measure.equals("talespoon")) {
+                                dbIngredient = ingredientService.findIngredientByName(specialNameAlteration(searchTerm));
+                            } else {
+                                dbIngredient = ingredientService.findIngredientByName(searchTerm);
+                            }
+                            
                         }
                         searchTerm = "";
                         // if current search term result in an ingredient record, break out of all loops
@@ -394,6 +404,15 @@ public class ShoppingListController {
         ingredientTagDto.setNote(note);
 
         return ingredientTagDto;
+    }
+
+    private String specialNameAlteration(String name) {
+        switch(name) {
+            case "pepper" :
+                return "black pepper";
+            default: 
+                return name;
+        }
     }
 
     private String parsingComboAmount(String str) {
