@@ -124,6 +124,7 @@
             </div> -->
 
             <h1>Shopping List</h1>
+            <p>For meal plan starting Monday, <span th:text="${startDate}"/>.</p>
             <hr />
             <div th:each="category : ${shoppingList}" style="padding-bottom: 20px;border-bottom: 1px solid #ccc;">
               <h3 th:text="${category.key}" class="ingredient-category" />

@@ -65,6 +65,11 @@ public class ShoppingListController {
         model.addAttribute("ingredientDtos", ingredientTagDtos);
         model.addAttribute("shoppingList" , shoppingList);
         model.addAttribute("user", user);
+        
+
+        String[] startDateArr = mealPlan.getStartDate().split("_");
+        String startDate = startDateArr[1] + " " + startDateArr[2] + ", " + startDateArr[0];
+        model.addAttribute("startDate", startDate);
 
         return "shopping-list";
     }
