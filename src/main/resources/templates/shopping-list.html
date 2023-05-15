@@ -121,6 +121,33 @@
                 </div>
               </div>
             </div>
+
+            <h1 style="background-color: #999; color: white">Shopping List</h1>
+            <div th:each="category : ${shoppingList}">
+              <h3 th:text="${category.key}" />
+              <div
+                th:each="ingredient : ${category.value}"
+                th:if="${ingredient.key != 'Salt' && ingredient.key != 'Black pepper'}"
+                class="row"
+              >
+                <div
+                  th:text="${ingredient.key}"
+                  class="col col-lg-3 row"
+                />
+                <div class="row flex-column col col-lg-9">
+                  <div th:each="measure : ${ingredient.value}" class="row col col-lg-12">
+                    <div class="col col-lg-2" th:text="${measure.amount}" />
+                    <div class="col col-lg-3" th:text="${measure.measure}" />
+                    <div class="col col-lg-7">
+                      <p th:each="note : ${measure.notes}" th:text="${note}" style="padding: none; margin: 0; font-size: 0.8rem;"/>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
