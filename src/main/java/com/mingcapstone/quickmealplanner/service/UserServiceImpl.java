@@ -1,19 +1,16 @@
 package com.mingcapstone.quickmealplanner.service;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
 import com.mingcapstone.quickmealplanner.entity.Recipe;
 import com.mingcapstone.quickmealplanner.entity.Role;
@@ -181,8 +178,8 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new RuntimeException("Recipe not found");
         }
-        Recipe dbRecipe = recipeRepository.save(recipe);
-        user.removeRecipe(dbRecipe);
+        // Recipe dbRecipe = recipeRepository.save(recipe);
+        user.removeRecipe(recipe);
         return userRepository.save(user);
     }
 

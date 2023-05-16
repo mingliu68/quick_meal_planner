@@ -9,7 +9,8 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Getter
 @Setter
@@ -39,10 +40,15 @@ public class Recipe {
     // @JsonManagedReference
     private List<MealPlanItem> mealPlanItems;
     
-    // @Column(name="saved")
-    // private int saved;
+    @OneToMany(mappedBy="recipe", fetch = FetchType.EAGER)
+    @JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property="id"
+    )
+    private List<IngredientLineEntry> dbIngredients = new ArrayList<>();
+
+    public void addIngredientLineEntry(IngredientLineEntry ingredientLineEntry) {
+        dbIngredients.add(ingredientLineEntry);
+    }
     
-    // public void setSaved(int num) {
-    //     saved += num;
-    // }
 }
