@@ -32,14 +32,10 @@ public class IngredientLineEntryServiceImpl implements IngredientLineEntryServic
 
     @Override
     public void setDbIngredients(List<String> ingredients, Recipe recipe) {
-        // ArrayList<IngredientLineEntry> dbIngredients = new ArrayList<>();
         for (String ingredient : ingredients) {
             String[] ingredientArr = ingredient.split(" ");
-            // dbIngredients.add(ingredientTagging(ingredientArr));
             recipe.addIngredientLineEntry(ingredientTagging(ingredientArr, recipe));
         }
-  
-        // return dbIngredients;
     }
 
     private IngredientLineEntry ingredientTagging(String[] ingredientArr, Recipe recipe) {

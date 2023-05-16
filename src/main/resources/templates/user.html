@@ -65,15 +65,17 @@
               <div class="card mb-4 px-3 py-2 rounded-3 shadow-sm">
                
                   <div th:text="${#lists.size(user.recipes)}" style="font-size:2rem;font-weight:900"/>
-                  <p>recipes saved</p>
+                  <p th:if="${#lists.size(user.recipes) > 1 }" >recipes saved </p>
+                  <p th:unless="${#lists.size(user.recipes) > 1 }">recipe saved</p>
               </div>
             </div>
             <div class="col-lg-3 col-sm-4 mb-3 d-flex align-items-stretch">
               <div class="card mb-4 px-3 py-2 rounded-3 shadow-sm">
                
                   <div th:text="${#lists.size(user.mealPlans)}"  style="font-size:2rem;font-weight:900"/>
-                  <p>meal plans created</p>
-              </div>
+                  <p th:if="${#lists.size(user.mealPlans) > 1}">meal plans created</p>
+                  <p th:unless="${#lists.size(user.mealPlans) > 1}">meal plan created</p>
+                </div>
             </div>
             
 
