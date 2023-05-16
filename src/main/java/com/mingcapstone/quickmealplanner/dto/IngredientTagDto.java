@@ -1,6 +1,5 @@
 package com.mingcapstone.quickmealplanner.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;

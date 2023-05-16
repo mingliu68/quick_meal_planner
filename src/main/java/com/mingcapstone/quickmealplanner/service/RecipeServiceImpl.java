@@ -21,16 +21,17 @@ public class RecipeServiceImpl implements RecipeService {
     private RecipeRepository recipeRepository;
     private UserRepository userRepository;
     private UserService userService;
+    private IngredientLineEntryService ingredientLineEntryService;
 
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository, UserService userService) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository, UserService userService, IngredientLineEntryService ingredientLineEntryService) {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.ingredientLineEntryService = ingredientLineEntryService;
     }
     
     
-
     @Override
     public RecipeDto findDtoById(Long id){
         return mapToRecipeDto(findById(id));
@@ -56,9 +57,14 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setName(recipeDto.getName());
         recipe.setDirections(recipeDto.getDirections());
         recipe.setIngredients(recipeDto.getIngredients());
+        
         Recipe dbRecipe = recipeRepository.save(recipe);
         user.addRecipe(dbRecipe);
         userRepository.save(user);
+        
+        // ingredient tagging
+        ingredientLineEntryService.setDbIngredients(recipeDto.getIngredients(), dbRecipe);
+        
         return dbRecipe;
     }
 
@@ -84,8 +90,6 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
 
-
-
     @Override
     public Recipe updateRecipe(RecipeDto recipeDto){
         Recipe recipe = new Recipe();
@@ -106,13 +110,15 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDto> getRecentRecipesNotByUser(Long userId){
         User user = userService.findUserById(userId);
-        List<Recipe> recentRecipes = getRecentRecipes();
+        List<Recipe> recentRecipes = recipeRepository.findRecentRecipes();
+
         List<Recipe> recipes = new ArrayList<>();
         for(Recipe recipe: recentRecipes) {
             if(!user.getRecipes().contains(recipe)) {
                 recipes.add(recipe);
             }
         }
+        
         return recipes.stream()
         .map( recipe -> mapToRecipeDto(recipe))
         .collect(Collectors.toList());
@@ -126,7 +132,9 @@ public class RecipeServiceImpl implements RecipeService {
         recipeDto.setDirections(recipe.getDirections());
         recipeDto.setIngredients(recipe.getIngredients());
         recipeDto.setUsers(recipe.getUsers());
+        recipeDto.setDbIngredients(recipe.getDbIngredients());
         return recipeDto;
     }
+
 
 }

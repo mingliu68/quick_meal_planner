@@ -64,75 +64,12 @@
 
         <div class="col-md-9 col-lg-10 dashboard-content-container-wrapper shopping-list">
           <div class="row">
-            <!-- <div th:if="${allIngredients != null}">
-              <p
-                th:each="ingredient : ${allIngredients}"
-                th:text="${ingredient}"
-              />
-            </div>
-            <div th:unless="${allIngredients != null}">
-              <p>
-                You do not have any ingredients to generate a shopping list. Try
-                generating a new shopping list from
-                <a th:href="@{/user/mealplans}"> meal plan </a>
-              </p>
-            </div> -->
-<!-- 
-            <h1>Ingredient Tagging Table</h1>
-
-            <table>
-              <tr style="background-color: #666666; color: white">
-                <th>Amount</th>
-                <th>Measure</th>
-                <th>Name</th>
-                <th>DB Names</th>
-                <th>Category</th>
-                <th>Note</th>
-              </tr>
-              <tr
-                th:each="ingredient, iter : ${ingredientDtos}"
-                th:style="${iter.index % 2 == 0 ? 'background-color: #eee' : 'background-color: none'}"
-              >
-                <td th:text="${ingredient.amount}" />
-                <td th:text="${ingredient.measure}" />
-                <td th:text="${ingredient.name}" />
-                <td th:text="${ingredient.dbName}" />
-                <td th:text="${ingredient.category}" />
-                <td th:text="${ingredient.note}" />
-              </tr>
-            </table> -->
-
-            <!-- <h1 style="background-color: #999; color: white">Shopping List</h1>
-            <div th:each="category : ${shoppingList}">
-              <h3 th:text="${category.key}" />
-              <div
-                th:each="ingredient : ${category.value}"
-                th:if="${ingredient.key != 'Salt' && ingredient.key != 'Black pepper'}"
-              >
-                <p
-                  th:text="${ingredient.key}"
-                  style="background-color: #999; color: white"
-                />
-                <div th:each="measure : ${ingredient.value}" class="row">
-                  <div class="col col-lg-2" th:text="${measure.amount}" />
-                  <div class="col col-lg-3" th:text="${measure.measure}" />
-                  <div class="col col-lg-7">
-                    <p th:each="note : ${measure.notes}" th:text="${note}" />
-                  </div>
-                </div>
-              </div>
-            </div> -->
 
             <h1>Shopping List</h1>
             <p>For meal plan starting Monday, <span th:text="${startDate}"/>.</p>
             <hr />
             <div th:each="category : ${shoppingList}" style="padding-bottom: 20px;border-bottom: 1px solid #ccc;">
               <h3 th:text="${category.key}" class="ingredient-category" />
-              <!-- <div
-                th:each="ingredient : ${category.value}"
-                th:if="${ingredient.key != 'Salt' && ingredient.key != 'Black pepper'}"
-                class="row"
-              > -->
               <div
                 th:each="ingredient, iter : ${category.value}"
                 class="d-flex ingredient-line" th:classappend="${iter.index % 2 == 0 ? 'even' : ''}"

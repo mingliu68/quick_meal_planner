@@ -1,11 +1,7 @@
 package com.mingcapstone.quickmealplanner.control;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mingcapstone.quickmealplanner.dto.IngredientDto;
-import com.mingcapstone.quickmealplanner.dto.IngredientTagDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanDto;
 import com.mingcapstone.quickmealplanner.dto.MealPlanItemDto;
 import com.mingcapstone.quickmealplanner.dto.RecipeDto;
 import com.mingcapstone.quickmealplanner.dto.UserDto;
-import com.mingcapstone.quickmealplanner.entity.Ingredient;
 import com.mingcapstone.quickmealplanner.service.IngredientService;
 import com.mingcapstone.quickmealplanner.service.MealPlanService;
 import com.mingcapstone.quickmealplanner.service.RecipeService;

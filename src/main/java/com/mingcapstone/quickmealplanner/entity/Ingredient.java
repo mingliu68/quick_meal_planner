@@ -31,6 +31,16 @@ public class Ingredient {
     @Column(name="category")
     private String category;
 
+
+    // @OneToMany(mappedBy="ingredient", fetch = FetchType.EAGER)
+    // @JsonIdentityInfo(
+    //     generator = ObjectIdGenerators.PropertyGenerator.class,
+    //     property="id"
+    // )
+    // private List<IngredientLineEntry> ingredientLineEntries;
+
+
+
     public IngredientDto mapToDto() {
         IngredientDto dto = new IngredientDto();
         dto.setId(id);
