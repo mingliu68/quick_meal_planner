@@ -1,6 +1,5 @@
 package com.mingcapstone.quickmealplanner.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +37,6 @@ public class UserServiceImpl implements UserService {
     RecipeRepository recipeRepository;
 
 
-    
-
     @Override
     public UserDto saveUser(UserDto userDto) {
         User user = new User();
@@ -47,8 +44,6 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        List<Recipe> recipes = new ArrayList<>();
-        user.setRecipes(recipes);
         Role role = roleRepository.findByName("USER");
         if (role == null) {
             role = checkRoleExist();
@@ -57,7 +52,6 @@ public class UserServiceImpl implements UserService {
         User dbUser = userRepository.save(user);
         userDto.setId(dbUser.getId());
 
-        // return userRepository.save(user);
         return userDto;
     }
 
@@ -67,7 +61,6 @@ public class UserServiceImpl implements UserService {
         user.setId(userDto.getId());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
-        // user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setRecipes(userDto.getRecipes());
@@ -141,7 +134,7 @@ public class UserServiceImpl implements UserService {
     public Boolean recipeSavedByUser(Long recipeId, Long userId) {
         User user = findUserById(userId);
         Optional<Recipe> result = recipeRepository.findById(recipeId);
-        Recipe recipe = new Recipe();
+        Recipe recipe = null;
         if (result.isPresent()) {
             recipe = result.get();
         } else {
@@ -157,14 +150,13 @@ public class UserServiceImpl implements UserService {
     public User addRecipeToList(Long recipeId, Long userId) {
         User user = findUserById(userId);
         Optional<Recipe> result = recipeRepository.findById(recipeId);
-        Recipe recipe = new Recipe();
+        Recipe recipe = null;
         if (result.isPresent()) {
             recipe = result.get();
         } else {
             throw new RuntimeException("Recipe not found");
         }
-        Recipe dbRecipe = recipeRepository.save(recipe);
-        user.addRecipe(dbRecipe);
+        user.addRecipe(recipe);
         return userRepository.save(user);
     }
 
@@ -172,13 +164,12 @@ public class UserServiceImpl implements UserService {
     public User removeRecipeFromList(Long recipeId, Long userId) {
         User user = findUserById(userId);
         Optional<Recipe> result = recipeRepository.findById(recipeId);
-        Recipe recipe = new Recipe();
+        Recipe recipe = null;
         if (result.isPresent()) {
             recipe = result.get();
         } else {
             throw new RuntimeException("Recipe not found");
         }
-        // Recipe dbRecipe = recipeRepository.save(recipe);
         user.removeRecipe(recipe);
         return userRepository.save(user);
     }
