@@ -297,8 +297,14 @@ a.header-logo img {
     position: sticky;
     top: 0; 
     /* padding: 10px; */
+    width:100%;
 }
-
+.sideBar-container .sideBar-item-container {
+    height: 120px;
+    border-top: 1px solid #f8f8f8;
+    padding: 10px 0;
+    width: 100%;
+}
 .vertical-letters {
     writing-mode: vertical-lr;
     text-orientation: upright;
@@ -310,7 +316,9 @@ a.header-logo img {
     justify-content: flex-start;
     font-weight: 900;
 }
-
+.sideBar-container .sideBar-menu-items-wrapper {
+    max-width: calc(100% - 50px);
+}
 .sideBar-container .sideBar-menu-item-wrapper {
     height: 46%
 }
@@ -322,8 +330,15 @@ a.header-logo img {
     padding: 10px 15px;
     position: relative;
     cursor:pointer;
+    max-width: 100%;
 }
 
+
+.sideBar-menu-item p {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
 .sideBar-container .sideBar-menu-item.lunch {
     background-color:#faebd785;
 }

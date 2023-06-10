@@ -166,12 +166,8 @@
             </div>
             <div
               th:each="weekday, iter: ${weeklyDates}"
-              class="d-flex"
-              style="
-                height: 120px;
-                border-top: 1px solid #f8f8f8;
-                padding: 10px 0;
-              "
+              class="d-flex sideBar-item-container"
+
             >
               <div class="d-flex flex-column justify-content-between date-wrapper ">
                 <div class="date-box">
@@ -190,7 +186,7 @@
                 />
               </div>
               <div
-                class="h-100 d-flex flex-column justify-content-between w-100 pl-3"
+                class="h-100 d-flex flex-column justify-content-between w-100 pl-3 sideBar-menu-items-wrapper"
               >
                 <!-- first row lunch -->
                 <div
