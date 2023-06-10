@@ -2,6 +2,7 @@ package com.mingcapstone.quickmealplanner.control;
 
 import java.security.Principal;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class RecipeController {
     @GetMapping
     public String recipes(Model model, Principal principal) {
         UserDto user = getLoggedInUser(principal);
+        Collections.reverse(user.getRecipes());
         model.addAttribute("user", user);
 
         return "recipes";

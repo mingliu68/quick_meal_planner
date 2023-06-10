@@ -1,6 +1,9 @@
 package com.mingcapstone.quickmealplanner.rest;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +33,14 @@ public class RecipeRestController {
 
     @PostMapping("/recipe")
     public Recipe saveRecipe(@RequestBody RecipeDto recipeDto, Principal principal) {
+        // System.out.println("This recipe has " + recipeDto.getDirections().size() + " steps");
+        // if(recipeDto.getDirections().size() == 1) {
+        //     System.out.println("This recipe has 1 step, converted to multiple.");
+        //    List<String> newDirections = Arrays.asList(recipeDto.getDirections().get(0).split("\\."));
+        //     recipeDto.setDirections(newDirections);
+        // }
+        // System.out.println("This recipe has " + recipeDto.getDirections().size() + " steps");
+
         UserDto user = getLoggedInUser(principal);
         return recipeService.save(recipeDto, user.getId());
     } 

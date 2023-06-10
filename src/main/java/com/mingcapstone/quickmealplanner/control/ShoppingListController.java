@@ -70,8 +70,8 @@ public class ShoppingListController {
        
         // first group all ingredient tag dtos by category, then group ingredient tag dtos in each category by ingredient name
 
-       // key => category, value => list of ingredient tag dtos
-       Map<String, List<IngredientLineEntry>> ingredientDtosPerCategory = dbIngredients.stream().collect(Collectors.groupingBy(IngredientLineEntry::getCategory)); 
+        // key => category, value => list of ingredient tag dtos
+        Map<String, List<IngredientLineEntry>> ingredientDtosPerCategory = dbIngredients.stream().collect(Collectors.groupingBy(IngredientLineEntry::getCategory)); 
 
         ingredientDtosPerCategory.forEach((category, categoryDtos) -> {
             

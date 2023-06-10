@@ -2,6 +2,9 @@ package com.mingcapstone.quickmealplanner.control;
 
 import java.security.Principal;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,6 +96,11 @@ public class ChatGPTController {
 
         UserDto user = getLoggedInUser(principal);
 
+        // split direction by "."
+        System.out.println(recipe == null ? "recipe is null" : "This recipe has " + recipe.getDirections().size() + " steps");
+        if(recipe != null && recipe.getDirections().size() == 1) splitDirections(recipe);
+        System.out.println(recipe == null ? "recipe is null" : "This recipe has " + recipe.getDirections().size() + " steps");
+
         model.addAttribute("user", user);
 
         model.addAttribute("recipe", recipe);
@@ -124,6 +132,11 @@ public class ChatGPTController {
         }
 
         UserDto user = getLoggedInUser(principal);
+
+        // split direction by "."
+        System.out.println(recipe == null ? "recipe is null" : "This recipe has " + recipe.getDirections().size() + " steps");
+        if(recipe != null && recipe.getDirections().size() == 1) splitDirections(recipe);
+        System.out.println(recipe == null ? "recipe is null" : "This recipe has " + recipe.getDirections().size() + " steps");
 
         model.addAttribute("user", user);
 
@@ -159,6 +172,11 @@ public class ChatGPTController {
         }
 
         UserDto user = getLoggedInUser(principal);
+        
+        // split direction by "."
+        System.out.println(recipe == null ? "recipe is null" : "This recipe has " + recipe.getDirections().size() + " steps");
+        if(recipe != null && recipe.getDirections().size() == 1) splitDirections(recipe);
+        System.out.println(recipe == null ? "recipe is null" : "This recipe has " + recipe.getDirections().size() + " steps");
 
         model.addAttribute("user", user);
 
@@ -186,6 +204,23 @@ public class ChatGPTController {
 
     private UserDto getLoggedInUser(Principal principal) {
         return userService.findUserByEmail(principal.getName());
+    }
+
+    private void splitDirections(RecipeDto recipe) {
+         // split direction if length is 1
+         System.out.println("This recipe has " + recipe.getDirections().size() + " steps");
+         List<String> newDirections = new ArrayList<>();
+         for(String step : recipe.getDirections()) {
+            List<String> splitStep = Arrays.asList(step.split("\\."));
+            newDirections.addAll(splitStep);
+         }
+         recipe.setDirections(newDirections);
+        //  if(recipe != null && recipe.getDirections().size() == 1) {
+        //      System.out.println("This recipe has 1 step, converted to multiple.");
+        //     List<String> newDirections = Arrays.asList(recipe.getDirections().get(0).split("\\."));
+        //     recipe.setDirections(newDirections);
+        //  }
+         System.out.println("This recipe has " + recipe.getDirections().size() + " steps");
     }
 
 }

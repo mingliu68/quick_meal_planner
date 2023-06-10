@@ -102,11 +102,11 @@
               />
               <hr />
               <div>
-                <h4>Ingredients:</h4>
+                <h4 style="margin: 40px 0 15px 0;">Ingredients:</h4>
                 <div th:each="ingredient: ${recipe.ingredients}">
                   <p th:text="${ingredient}" />
                 </div>
-                <h4>Directions:</h4>
+                <h4 style="margin: 40px 0 15px 0;">Directions:</h4>
                 <div th:each="direction: ${recipe.directions}">
                   <p th:text="${direction}" />
                 </div>
