@@ -34,11 +34,11 @@ public class IngredientLineEntryServiceImpl implements IngredientLineEntryServic
     public void setDbIngredients(List<String> ingredients, Recipe recipe) {
         for (String ingredient : ingredients) {
             String[] ingredientArr = ingredient.split(" ");
-            recipe.addIngredientLineEntry(ingredientTagging(ingredientArr, recipe));
+            recipe.addIngredientLineEntry(ingredientTagging(ingredientArr, recipe, ingredient));
         }
     }
 
-    private IngredientLineEntry ingredientTagging(String[] ingredientArr, Recipe recipe) {
+    private IngredientLineEntry ingredientTagging(String[] ingredientArr, Recipe recipe, String originalIngredient) {
 
         IngredientLineEntry ingredientLineEntry = new IngredientLineEntry();
 
@@ -259,10 +259,12 @@ public class IngredientLineEntryServiceImpl implements IngredientLineEntryServic
             ingredientLineEntry.setCategory(dbIngredient.getCategory());
         }
 
-        String fullNote = amount + " " + measure + " " + name;
-        if (!note.equals("")) {
-            fullNote += " - " + note;
-        }
+        // String fullNote = amount + " " + measure + " " + name;
+        // if (!note.equals("")) {
+        //     fullNote += " - " + note;
+        // }
+        // ingredientLineEntry.setNote(fullNote);
+        String fullNote = !note.equals("") ? note + " - " + originalIngredient : originalIngredient;
         ingredientLineEntry.setNote(fullNote);
         // SAVE INGREDIENT LINE ENTRY then return db ingredient line entry
         return saveLineEntry(ingredientLineEntry);
@@ -395,6 +397,12 @@ public class IngredientLineEntryServiceImpl implements IngredientLineEntryServic
             case "oz.":
             case "ounce":
                 return "ounce";
+            case "lg":
+            case "sm":
+            case "md":
+            case "lg.":
+            case "sm.":
+            case "md.":
             case "small":
             case "medium":
             case "large":
