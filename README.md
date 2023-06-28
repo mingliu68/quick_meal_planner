@@ -1,4 +1,4 @@
-## About The Project
+## About SnapChef
 SnapChef (formally known as Quick Meal Planner) is an application that helps users find quick recipes leveraging ChatGPT, allowing users to save recipes, create weekly meal plans and generate weekly shopping lists.
 
 ### Database Schema
