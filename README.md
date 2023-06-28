@@ -8,8 +8,8 @@ SnapChef (formally known as Quick Meal Planner) is an application that helps use
 ### Built With
 
 
-[![Bootstrap][Bootstrap.com]]
-[![Java][Java.com]]
+[Bootstrap][Bootstrap.com]
+[Java][Java.com]
 
 
 
