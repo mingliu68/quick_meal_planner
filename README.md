@@ -10,6 +10,8 @@ SnapChef (formally known as Quick Meal Planner) is an application that helps use
 [![Java][Java.com]][Java-url]
 [![Springboot][Springboot.com]][Springboot-url]
 [![Postgresql][Postgresql.com]][Postgresql-url]
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
+![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
 [![ChatGPT][ChatGPT.com]][ChatGPT-url]
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-%23005C0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white)
