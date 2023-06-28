@@ -8,8 +8,8 @@ SnapChef (formally known as Quick Meal Planner) is an application that helps use
 ### Built With
 
 
-[Bootstrap][Bootstrap.com]
-[Java][Java.com]
+[![Bootstrap][Bootstrap.com]][Bootstrap-url]
+[![Java][Java.com]][Java-url]
 
 
 
@@ -29,6 +29,7 @@ SnapChef (formally known as Quick Meal Planner) is an application that helps use
 [linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com
 
 [Java.com]: [https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white
-
+[Java-url]: https://www.java.com/en/
