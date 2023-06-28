@@ -10,7 +10,9 @@ SnapChef (formally known as Quick Meal Planner) is an application that helps use
 
 [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 [![Java][Java.com]][Java-url]
-
+[![Springboot][Springboot.com]][Springboot-url]
+[![Postgresql][Postgresql.com]][Postgresql-url]
+[![ChatGPT][ChatGPT.com]][ChatGPT-url]
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -28,8 +30,18 @@ SnapChef (formally known as Quick Meal Planner) is an application that helps use
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
+
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
 
 [Java.com]: https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white
 [Java-url]: https://www.java.com/en/
+
+[Springboot.com]: https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white
+[Springboot-url]: https://spring.io/
+
+[Postgresql.com]:https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white
+[Postgresql-url]:https://www.postgresql.org/
+
+[ChatGPT.com]:https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white
+[ChatGPT-url]:https://openai.com/
