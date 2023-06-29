@@ -6,7 +6,8 @@ SnapChef (formally known as Quick Meal Planner) is an application that helps use
 ![Screen Shot 2023-06-13 at 12 42 42 AM](https://github.com/mingliu68/quick_meal_planner/assets/66700080/9ba930e9-5592-45b0-af61-ce1a6b88ace8)
 
 ### Database Schema
-![Screen Shot 2023-06-28 at 2 55 35 PM](https://github.com/mingliu68/quick_meal_planner/assets/66700080/06ebece9-20d7-4954-886a-3e5bf2dc5e60)
+
+![Screen Shot 2023-06-29 at 12 03 07 PM](https://github.com/mingliu68/quick_meal_planner/assets/66700080/d0abcb73-4729-48f4-b227-f3234e45ac78)
 
 
 ### Built With
